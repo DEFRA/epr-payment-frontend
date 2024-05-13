@@ -8,7 +8,7 @@ namespace EPR.Payment.Portal.Common.Exceptions
 
         public ResponseCodeException(
             HttpStatusCode statusCode,
-            string message) : base(message)
+            string? message) : base(message)
         {
             StatusCode = statusCode;
         }

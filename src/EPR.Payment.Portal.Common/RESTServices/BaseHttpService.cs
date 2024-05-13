@@ -68,7 +68,7 @@ namespace EPR.Payment.Portal.Common.RESTServices
         /// <returns>A <see cref="Task"/>Async object of type T returned</returns>
         protected async Task<T> Post<T>(
             string url,
-            object payload = null)
+            object? payload = null)
         {
             CheckUrl(url);
 
@@ -80,7 +80,7 @@ namespace EPR.Payment.Portal.Common.RESTServices
         /// <summary>
         /// Performs an Http POST returning the speicified object
         /// </summary>
-        protected async Task<T> Post<T>(object payload = null)
+        protected async Task<T> Post<T>(object? payload = null)
         {
             var url = $"{_baseUrl}";
 
@@ -92,7 +92,7 @@ namespace EPR.Payment.Portal.Common.RESTServices
         /// </summary>
         protected async Task Post(
             string url,
-            object payload = null)
+            object? payload = null)
         {
             CheckUrl(url);
 
@@ -106,7 +106,7 @@ namespace EPR.Payment.Portal.Common.RESTServices
         /// </summary>
         protected async Task<T> Put<T>(
             string url,
-            object payload = null)
+            object? payload = null)
         {
             CheckUrl(url);
 
@@ -120,7 +120,7 @@ namespace EPR.Payment.Portal.Common.RESTServices
         /// </summary>
         protected async Task Put(
             string url,
-            object payload = null)
+            object? payload = null)
         {
             CheckUrl(url);
 
@@ -134,7 +134,7 @@ namespace EPR.Payment.Portal.Common.RESTServices
         /// </summary>
         protected async Task<T> Delete<T>(
             string url,
-            object payload = null)
+            object? payload = null)
         {
             CheckUrl(url);
 
@@ -148,7 +148,7 @@ namespace EPR.Payment.Portal.Common.RESTServices
         /// </summary>
         protected async Task Delete(
             string url,
-            object payload = null)
+            object? payload = null)
         {
             CheckUrl(url);
 
@@ -159,7 +159,7 @@ namespace EPR.Payment.Portal.Common.RESTServices
 
         private HttpRequestMessage CreateMessage(
             string url,
-            object payload,
+            object? payload,
             HttpMethod httpMethod)
         {
             var msg = new HttpRequestMessage
