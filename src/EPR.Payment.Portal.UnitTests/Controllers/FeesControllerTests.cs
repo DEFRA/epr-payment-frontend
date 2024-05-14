@@ -1,60 +1,56 @@
-﻿using AutoFixture;
-using AutoFixture.Xunit2;
-using EPR.Payment.Portal.Common.Dtos;
+﻿using EPR.Payment.Portal.Common.Dtos;
 using EPR.Payment.Portal.Controllers;
 using EPR.Payment.Portal.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Xunit;
 
 namespace EPR.Payment.Portal.UnitTests.Controllers
 {
+    [TestClass]
     public class FeesControllerTests
     {
-        private readonly IFixture _fixture;
         private readonly FeesController _controller;
         private readonly Mock<IFeesService> _feesServiceMock;
 
         public FeesControllerTests()
         {
-            _fixture = new Fixture();
             _feesServiceMock = new Mock<IFeesService>();
             _controller = new FeesController(_feesServiceMock.Object);
         }
 
-        [Theory, AutoData]
-        public async Task GetFee_ReturnsViewWithViewModel(bool isLarge, string regulator)
+        [TestMethod]
+        public async Task GetFee_ReturnsViewWithViewModel()
         {
-            var expectedViewModel = _fixture.Build<GetFeesResponseDto>().Create(); 
-            _feesServiceMock.Setup(service => service.GetFee(isLarge, regulator)).ReturnsAsync(expectedViewModel);
+            var expectedViewModel = new GetFeesResponseDto { Large = true, Regulator = "regulator", Amount = 199, EffectiveFrom = DateTime.Now.AddDays(-1), EffectiveTo = DateTime.Now.AddDays(10) };
+            _feesServiceMock.Setup(service => service.GetFee(It.IsAny<bool>(), It.IsAny<string>())).ReturnsAsync(expectedViewModel);
 
-            var result = await _controller.GetFee(isLarge, regulator);
+            var result = await _controller.GetFee(true, "regulator");
 
 
-            Assert.NotNull(result);
-            Assert.IsType<ViewResult>(result);
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(ViewResult));
             ViewResult? viewResult = result as ViewResult;
-            Assert.NotNull(viewResult);
-            Assert.NotNull(viewResult.ViewData.Model);
+            Assert.IsNotNull(viewResult);
+            Assert.IsNotNull(viewResult.ViewData.Model);
 
             // check model is expected type
-            Assert.IsType<GetFeesResponseDto>(viewResult.ViewData.Model);
+            Assert.IsInstanceOfType(viewResult.ViewData.Model, typeof(GetFeesResponseDto));
 
             // check view name
-            Assert.Null(viewResult.ViewName);
+            Assert.IsNull(viewResult.ViewName);
 
-            _feesServiceMock.Verify(service => service.GetFee(isLarge, regulator), Times.Once());
+            _feesServiceMock.Verify(service => service.GetFee(true, "regulator"), Times.Once());
         }
 
-        [Fact]
+        [TestMethod]
         public async Task GetFee_ReturnsBadRequest()
         {
-            var result = await _controller.GetFee(false, null );
+            var result = await _controller.GetFee(false, null);
 
             // Assert
-            Assert.IsType<BadRequestObjectResult>(result);
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
 
-            _feesServiceMock.Verify(service => service.GetFee(false, null ), Times.Never());
+            _feesServiceMock.Verify(service => service.GetFee(false, null), Times.Never());
         }
     }
 }
