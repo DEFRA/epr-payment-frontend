@@ -1,9 +1,10 @@
 ﻿using EPR.Payment.Portal.Common.Dtos;
+using EPR.Payment.Portal.Common.Models;
 
 namespace EPR.Payment.Portal.Services.Interfaces
 {
     public interface IFeesService
     {
-        Task<GetFeesResponseDto> GetFee(bool isLarge, string? regulator);
+        Task<GetFeesResponseViewModel> GetFee(bool isLarge, string? regulator);
     }
 }

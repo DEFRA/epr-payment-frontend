@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using EPR.Payment.Portal.Common.Dtos;
+using EPR.Payment.Portal.Common.Models;
 using EPR.Payment.Portal.Common.RESTServices.Interfaces;
 using EPR.Payment.Portal.Services.Interfaces;
 
@@ -16,9 +16,10 @@ namespace EPR.Payment.Portal.Services
             _httpFeeService = httpFeeService ?? throw new ArgumentNullException(nameof(httpFeeService));
         }
 
-        public async Task<GetFeesResponseDto> GetFee(bool isLarge, string? regulator)
+        public async Task<GetFeesResponseViewModel> GetFee(bool isLarge, string? regulator)
         {
-            return  await _httpFeeService.GetFee(isLarge, regulator);
+            var result = await _httpFeeService.GetFee(isLarge, regulator);
+            return _mapper.Map<GetFeesResponseViewModel>(result);
         }
     }
 }

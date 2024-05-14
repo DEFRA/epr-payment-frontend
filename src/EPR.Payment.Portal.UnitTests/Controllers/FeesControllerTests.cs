@@ -1,4 +1,4 @@
-﻿using EPR.Payment.Portal.Common.Dtos;
+﻿using EPR.Payment.Portal.Common.Models;
 using EPR.Payment.Portal.Controllers;
 using EPR.Payment.Portal.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +21,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         [TestMethod]
         public async Task GetFee_ReturnsViewWithViewModel()
         {
-            var expectedViewModel = new GetFeesResponseDto { Large = true, Regulator = "regulator", Amount = 199, EffectiveFrom = DateTime.Now.AddDays(-1), EffectiveTo = DateTime.Now.AddDays(10) };
+            var expectedViewModel = new GetFeesResponseViewModel { Large = true, Regulator = "regulator", Amount = 199, EffectiveFrom = DateTime.Now.AddDays(-1), EffectiveTo = DateTime.Now.AddDays(10) };
             _feesServiceMock.Setup(service => service.GetFee(It.IsAny<bool>(), It.IsAny<string>())).ReturnsAsync(expectedViewModel);
 
             var result = await _controller.GetFee(true, "regulator");
@@ -34,7 +34,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             Assert.IsNotNull(viewResult.ViewData.Model);
 
             // check model is expected type
-            Assert.IsInstanceOfType(viewResult.ViewData.Model, typeof(GetFeesResponseDto));
+            Assert.IsInstanceOfType(viewResult.ViewData.Model, typeof(GetFeesResponseViewModel));
 
             // check view name
             Assert.IsNull(viewResult.ViewName);

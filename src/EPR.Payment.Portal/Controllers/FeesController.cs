@@ -23,7 +23,7 @@ namespace EPR.Payment.Portal.Controllers
                 return BadRequest("Invalid 'regulator' parameter provided");
             }
 
-            GetFeesResponseDto feeResponseVm = await _feesService.GetFee(isLarge, regulator);
+            var feeResponseVm = await _feesService.GetFee(isLarge, regulator);
 
             return View(feeResponseVm);
         }
