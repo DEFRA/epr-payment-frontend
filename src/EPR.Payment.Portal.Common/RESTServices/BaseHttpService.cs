@@ -8,9 +8,9 @@ namespace EPR.Payment.Portal.Common.RESTServices
 {
     public abstract class BaseHttpService
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly string _baseUrl;
-        private readonly HttpClient _httpClient;
+        protected readonly string _baseUrl;
+        protected readonly HttpClient _httpClient;
+        protected IHttpContextAccessor _httpContextAccessor;
 
         public BaseHttpService(
             IHttpContextAccessor httpContextAccessor,
