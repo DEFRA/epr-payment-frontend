@@ -32,4 +32,8 @@
     <ProjectReference Include="..\EPR.Payment.Portal\EPR.Payment.Portal.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
