@@ -1,10 +1,13 @@
+using EPR.Payment.Portal.Common.Configuration;
 using EPR.Payment.Portal.Extension;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDependencies();
+builder.Services.Configure<DashboardConfiguration>(builder.Configuration.GetSection(DashboardConfiguration.SectionName));
 
 var app = builder.Build();
 

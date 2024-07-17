@@ -1,14 +1,25 @@
-﻿@using Microsoft.AspNetCore.Mvc.Routing;
+﻿@using EPR.Payment.Portal.Common.Configuration
+@using Microsoft.AspNetCore.Mvc.Routing;
+@model DashboardConfiguration;
+
 
 @{
     ViewData["Title"] = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="govuk-body"><a asp-action="Index"></a></div>
+<a href=@Model.BackUrl.Url class="govuk-back-link">Back</a>
+<main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content">
+    @* <h2 class="govuk-heading-m">There was a problem making the payment. Please <a href="@ViewBag.ReturnUrl">click here</a> to go back to the dashboard.</h2> *@
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
 
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-xl">Placeholder home page</h1>
-        <p class="govuk-body">This is a temporary home page to redirect requirement</p>
+            <h1 class="govuk-heading-l">Sorry - the service is unavailable</h1>
+            <p>
+                Your payment has not been completed and will not be taken from your bank account.
+            </p><p>You can return to the service later to pay online, or <a href=@Model.OfflinePaymentUrl.Url>make an offline payment</a></p>
+            <p></p>
+
+        </div>
     </div>
-</div>
+</main>
