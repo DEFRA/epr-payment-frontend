@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System.Net.Http.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Net.Http.Headers;
 
 namespace EPR.Payment.Portal.Common.RESTServices
 {
@@ -20,141 +21,115 @@ namespace EPR.Payment.Portal.Common.RESTServices
         {
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
 
-            // do basic checks on parameters
+            // Initialize _baseUrl in the constructor
             _baseUrl = string.IsNullOrWhiteSpace(baseUrl) ? throw new ArgumentNullException(nameof(baseUrl)) : baseUrl;
 
             if (httpClientFactory == null)
-            {
                 throw new ArgumentNullException(nameof(httpClientFactory));
-            }
 
             if (string.IsNullOrWhiteSpace(endPointName))
-            {
                 throw new ArgumentNullException(nameof(endPointName));
-            }
 
             _httpClient = httpClientFactory.CreateClient();
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
             if (_baseUrl.EndsWith("/"))
-            {
                 _baseUrl = _baseUrl.TrimEnd('/');
-            }
 
             _baseUrl = $"{_baseUrl}/{endPointName}";
+        }
+
+        protected void SetBearerToken(string token)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
         /// <summary>
         /// Performs an Http GET returning the specified object
         /// </summary>
-        /// <param name="url">URL to send the post request to</param>
-        /// <typeparam name="T">The type of object to return</typeparam>
-        /// <returns>A <see cref="Task"/>Async object of type T returned</returns>
-        protected async Task<T> Get<T>(
-            string url,
-            bool includeTrailingSlash = true)
+        protected async Task<T> Get<T>(string url, CancellationToken cancellationToken, bool includeTrailingSlash = true)
         {
-            url = includeTrailingSlash ? $"{_baseUrl}/{url}/" : $"{_baseUrl}/{url}";
+            url = string.IsNullOrEmpty(url) && !includeTrailingSlash ? _baseUrl : includeTrailingSlash ? $"{_baseUrl}/{url}/" : $"{_baseUrl}/{url}";
 
-            return await Send<T>(CreateMessage(url, null, HttpMethod.Get));
+            return await Send<T>(CreateMessage(url, null, HttpMethod.Get), cancellationToken);
         }
 
         /// <summary>
-        /// Performs an Http POST returning the speicified object
+        /// Performs an Http POST returning the specified object
         /// </summary>
-        /// <param name="url">URL to send the post request to</param>
-        /// <param name="payload">The object payload to send</param>
-        /// <typeparam name="T">The type of object to return</typeparam>
-        /// <returns>A <see cref="Task"/>Async object of type T returned</returns>
-        protected async Task<T> Post<T>(
-            string url,
-            object? payload = null)
+        protected async Task<T> Post<T>(string url, object? payload, CancellationToken cancellationToken)
         {
-            CheckUrl(url);
+            if (string.IsNullOrWhiteSpace(url))
+                throw new ArgumentNullException(nameof(url));
 
             url = $"{_baseUrl}/{url}/";
 
-            return await Send<T>(CreateMessage(url, payload, HttpMethod.Post));
-        }
-
-        /// <summary>
-        /// Performs an Http POST returning the speicified object
-        /// </summary>
-        protected async Task<T> Post<T>(object? payload = null)
-        {
-            var url = $"{_baseUrl}";
-
-            return await Send<T>(CreateMessage(url, payload, HttpMethod.Post));
+            return await Send<T>(CreateMessage(url, payload, HttpMethod.Post), cancellationToken);
         }
 
         /// <summary>
         /// Performs an Http POST without returning any data
         /// </summary>
-        protected async Task Post(
-            string url,
-            object? payload = null)
+        protected async Task Post(string url, object? payload, CancellationToken cancellationToken)
         {
-            CheckUrl(url);
+            if (string.IsNullOrWhiteSpace(url))
+                throw new ArgumentNullException(nameof(url));
 
             url = $"{_baseUrl}/{url}/";
 
-            await Send(CreateMessage(url, payload, HttpMethod.Post));
+            await Send(CreateMessage(url, payload, HttpMethod.Post), cancellationToken);
         }
 
         /// <summary>
-        /// Performs an Http PUT returning the speicified object
+        /// Performs an Http PUT returning the specified object
         /// </summary>
-        protected async Task<T> Put<T>(
-            string url,
-            object? payload = null)
+        protected async Task<T> Put<T>(string url, object? payload, CancellationToken cancellationToken)
         {
-            CheckUrl(url);
+            if (string.IsNullOrWhiteSpace(url))
+                throw new ArgumentNullException(nameof(url));
 
             url = $"{_baseUrl}/{url}/";
 
-            return await Send<T>(CreateMessage(url, payload, HttpMethod.Put));
+            return await Send<T>(CreateMessage(url, payload, HttpMethod.Put), cancellationToken);
         }
 
         /// <summary>
         /// Performs an Http PUT without returning any data
         /// </summary>
-        protected async Task Put(
-            string url,
-            object? payload = null)
+        protected async Task Put(string url, object? payload, CancellationToken cancellationToken)
         {
-            CheckUrl(url);
+            if (string.IsNullOrWhiteSpace(url))
+                throw new ArgumentNullException(nameof(url));
 
             url = $"{_baseUrl}/{url}/";
 
-            await Send(CreateMessage(url, payload, HttpMethod.Put));
+            await Send(CreateMessage(url, payload, HttpMethod.Put), cancellationToken);
         }
 
         /// <summary>
-        /// Performs an Http DELETE returning the speicified object
+        /// Performs an Http DELETE returning the specified object
         /// </summary>
-        protected async Task<T> Delete<T>(
-            string url,
-            object? payload = null)
+        protected async Task<T> Delete<T>(string url, object? payload, CancellationToken cancellationToken)
         {
-            CheckUrl(url);
+            if (string.IsNullOrWhiteSpace(url))
+                throw new ArgumentNullException(nameof(url));
 
             url = $"{_baseUrl}/{url}/";
 
-            return await Send<T>(CreateMessage(url, payload, HttpMethod.Delete));
+            return await Send<T>(CreateMessage(url, payload, HttpMethod.Delete), cancellationToken);
         }
 
         /// <summary>
         /// Performs an Http DELETE without returning any data
         /// </summary>
-        protected async Task Delete(
-            string url,
-            object? payload = null)
+        protected async Task Delete(string url, object? payload, CancellationToken cancellationToken)
         {
-            CheckUrl(url);
+            if (string.IsNullOrWhiteSpace(url))
+                throw new ArgumentNullException(nameof(url));
 
             url = $"{_baseUrl}/{url}/";
 
-            await Send(CreateMessage(url, payload, HttpMethod.Delete));
+            await Send(CreateMessage(url, payload, HttpMethod.Delete), cancellationToken);
         }
 
         private HttpRequestMessage CreateMessage(
@@ -176,9 +151,9 @@ namespace EPR.Payment.Portal.Common.RESTServices
             return msg;
         }
 
-        private async Task<T> Send<T>(HttpRequestMessage requestMessage)
+        private async Task<T> Send<T>(HttpRequestMessage requestMessage, CancellationToken cancellationToken)
         {
-            var response = await _httpClient.SendAsync(requestMessage);
+            var response = await _httpClient.SendAsync(requestMessage, cancellationToken);
 
             if (response.IsSuccessStatusCode)
             {
@@ -187,9 +162,7 @@ namespace EPR.Payment.Portal.Common.RESTServices
                 var content = await streamReader.ReadToEndAsync();
 
                 if (string.IsNullOrWhiteSpace(content))
-                {
                     return default!;
-                }
 
                 return ReturnValue<T>(content);
             }
@@ -206,61 +179,41 @@ namespace EPR.Payment.Portal.Common.RESTServices
                 }
 
                 // set the response status code and throw the exception for the middleware to handle
-                throw new ResponseCodeException(response.StatusCode, content);
+                throw new ResponseCodeException(response.StatusCode, content!);
             }
         }
 
-        private async Task Send(HttpRequestMessage requestMessage)
+        private async Task Send(HttpRequestMessage requestMessage, CancellationToken cancellationToken)
         {
-            var response = await _httpClient.SendAsync(requestMessage);
+            var response = await _httpClient.SendAsync(requestMessage, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
                 _httpContextAccessor.HttpContext.Response.StatusCode = (int)response.StatusCode;
-
                 // for now we don't know how we're going to handle errors specifically,
                 // so we'll just throw an error with the error code
-                throw new ResponseCodeException(
-                    response.StatusCode,
-                    $"Error occurred calling API with error code: {response.StatusCode}. Message: {response.ReasonPhrase}");
+                throw new Exception($"Error occurred calling API with error code: {response.StatusCode}. Message: {response.ReasonPhrase}");
             }
         }
 
         private T ReturnValue<T>(string value)
         {
             if (IsValidJson(value))
-            {
                 return JsonConvert.DeserializeObject<T>(value)!;
-            }
             else
-            {
                 return (T)Convert.ChangeType(value, typeof(T));
-            }
         }
 
         private bool IsValidJson(string stringValue)
         {
             try
             {
-                JToken.Parse(stringValue);
+                var val = JToken.Parse(stringValue);
                 return true;
             }
             catch
             {
                 return false;
-            }
-        }
-
-        /// <summary>
-        /// Checks that the string url passed in actually has a valid existing string
-        /// If not, it throws an exception
-        /// </summary>
-        /// <param name="url">The url to check</param>
-        private void CheckUrl(string url)
-        {
-            if (string.IsNullOrWhiteSpace(url))
-            {
-                throw new ArgumentNullException(nameof(url));
             }
         }
     }

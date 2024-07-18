@@ -1,20 +1,18 @@
 ﻿using AutoFixture;
-using AutoFixture.MSTest;
 using EPR.Payment.Portal.Common.Configuration;
 using EPR.Payment.Portal.Controllers;
-using EPR.Payment.Portal.UnitTests.TestHelpers;
+using EPR.Payment.Portal.Common.UnitTests.TestHelpers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using FluentAssertions.Execution;
 
 namespace EPR.Payment.Portal.UnitTests.Controllers
 {
     [TestClass]
     public class HomeControllerTests
     {
-        private Mock<IOptions<Service>>? _configMock;
         private Mock<DashboardConfiguration> mockDashboardConfig = null!;
         private Mock<IOptions<DashboardConfiguration>> mockOptions = null!;
 
@@ -38,7 +36,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod, AutoMoqData]
-        public void Constructor_Should_Throw_ArgumentNullException_When_Config_Is_Null()
+        public void Constructor_WhenConfigIsNull_ShouldThrowArgumentNullException()
         {
             // Act
             mockOptions.Setup(o => o.Value).Returns((DashboardConfiguration)null!);
@@ -49,7 +47,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod, AutoMoqData]
-        public void Constructor_Should_Initialize_When_Config_Is_Not_Null(IOptions<DashboardConfiguration> config)
+        public void Constructor_WhenConfigIsNotNull_ShouldInitialize(IOptions<DashboardConfiguration> config)
         {
             // Act
             var controller = new HomeController(mockOptions.Object);
@@ -59,7 +57,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod, AutoMoqData]
-        public void Index_Should_Return_View_With_Correct_Configuration()
+        public void Index_WithCorrectConfiguration_ShouldReturnView()
         {
             // Arrange
             var fixture = new Fixture();
@@ -75,12 +73,13 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             var result = controller.Index() as ViewResult;
 
             // Assert
-            result.Should().NotBeNull();
-            //result!.Model.Should().Be(dashboardConfig);
-            result.Should().BeOfType<ViewResult>();
-            result!.Model.Should().Be(mockDashboardConfig.Object);
-            //controller.ViewBag.BackUrl.Should().Be("https://backurl.com");
-            //controller.ViewBag.OfflinePaymentUrl.Should().Be("https://offlinepayment.com");
+            using (new AssertionScope())
+            {
+                result.Should().NotBeNull();
+                result.Should().BeOfType<ViewResult>();
+                result!.Model.Should().Be(mockDashboardConfig.Object);
+            }
+
         }
     }
 }

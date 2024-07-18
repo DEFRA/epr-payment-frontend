@@ -3,7 +3,7 @@ using AutoFixture.AutoMoq;
 using AutoFixture.Kernel;
 using AutoFixture.MSTest;
 
-namespace EPR.Payment.Portal.UnitTests.TestHelpers
+namespace EPR.Payment.Portal.Common.UnitTests.TestHelpers
 {
     [AttributeUsage(AttributeTargets.Method)]
     public class AutoMoqDataAttribute : AutoDataAttribute
