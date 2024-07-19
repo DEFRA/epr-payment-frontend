@@ -40,7 +40,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         {
             // Act
             mockOptions.Setup(o => o.Value).Returns((DashboardConfiguration)null!);
-            Action act = () => new HomeController(mockOptions.Object);
+            Action act = () => new PaymentErrorController(mockOptions.Object);
 
             // Assert
             act.Should().Throw<ArgumentNullException>().WithMessage("*dashboardConfiguration*");
@@ -50,7 +50,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         public void Constructor_WhenConfigIsNotNull_ShouldInitialize(IOptions<DashboardConfiguration> config)
         {
             // Act
-            var controller = new HomeController(mockOptions.Object);
+            var controller = new PaymentErrorController(mockOptions.Object);
 
             // Assert
             controller.Should().NotBeNull();
@@ -67,7 +67,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
                 .Create();
             var options = Options.Create(dashboardConfig);
 
-            var controller = new HomeController(mockOptions.Object);
+            var controller = new PaymentErrorController(mockOptions.Object);
 
             // Act
             var result = controller.Index() as ViewResult;
