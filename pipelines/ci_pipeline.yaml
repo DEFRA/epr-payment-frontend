@@ -69,4 +69,4 @@ extends:
     runNugetTasks: ${{ variables.runNugetTasks }}
     serviceName: $(serviceName)
     sonarqubeInstance: ${{ parameters.sonarqubeInstance }}
-    dotnetVersion: ${{ parameters.dotnetVersion }}
+    dotnetVersion: ${{ variables.dotnetVersion }}
