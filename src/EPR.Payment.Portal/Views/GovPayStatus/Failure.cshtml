@@ -1,0 +1,27 @@
+﻿@using EPR.Payment.Portal.Common.Configuration
+@using Microsoft.AspNetCore.Mvc.Routing;
+@model GovPayErrorConfiguration;
+
+@{
+    ViewData["Title"] = "GovPay Error";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <h1 class="govuk-heading-l">Your payment has been declined</h1>
+            <p>Contact your bank for more details. No money has been taken from your account.</p>
+            <p><a href="@Model.TryPaymentAgainUrl.Url"> Try the payment again</a></p>
+            <h2 class="govuk-heading-m">To pay by bank transfer instead</h2>
+            <p class="govuk-body">Use these details to make payment of @ViewData["PaymentAmount"]:</p>
+            <ul class="govuk-list govuk-list">
+                <li>Company name: Environment Agency</li>
+                <li>Bank: RBS/NatWest, London Corporate Service Centre,CPB Services, 2nd floor, 280 Bishopsgate, London EC2M 4RB</li>
+                <li>Sort code: 60-70-80</li>
+                <li>Account number: 10014411</li>
+                <li>Account name: EA RECEIPTS</li>
+                <li>Reference: PR/PK/REP </li>
+            </ul>
+        </div>
+    </div>
+</main>

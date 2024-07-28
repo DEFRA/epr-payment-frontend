@@ -9,6 +9,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDependencies();
 builder.Services.Configure<DashboardConfiguration>(builder.Configuration.GetSection(DashboardConfiguration.SectionName));
 builder.Services.AddApplicationInsightsTelemetry();
+builder.Services.Configure<GovPayErrorConfiguration>(builder.Configuration.GetSection(GovPayErrorConfiguration.SectionName));
+
 
 var app = builder.Build();
 

@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EPR.Payment.Portal.Common\EPR.Payment.Portal.Common.csproj" />
+    <ProjectReference Include="..\EPR.Payment.Portal\EPR.Payment.Portal.csproj" />
   </ItemGroup>
 
   <ItemGroup>
