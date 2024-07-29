@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+	<DataCollectionRunSettings>
+		<DataCollectors>
+			<DataCollector friendlyName="XPlat Code Coverage" uri="datacollector://Microsoft/Coverlet/CodeCoverage/1.0">
+				<Configuration>
+					<ExcludeByFile>
+						<File>**/*.cshtml</File>
+					</ExcludeByFile>
+					<Exclude>
+						[xunit.*]
+						[MSTest.*]
+						[NUnit.*]
+						[Coverlet.*]
+						[FluentAssertions.*]
+						[Moq.*]
+					</Exclude>
+				</Configuration>
+			</DataCollector>
+		</DataCollectors>
+	</DataCollectionRunSettings>
+</RunSettings>
