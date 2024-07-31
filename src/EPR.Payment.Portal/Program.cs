@@ -1,6 +1,7 @@
 using EPR.Payment.Portal.Common.Configuration;
 using EPR.Payment.Portal.Extension;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.FileProvider;
 
 var builder = WebApplication.CreateBuilder(args);
 
