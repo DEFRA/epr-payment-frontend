@@ -4,7 +4,7 @@ using EPR.Payment.Portal.Common.RESTServices.Payments.Interfaces;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 
-namespace EPR.Payment.Portal.Extension
+namespace EPR.Payment.Portal.Helpers
 {
     public static class DependencyHelper
     {
@@ -14,7 +14,7 @@ namespace EPR.Payment.Portal.Extension
         {
             services.Configure<FacadeConfiguration>(configuration.GetSection(FacadeConfiguration.SectionName));
 
-            RegisterHttpService<IHttpPaymentFacade, HttpPaymentsFacade>(
+            RegisterHttpService<IHttpPaymentFacade, HttpPaymentFacade>(
                 services, nameof(FacadeConfiguration.FacadeService));
 
             return services;
@@ -28,7 +28,7 @@ namespace EPR.Payment.Portal.Extension
             // Perform validation before adding to the service collection
             var serviceOptions = CreateServiceOptions(services, configName, endPointOverride);
 
-            services.AddScoped<TInterface>(s =>
+            services.AddScoped(s =>
             {
                 Trace.WriteLine($"Registering service {typeof(TImplementation).Name} for {configName}");
 

@@ -12,7 +12,7 @@ namespace EPR.Payment.Portal.Extension
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddHttpContextAccessor();
-            services.AddScoped<IPaymentsServices, PaymentsService>();
+            services.AddScoped<IPaymentsService, PaymentsService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddHttpClient();
 

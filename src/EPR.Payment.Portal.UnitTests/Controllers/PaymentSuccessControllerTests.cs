@@ -1,23 +1,25 @@
 ﻿using AutoFixture;
+using AutoFixture.MSTest;
 using EPR.Payment.Portal.Common.Configuration;
-using EPR.Payment.Portal.Controllers;
+using EPR.Payment.Portal.Common.Models;
 using EPR.Payment.Portal.Common.UnitTests.TestHelpers;
+using EPR.Payment.Portal.Controllers;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Moq;
-using FluentAssertions.Execution;
 
 namespace EPR.Payment.Portal.UnitTests.Controllers
 {
     [TestClass]
-    public class HomeControllerTests
+    public class PaymentSuccessControllerTests
     {
         private Mock<DashboardConfiguration> mockDashboardConfig = null!;
         private Mock<IOptions<DashboardConfiguration>> mockOptions = null!;
 
         [TestInitialize]
-        public void SetUp()
+        public void TestInitialize()
         {
             mockDashboardConfig = new Mock<DashboardConfiguration>();
             mockDashboardConfig.SetupAllProperties();
@@ -32,7 +34,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
 
             mockOptions = new Mock<IOptions<DashboardConfiguration>>();
             mockOptions.Setup(o => o.Value).Returns(mockDashboardConfig.Object);
-            
+
         }
 
         [TestMethod, AutoMoqData]
@@ -40,7 +42,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         {
             // Act
             mockOptions.Setup(o => o.Value).Returns((DashboardConfiguration)null!);
-            Action act = () => new PaymentErrorController(mockOptions.Object);
+            Action act = () => new PaymentSuccessController(mockOptions.Object);
 
             // Assert
             act.Should().Throw<ArgumentNullException>().WithMessage("*dashboardConfiguration*");
@@ -50,14 +52,14 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         public void Constructor_WhenConfigIsNotNull_ShouldInitialize(IOptions<DashboardConfiguration> config)
         {
             // Act
-            var controller = new PaymentErrorController(mockOptions.Object);
+            var controller = new PaymentSuccessController(mockOptions.Object);
 
             // Assert
             controller.Should().NotBeNull();
         }
 
         [TestMethod, AutoMoqData]
-        public void Index_WithCorrectConfiguration_ShouldReturnView()
+        public void Index_WithCorrectConfiguration_ShouldReturnView([Frozen] CompletePaymentViewModel completePaymentResponseViewModel)
         {
             // Arrange
             var fixture = new Fixture();
@@ -67,10 +69,10 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
                 .Create();
             var options = Options.Create(dashboardConfig);
 
-            var controller = new PaymentErrorController(mockOptions.Object);
+            var controller = new PaymentSuccessController(mockOptions.Object);
 
             // Act
-            var result = controller.Index() as ViewResult;
+            var result = controller.Index(completePaymentResponseViewModel) as ViewResult;
 
             // Assert
             using (new AssertionScope())

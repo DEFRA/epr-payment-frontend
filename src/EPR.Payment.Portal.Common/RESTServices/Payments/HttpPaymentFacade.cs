@@ -7,12 +7,12 @@ using Microsoft.Extensions.Options;
 
 namespace EPR.Payment.Portal.Common.RESTServices.Payments
 {
-    public class HttpPaymentsFacade : BaseHttpService, IHttpPaymentFacade
+    public class HttpPaymentFacade : BaseHttpService, IHttpPaymentFacade
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly string _httpClientName;
 
-        public HttpPaymentsFacade(
+        public HttpPaymentFacade(
             IHttpContextAccessor httpContextAccessor,
             IHttpClientFactory httpClientFactory,
             IOptions<FacadeService> config)
@@ -27,9 +27,16 @@ namespace EPR.Payment.Portal.Common.RESTServices.Payments
 
         public async Task<CompletePaymentResponseDto> CompletePaymentAsync(Guid externalPaymentId, CancellationToken cancellationToken)
         {
-            var url = UrlConstants.PaymentsComplete.Replace("{externalPaymentId}", externalPaymentId.ToString());
-            var response = await Post<CompletePaymentResponseDto>(url, externalPaymentId, cancellationToken);
-            return response;
+            try
+            {
+                var url = UrlConstants.PaymentsComplete.Replace("{externalPaymentId}", externalPaymentId.ToString());
+                var response = await Post<CompletePaymentResponseDto>(url, externalPaymentId, cancellationToken);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ExceptionMessages.ErrorCompletePayment, ex);
+            }
         }
     }
 }
