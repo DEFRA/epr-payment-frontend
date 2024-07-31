@@ -2,6 +2,7 @@ using EPR.Payment.Portal.Common.Configuration;
 using EPR.Payment.Portal.Extension;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProvider;
+using EPR.Payment.Portal.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,11 +23,9 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles(new StaticFileOptions {
-     FileProvider = new PhysicalFileProvider(
-            Path.Combine(builder.Environment.ContentRootPath, "Asset")),
-     RequestPath = "/Asset"
-});
+app.UseStaticFiles();
+
+app.UseMiddlewares<UseStaticFilesMiddlewareExtension>();
 
 app.UseRouting();
 
