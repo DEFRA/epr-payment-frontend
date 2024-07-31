@@ -1,8 +1,7 @@
 using EPR.Payment.Portal.Common.Configuration;
 using EPR.Payment.Portal.Extension;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.FileProvider;
 using EPR.Payment.Portal.Middlewares;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +12,8 @@ builder.Services.Configure<DashboardConfiguration>(builder.Configuration.GetSect
 builder.Services.AddApplicationInsightsTelemetry();
 
 var app = builder.Build();
-
+// Use the static files middleware extension
+app.UseStaticFilesMiddlewareExtension();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -23,9 +23,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseMiddlewares<UseStaticFilesMiddlewareExtension>();
+//app.UseStaticFiles();
 
 app.UseRouting();
 

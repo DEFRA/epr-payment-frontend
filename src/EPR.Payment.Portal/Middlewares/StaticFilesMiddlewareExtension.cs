@@ -1,6 +1,6 @@
 using Microsoft.Extensions.FileProviders;
 
-namespace Epr.Payment.Portal.Middlewares;
+namespace EPR.Payment.Portal.Middlewares;
 
 public static class StaticFilesMiddlewareExtension
 {
