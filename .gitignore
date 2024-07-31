@@ -8,9 +8,6 @@
 /packages/
 **/*.csproj.user
 */wwwroot/DEVONLY/
-**/wwwroot/css/
-**/wwwroot/js/
-**/wwwroot/assets/
 **/*/node_modules/
 **/*/.npmrc
 StyleCop.Cache
