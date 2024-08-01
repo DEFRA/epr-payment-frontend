@@ -40,10 +40,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="C:\Users\a926787\.nuget\packages\mstest.testadapter\3.3.1\build\net8.0\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll" />
   </ItemGroup>
 

@@ -11,7 +11,7 @@ using FluentAssertions.Execution;
 namespace EPR.Payment.Portal.UnitTests.Controllers
 {
     [TestClass]
-    public class HomeControllerTests
+    public class PaymentErrorControllerTests
     {
         private Mock<DashboardConfiguration> mockDashboardConfig = null!;
         private Mock<IOptions<DashboardConfiguration>> mockOptions = null!;
