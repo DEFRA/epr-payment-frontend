@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using EPR.Payment.Portal.Services;
+using EPR.Payment.Portal.Services.Interfaces;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EPR.Payment.Portal.Extension
 {
@@ -10,6 +12,8 @@ namespace EPR.Payment.Portal.Extension
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddHttpContextAccessor();
+            services.AddScoped<IPaymentsService, PaymentsService>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddHttpClient();
 
             return services;

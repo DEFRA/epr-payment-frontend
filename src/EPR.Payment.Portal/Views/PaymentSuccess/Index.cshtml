@@ -1,0 +1,20 @@
+﻿@using EPR.Payment.Portal.Common.Configuration
+@using Microsoft.AspNetCore.Mvc.Routing;
+
+@{
+    ViewData["Title"] = "GovPay Success";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content">
+    <div class="govuk-grid-row">
+        <div class="govuk-panel govuk-panel--confirmation">
+            <h1 class="govuk-panel__title">
+                Payment for registration complete
+            </h1>
+            <div class="govuk-panel__body">
+                Your registration number:<br><strong>@ViewData["reference"]</strong>
+            </div>
+        </div>
+    </div>
+</main>

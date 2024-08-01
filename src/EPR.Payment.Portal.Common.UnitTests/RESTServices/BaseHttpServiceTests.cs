@@ -997,7 +997,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             _httpClientFactoryMock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(new HttpClient());
 
             // Act
-            var service = new TestableBaseHttpService(_httpContextAccessorMock.Object, _httpClientFactoryMock.Object, string.Concat(baseUrl,"/"), endPointName);
+            var service = new TestableBaseHttpService(_httpContextAccessorMock.Object, _httpClientFactoryMock.Object, string.Concat(baseUrl, "/"), endPointName);
 
             // Assert
             service.BaseUrl.Should().Be($"{baseUrl}/{endPointName}");
