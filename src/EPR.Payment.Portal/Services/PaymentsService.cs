@@ -9,18 +9,21 @@ namespace EPR.Payment.Portal.Services
     public class PaymentsService : IPaymentsService
     {
         private readonly IHttpPaymentFacade _httpPaymentFacade;
-        private IMapper _mapper;
+        private readonly ILogger<PaymentsService> _logger;
+        private readonly IMapper _mapper;
 
-        public PaymentsService(IMapper mapper, IHttpPaymentFacade httpPaymentFacade)
+        public PaymentsService(IMapper mapper, IHttpPaymentFacade httpPaymentFacade, ILogger<PaymentsService> logger)
         {
-            _mapper = mapper;
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _httpPaymentFacade = httpPaymentFacade ?? throw new ArgumentNullException(nameof(httpPaymentFacade));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
         public async Task<CompletePaymentViewModel> CompletePaymentAsync(Guid externalPaymentId, CancellationToken cancellationToken)
         {
             if (externalPaymentId == Guid.Empty)
             {
-                throw new ArgumentException(ExceptionMessages.ErrorEcternalPaymentIdEmpty);
+                _logger.LogError(ExceptionMessages.ErrorExternalPaymentIdEmpty);
+                throw new ArgumentException(ExceptionMessages.ErrorExternalPaymentIdEmpty);
             }
             try
             {
@@ -34,6 +37,7 @@ namespace EPR.Payment.Portal.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, ExceptionMessages.ErrorRetrievingCompletePayment);
                 throw new Exception(ExceptionMessages.ErrorRetrievingCompletePayment, ex);
             }
         }

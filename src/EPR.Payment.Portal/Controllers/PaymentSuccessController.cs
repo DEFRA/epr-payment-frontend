@@ -1,23 +1,19 @@
-﻿using EPR.Payment.Portal.Common.Configuration;
+﻿using EPR.Payment.Portal.Common.Constants;
 using EPR.Payment.Portal.Common.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 
 namespace EPR.Payment.Portal.Controllers
 {
     public class PaymentSuccessController : Controller
     {
-        private readonly DashboardConfiguration _dashboardConfiguration;
-
-        public PaymentSuccessController(IOptions<DashboardConfiguration> dashboardConfiguration)
+        public IActionResult Index(CompletePaymentViewModel? completePaymentResponseViewModel)
         {
-            _dashboardConfiguration = dashboardConfiguration.Value ?? throw new ArgumentNullException(nameof(dashboardConfiguration));
-        }
-
-        public IActionResult Index(CompletePaymentViewModel completePaymentResponseViewModel)
-        {
+            if (completePaymentResponseViewModel == null)
+            {
+                return RedirectToAction("Index", "PaymentError", new { message = ExceptionMessages.ErrorInvalidViewModel });
+            }
             ViewData["reference"] = completePaymentResponseViewModel.Reference;
-            return View(_dashboardConfiguration);
+            return View();
         }
     }
 }

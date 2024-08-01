@@ -4,15 +4,13 @@ using AutoFixture.MSTest;
 using AutoMapper;
 using EPR.Payment.Portal.Common.Constants;
 using EPR.Payment.Portal.Common.Dtos.Response;
-using EPR.Payment.Portal.Common.Enums;
 using EPR.Payment.Portal.Common.Profiles;
 using EPR.Payment.Portal.Common.RESTServices.Payments.Interfaces;
 using EPR.Payment.Portal.Common.UnitTests.TestHelpers;
 using EPR.Payment.Portal.Services;
 using EPR.Payment.Portal.Services.Interfaces;
-using Fare;
 using FluentAssertions;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace EPR.Payment.Portal.UnitTests.Services
@@ -23,6 +21,7 @@ namespace EPR.Payment.Portal.UnitTests.Services
         private IFixture? _fixture;
         private Mock<IHttpPaymentFacade> _httpPaymentFacadeMock = null!;
         private IPaymentsService _service = null!;
+        private Mock<ILogger<PaymentsService>>? _loggerMock;
         private IMapper? _mapper;
 
         [TestInitialize]
@@ -42,11 +41,13 @@ namespace EPR.Payment.Portal.UnitTests.Services
             {
                 cfg.AddProfile<PaymentProfile>();
             });
+            _loggerMock = _fixture.Freeze<Mock<ILogger<PaymentsService>>>();
             _mapper = mapperConfig.CreateMapper();
 
             _service = new PaymentsService(
                 _mapper,
-                _httpPaymentFacadeMock.Object);
+                _httpPaymentFacadeMock.Object,
+                _loggerMock.Object);
         }
 
         [TestMethod, AutoMoqData]
@@ -71,7 +72,7 @@ namespace EPR.Payment.Portal.UnitTests.Services
             // Act & Assert
             await _service.Invoking(async s => await s.CompletePaymentAsync(Guid.Empty, new CancellationToken()))
                 .Should().ThrowAsync<ArgumentException>()
-                .WithMessage(ExceptionMessages.ErrorEcternalPaymentIdEmpty);
+                .WithMessage(ExceptionMessages.ErrorExternalPaymentIdEmpty);
         }
 
         [TestMethod, AutoMoqData]
