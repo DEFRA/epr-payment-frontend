@@ -53,7 +53,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             {
                 result.Should().NotBeNull();
                 result.ActionName.Should().Be("Index");
-                result.ControllerName.Should().Be("PaymentSuccess");
+                result.ControllerName.Should().Be("GovPaySuccess");
                 _paymentsServiceMock.Verify(service => service.CompletePaymentAsync(id, It.IsAny<CancellationToken>()), Times.Once());
             }
         }
@@ -71,7 +71,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             // Assert
             result.Should().NotBeNull();
             result.ActionName.Should().Be("Index");
-            result.ControllerName.Should().Be("PaymentError");
+            result.ControllerName.Should().Be("Error");
         }
 
         [TestMethod]
@@ -85,7 +85,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             {
                 result.Should().NotBeNull();
                 result.ActionName.Should().Be("Index");
-                result.ControllerName.Should().Be("PaymentError");
+                result.ControllerName.Should().Be("Error");
             }
         }
     }

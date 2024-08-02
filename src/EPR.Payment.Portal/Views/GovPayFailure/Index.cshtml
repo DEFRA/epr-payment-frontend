@@ -17,7 +17,8 @@
             <p></p>
             <p class="govuk-body">Contact your bank for more details. No money has been taken from your account.</p>
             <p></p>
-            <p class="govuk-body"><a href="@Url.Action("InitiatePayment","GenericFailure", new { UserId = Model.completePaymentViewModel.UserId, OrganisationId = Model.completePaymentViewModel.OrganisationId,Reference = Model.completePaymentViewModel.Reference,Regulator = Model.completePaymentViewModel.Regulator,Amount = Model.completePaymentViewModel.Amount })">Try the payment again</a>
+            <p class="govuk-body">
+                <a href="@Url.Action("InitiatePayment","GovPayFailure", new { UserId = Model.completePaymentViewModel.UserId, OrganisationId = Model.completePaymentViewModel.OrganisationId,Reference = Model.completePaymentViewModel.Reference,Regulator = Model.completePaymentViewModel.Regulator,Amount = Model.completePaymentViewModel.Amount })">Try the payment again</a>
             </p>
             <p></p>
             <h3 class="govuk-heading-s">To pay by bank transfer instead </h3>

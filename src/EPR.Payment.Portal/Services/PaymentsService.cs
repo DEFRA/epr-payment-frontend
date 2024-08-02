@@ -4,6 +4,7 @@ using EPR.Payment.Portal.Common.Dtos.Request;
 using EPR.Payment.Portal.Common.Models;
 using EPR.Payment.Portal.Common.RESTServices.Payments.Interfaces;
 using EPR.Payment.Portal.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EPR.Payment.Portal.Services
 {
@@ -43,7 +44,7 @@ namespace EPR.Payment.Portal.Services
             }
         }
 
-        public async Task InitiatePaymentAsync(PaymentRequestDto? request, CancellationToken cancellationToken)
+        public async Task<string> InitiatePaymentAsync(PaymentRequestDto? request, CancellationToken cancellationToken)
         {
             if (request == null)
             {
@@ -52,7 +53,7 @@ namespace EPR.Payment.Portal.Services
             }
             try
             {
-                await _httpPaymentFacade.InitiatePaymentAsync(request, cancellationToken);
+                return await _httpPaymentFacade.InitiatePaymentAsync(request, cancellationToken);
             }
             catch (Exception ex)
             {

@@ -20,19 +20,19 @@ namespace EPR.Payment.Portal.Controllers
             if (id == Guid.Empty)
             {
                 _logger.LogError(ExceptionMessages.ErrorExternalPaymentIdEmpty);
-                return RedirectToAction("Index", "PaymentError", new { message = ExceptionMessages.ErrorExternalPaymentIdEmpty });
+                return RedirectToAction("Index", "Error", new { message = ExceptionMessages.ErrorExternalPaymentIdEmpty });
             }
 
             try
             {
                 var viewModel = await _paymentsService.CompletePaymentAsync(id, cancellationToken);
-                string controllerName = (PaymentStatus)viewModel.Status == PaymentStatus.Success ? "PaymentSuccess" : "GenericFailure";
+                string controllerName = (PaymentStatus)viewModel.Status == PaymentStatus.Success ? "GovPaySuccess" : "GovPayFailure";
                 return RedirectToAction("Index", controllerName, viewModel);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error completing payment for ID {PaymentId}", id);
-                return RedirectToAction("Index", "PaymentError", new {message = ex.Message});
+                return RedirectToAction("Index", "Error", new {message = ex.Message});
             }
         }
     }
