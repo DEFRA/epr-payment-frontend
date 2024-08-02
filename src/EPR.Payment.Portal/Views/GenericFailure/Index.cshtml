@@ -1,0 +1,36 @@
+﻿@using EPR.Payment.Portal.Common.Configuration
+@using EPR.Payment.Portal.Common.Models
+@using Microsoft.AspNetCore.Mvc.Routing;
+@model CompositeViewModel;
+
+@{
+    ViewData["Title"] = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<a href=@Model.dashboardConfiguration.BackUrl.Url class="govuk-back-link">Back</a>
+<main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+
+            <h1 class="govuk-heading-l">Your payment has been declined</h1>
+            <p></p>
+            <p class="govuk-body">Contact your bank for more details. No money has been taken from your account.</p>
+            <p></p>
+            <p class="govuk-body"><a href="@Url.Action("InitiatePayment","GenericFailure", new { UserId = Model.completePaymentViewModel.UserId, OrganisationId = Model.completePaymentViewModel.OrganisationId,Reference = Model.completePaymentViewModel.Reference,Regulator = Model.completePaymentViewModel.Regulator,Amount = Model.completePaymentViewModel.Amount })">Try the payment again</a>
+            </p>
+            <p></p>
+            <h3 class="govuk-heading-s">To pay by bank transfer instead </h3>
+            <p></p>
+            <p class="govuk-body">Use this details to make payment of @ViewData["amount"]
+            <p></p>
+            <p class="govuk-body">Company name: Environment Agency<br />
+                Bank: RBS/NatWest, London Corporate Service Centre, CPB Services, 2nd floor, 280 Bishopsgate, London EC2M 4RB<br/>
+                Sort Code: 60-70-80<br />
+                Account number: 10014411<br />
+                Account name: EA RECEIPTS<br />
+                Reference: PK/PK/REP</p>
+            <p></p>
+        </div>
+    </div>
+</main>

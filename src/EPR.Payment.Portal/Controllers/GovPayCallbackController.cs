@@ -26,7 +26,7 @@ namespace EPR.Payment.Portal.Controllers
             try
             {
                 var viewModel = await _paymentsService.CompletePaymentAsync(id, cancellationToken);
-                string controllerName = string.Concat("Payment", ((PaymentStatus)viewModel.Status).ToString());
+                string controllerName = (PaymentStatus)viewModel.Status == PaymentStatus.Success ? "PaymentSuccess" : "GenericFailure";
                 return RedirectToAction("Index", controllerName, viewModel);
             }
             catch (Exception ex)
