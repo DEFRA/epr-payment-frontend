@@ -27,6 +27,7 @@ namespace EPR.Payment.Portal.Controllers
             {
                 return RedirectToAction("Index", "Error", new { message = ExceptionMessages.ErrorInvalidViewModel });
             }
+
             ViewData["amount"] = completePaymentResponseViewModel.Amount / 100;
 
             var compositeViewModel = new CompositeViewModel() { completePaymentViewModel = completePaymentResponseViewModel, dashboardConfiguration = _dashboardConfiguration };
@@ -45,7 +46,7 @@ namespace EPR.Payment.Portal.Controllers
             try
             {
                 var responseContent = await _paymentsService.InitiatePaymentAsync(request, cancellationToken);
-                return Content(responseContent, "text/html");
+                return Content(responseContent, "text/html"); 
             }
             catch (Exception ex)
             {

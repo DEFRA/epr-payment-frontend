@@ -4,7 +4,6 @@ using EPR.Payment.Portal.Common.Dtos.Request;
 using EPR.Payment.Portal.Common.Dtos.Response;
 using EPR.Payment.Portal.Common.RESTServices.Payments.Interfaces;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace EPR.Payment.Portal.Common.RESTServices.Payments

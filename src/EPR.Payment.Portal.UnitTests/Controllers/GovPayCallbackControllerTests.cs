@@ -1,11 +1,9 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.MSTest;
-using EPR.Payment.Portal.Common.Constants;
 using EPR.Payment.Portal.Common.Models;
 using EPR.Payment.Portal.Common.UnitTests.TestHelpers;
 using EPR.Payment.Portal.Controllers;
-using EPR.Payment.Portal.Services;
 using EPR.Payment.Portal.Services.Interfaces;
 using FluentAssertions;
 using FluentAssertions.Execution;

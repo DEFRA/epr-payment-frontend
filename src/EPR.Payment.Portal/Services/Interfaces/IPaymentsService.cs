@@ -1,6 +1,5 @@
 ﻿using EPR.Payment.Portal.Common.Dtos.Request;
 using EPR.Payment.Portal.Common.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace EPR.Payment.Portal.Services.Interfaces
 {
