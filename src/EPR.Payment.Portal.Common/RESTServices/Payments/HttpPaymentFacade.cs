@@ -1,5 +1,6 @@
 ﻿using EPR.Payment.Portal.Common.Configuration;
 using EPR.Payment.Portal.Common.Constants;
+using EPR.Payment.Portal.Common.Dtos.Request;
 using EPR.Payment.Portal.Common.Dtos.Response;
 using EPR.Payment.Portal.Common.RESTServices.Payments.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -36,6 +37,20 @@ namespace EPR.Payment.Portal.Common.RESTServices.Payments
             catch (Exception ex)
             {
                 throw new Exception(ExceptionMessages.ErrorCompletePayment, ex);
+            }
+        }
+
+        public async Task<string> InitiatePaymentAsync(PaymentRequestDto request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var url = UrlConstants.PaymentsInitiate;
+                var response = await Post<string>(url, request, cancellationToken);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ExceptionMessages.ErrorInitiatePayment, ex);
             }
         }
     }

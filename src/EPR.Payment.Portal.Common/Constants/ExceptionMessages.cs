@@ -11,5 +11,7 @@
         public const string PaymentDataNotFound = "Payment data not found."; 
         public const string ErrorExternalPaymentIdEmpty = "Invalid payment ID.";
         public const string ErrorInvalidViewModel = "Invalid payment response view model.";
+        public const string ErrorInitiatePayment = "Error occured while Initiating payment.";
+        public const string ErrorInvalidPaymentRequestDto = "Invalid payment request model.";
     }
 }

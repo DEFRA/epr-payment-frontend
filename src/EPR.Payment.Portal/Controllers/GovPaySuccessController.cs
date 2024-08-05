@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EPR.Payment.Portal.Controllers
 {
-    public class PaymentSuccessController : Controller
+    public class GovPaySuccessController : Controller
     {
         public IActionResult Index(CompletePaymentViewModel? completePaymentResponseViewModel)
         {
             if (completePaymentResponseViewModel == null)
             {
-                return RedirectToAction("Index", "PaymentError", new { message = ExceptionMessages.ErrorInvalidViewModel });
+                return RedirectToAction("Index", "Error", new { message = ExceptionMessages.ErrorInvalidViewModel });
             }
             ViewData["reference"] = completePaymentResponseViewModel.Reference;
             return View();
