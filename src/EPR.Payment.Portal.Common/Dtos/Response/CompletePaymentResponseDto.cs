@@ -11,5 +11,6 @@ namespace EPR.Payment.Portal.Common.Dtos.Response
         public Guid? OrganisationId { get; set; }
         public string? Regulator { get; set; }
         public decimal? Amount { get; set; }
+        public string? Email { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoFixture.MSTest;
 using EPR.Payment.Portal.Common.Configuration;
 using EPR.Payment.Portal.Common.Constants;
+using EPR.Payment.Portal.Common.Dtos.Request;
 using EPR.Payment.Portal.Common.Dtos.Response;
 using EPR.Payment.Portal.Common.RESTServices.Payments;
 using EPR.Payment.Portal.Common.UnitTests.TestHelpers;
@@ -107,6 +108,74 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             using (new AssertionScope())
             {
                 await act.Should().ThrowAsync<Exception>().WithMessage(ExceptionMessages.ErrorCompletePayment);
+                handlerMock.Protected().Verify(
+                    "SendAsync",
+                    Times.Once(),
+                    ItExpr.Is<HttpRequestMessage>(msg =>
+                        msg.Method == HttpMethod.Post),
+                    ItExpr.IsAny<CancellationToken>());
+            }
+        }
+
+        [TestMethod, AutoMoqData]
+        public async Task InitiatePaymentAsync_Success_ReturnsPaymentDetailsDto(
+            [Frozen] Mock<HttpMessageHandler> handlerMock,
+            HttpPaymentFacade httpPaymentsFacade,
+            CancellationToken cancellationToken,
+            PaymentRequestDto request,
+            string response)
+        {
+            // Arrange
+            handlerMock.Protected()
+                       .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                       .ReturnsAsync(new HttpResponseMessage
+                       {
+                           StatusCode = HttpStatusCode.OK,
+                           Content = new StringContent(JsonConvert.SerializeObject(response), Encoding.UTF8, "application/json")
+                       });
+
+            var httpClient = new HttpClient(handlerMock.Object);
+            httpPaymentsFacade = CreateHttpPaymentsService(httpClient);
+
+            // Act
+            var result = await httpPaymentsFacade.InitiatePaymentAsync(request, cancellationToken);
+
+            // Assert
+            using (new AssertionScope())
+            {
+                result.Should().BeEquivalentTo(response);
+                handlerMock.Protected().Verify(
+                    "SendAsync",
+                    Times.Once(),
+                    ItExpr.Is<HttpRequestMessage>(msg =>
+                        msg.Method == HttpMethod.Post),
+                    ItExpr.IsAny<CancellationToken>());
+            }
+        }
+
+        [TestMethod, AutoMoqData]
+        public async Task InitiatePaymentAsync_Failure_ThrowsException(
+            [Frozen] Mock<HttpMessageHandler> handlerMock,
+            HttpPaymentFacade httpPaymentsFacade,
+            CancellationToken cancellationToken,
+            PaymentRequestDto request)
+        {
+            // Arrange
+
+            handlerMock.Protected()
+                       .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                       .ThrowsAsync(new HttpRequestException(ExceptionMessages.ErrorCompletePayment));
+
+            var httpClient = new HttpClient(handlerMock.Object);
+            httpPaymentsFacade = CreateHttpPaymentsService(httpClient);
+
+            // Act
+            Func<Task> act = async () => await httpPaymentsFacade.InitiatePaymentAsync(request, cancellationToken);
+
+            // Assert
+            using (new AssertionScope())
+            {
+                await act.Should().ThrowAsync<Exception>().WithMessage(ExceptionMessages.ErrorInitiatePayment);
                 handlerMock.Protected().Verify(
                     "SendAsync",
                     Times.Once(),
