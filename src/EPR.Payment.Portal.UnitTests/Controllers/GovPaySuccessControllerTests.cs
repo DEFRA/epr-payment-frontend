@@ -5,22 +5,19 @@ using EPR.Payment.Portal.Controllers;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
-using System.ComponentModel.DataAnnotations;
-using System.Threading;
 
 namespace EPR.Payment.Portal.UnitTests.Controllers
 {
     [TestClass]
-    public class PaymentSuccessControllerTests
+    public class GovPaySuccessControllerTests
     {
-        private PaymentSuccessController _controller = null!;
+        private GovPaySuccessController _controller = null!;
 
         [TestInitialize]
         public void TestInitialize()
         {
 
-            _controller = new PaymentSuccessController();
+            _controller = new GovPaySuccessController();
         }
 
         [TestMethod, AutoMoqData]
@@ -49,7 +46,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             {
                 result.Should().NotBeNull();
                 result.ActionName.Should().Be("Index");
-                result.ControllerName.Should().Be("PaymentError");
+                result.ControllerName.Should().Be("Error");
             }
         }
     }

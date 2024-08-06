@@ -4,11 +4,11 @@ using Microsoft.Extensions.Options;
 
 namespace EPR.Payment.Portal.Controllers
 {
-    public class PaymentErrorController : Controller
+    public class ErrorController : Controller
     {
         private readonly DashboardConfiguration _dashboardConfiguration;
 
-        public PaymentErrorController(IOptions<DashboardConfiguration> dashboardConfiguration)
+        public ErrorController(IOptions<DashboardConfiguration> dashboardConfiguration)
         {
             _dashboardConfiguration = dashboardConfiguration.Value ?? throw new ArgumentNullException(nameof(dashboardConfiguration));
         }

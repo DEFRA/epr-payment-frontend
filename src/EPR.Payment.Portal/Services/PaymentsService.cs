@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EPR.Payment.Portal.Common.Constants;
+using EPR.Payment.Portal.Common.Dtos.Request;
 using EPR.Payment.Portal.Common.Models;
 using EPR.Payment.Portal.Common.RESTServices.Payments.Interfaces;
 using EPR.Payment.Portal.Services.Interfaces;
@@ -39,6 +40,24 @@ namespace EPR.Payment.Portal.Services
             {
                 _logger.LogError(ex, ExceptionMessages.ErrorRetrievingCompletePayment);
                 throw new Exception(ExceptionMessages.ErrorRetrievingCompletePayment, ex);
+            }
+        }
+
+        public async Task<string> InitiatePaymentAsync(PaymentRequestDto? request, CancellationToken cancellationToken)
+        {
+            if (request == null)
+            {
+                _logger.LogError(ExceptionMessages.ErrorInvalidPaymentRequestDto);
+                throw new ArgumentException(ExceptionMessages.ErrorInvalidPaymentRequestDto);
+            }
+            try
+            {
+                return await _httpPaymentFacade.InitiatePaymentAsync(request, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ExceptionMessages.ErrorInitiatePayment);
+                throw new Exception(ExceptionMessages.ErrorInitiatePayment, ex);
             }
         }
     }

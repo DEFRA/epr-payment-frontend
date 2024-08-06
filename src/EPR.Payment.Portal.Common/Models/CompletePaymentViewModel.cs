@@ -10,6 +10,6 @@ namespace EPR.Payment.Portal.Common.Models
         public Guid? UserId { get; set; }
         public Guid? OrganisationId { get; set; }
         public string? Regulator { get; set; }
-        public decimal? Amount { get; set; }
+        public int? Amount { get; set; }
     }
 }

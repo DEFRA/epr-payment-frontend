@@ -1,11 +1,9 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.MSTest;
-using EPR.Payment.Portal.Common.Constants;
 using EPR.Payment.Portal.Common.Models;
 using EPR.Payment.Portal.Common.UnitTests.TestHelpers;
 using EPR.Payment.Portal.Controllers;
-using EPR.Payment.Portal.Services;
 using EPR.Payment.Portal.Services.Interfaces;
 using FluentAssertions;
 using FluentAssertions.Execution;
@@ -53,7 +51,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             {
                 result.Should().NotBeNull();
                 result.ActionName.Should().Be("Index");
-                result.ControllerName.Should().Be("PaymentSuccess");
+                result.ControllerName.Should().Be("GovPaySuccess");
                 _paymentsServiceMock.Verify(service => service.CompletePaymentAsync(id, It.IsAny<CancellationToken>()), Times.Once());
             }
         }
@@ -71,7 +69,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             // Assert
             result.Should().NotBeNull();
             result.ActionName.Should().Be("Index");
-            result.ControllerName.Should().Be("PaymentError");
+            result.ControllerName.Should().Be("Error");
         }
 
         [TestMethod]
@@ -85,7 +83,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             {
                 result.Should().NotBeNull();
                 result.ActionName.Should().Be("Index");
-                result.ControllerName.Should().Be("PaymentError");
+                result.ControllerName.Should().Be("Error");
             }
         }
     }

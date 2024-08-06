@@ -11,7 +11,7 @@ using FluentAssertions.Execution;
 namespace EPR.Payment.Portal.UnitTests.Controllers
 {
     [TestClass]
-    public class PaymentErrorControllerTests
+    public class ErrorControllerTests
     {
         private Mock<DashboardConfiguration> mockDashboardConfig = null!;
         private Mock<IOptions<DashboardConfiguration>> mockOptions = null!;
@@ -40,7 +40,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         {
             // Act
             mockOptions.Setup(o => o.Value).Returns((DashboardConfiguration)null!);
-            Action act = () => new PaymentErrorController(mockOptions.Object);
+            Action act = () => new ErrorController(mockOptions.Object);
 
             // Assert
             act.Should().Throw<ArgumentNullException>().WithMessage("*dashboardConfiguration*");
@@ -50,7 +50,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         public void Constructor_WhenConfigIsNotNull_ShouldInitialize(IOptions<DashboardConfiguration> config)
         {
             // Act
-            var controller = new PaymentErrorController(mockOptions.Object);
+            var controller = new ErrorController(mockOptions.Object);
 
             // Assert
             controller.Should().NotBeNull();
@@ -67,7 +67,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
                 .Create();
             var options = Options.Create(dashboardConfig);
 
-            var controller = new PaymentErrorController(mockOptions.Object);
+            var controller = new ErrorController(mockOptions.Object);
 
             // Act
             var result = controller.Index() as ViewResult;
