@@ -11,5 +11,6 @@ namespace EPR.Payment.Portal.Common.Models
         public Guid? OrganisationId { get; set; }
         public string? Regulator { get; set; }
         public int? Amount { get; set; }
+        public string? Email { get; set; }
     }
 }
