@@ -81,4 +81,10 @@
     <ProjectReference Include="..\EPR.Payment.Portal.Common\EPR.Payment.Portal.Common.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<SonarQubeSetting Include="sonar.coverage.exclusions">
+			<value>Views/**/*.cshtml, Program.cs, gulpfile.js</value>
+		</SonarQubeSetting>
+	</ItemGroup>
+
 </Project>
