@@ -47,7 +47,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod, AutoMoqData]
-        public void Constructor_WhenConfigIsNotNull_ShouldInitialize(IOptions<DashboardConfiguration> config)
+        public void Constructor_WhenConfigIsNotNull_ShouldInitialize()
         {
             // Act
             var controller = new ErrorController(mockOptions.Object);

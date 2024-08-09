@@ -21,7 +21,7 @@ namespace EPR.Payment.Portal.UnitTests.Services
     {
         private IFixture? _fixture;
         private Mock<IHttpPaymentFacade> _httpPaymentFacadeMock = null!;
-        private IPaymentsService _service = null!;
+        private PaymentsService _service = null!;
         private Mock<ILogger<PaymentsService>>? _loggerMock;
         private IMapper? _mapper;
 

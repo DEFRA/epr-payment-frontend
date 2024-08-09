@@ -17,6 +17,9 @@ namespace EPR.Payment.Portal.Helpers
             RegisterHttpService<IHttpPaymentFacade, HttpPaymentFacade>(
                 services, nameof(FacadeConfiguration.FacadeService));
 
+            RegisterHttpService<IHttpPaymentFacadeHealthCheckService, HttpPaymentFacadeHealthCheckService>(
+                services, nameof(FacadeConfiguration.FacadeService), "health");
+
             return services;
         }
 

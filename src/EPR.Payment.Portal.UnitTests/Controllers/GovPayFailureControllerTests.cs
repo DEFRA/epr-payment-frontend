@@ -19,7 +19,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
     [TestClass]
     public class GovPayFailureControllerTests
     {
-        private IFixture? _fixture;
+        private IFixture _fixture = null!;
         private Mock<DashboardConfiguration> mockDashboardConfig = null!;
         private Mock<IOptions<DashboardConfiguration>> mockOptions = null!;
         private Mock<IPaymentsService> _paymentsServiceMock = null!;
@@ -69,25 +69,29 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             controller.Should().NotBeNull();
         }
 
-        [TestMethod, AutoMoqData]
-        public void Index_WithCorrectConfiguration_ShouldReturnView([Frozen] CompletePaymentViewModel completePaymentResponseViewModel)
+        [TestMethod]
+        public void Index_WithCorrectConfiguration_ShouldReturnView()
         {
             // Arrange
+            var expectedAmount = 500 / 100;
             var fixture = new Fixture();
             var dashboardConfig = fixture.Build<DashboardConfiguration>()
                 .With(x => x.BackUrl, new Service() { Url = "https://backurl.com" })
                 .Create();
             var options = Options.Create(dashboardConfig);
 
+            var request = _fixture.Build<CompletePaymentViewModel>().With(d => d.Amount, 500).Create();
+
             var controller = new GovPayFailureController(_paymentsServiceMock.Object, mockOptions.Object, _loggerMock.Object);
 
             // Act
-            var result = controller.Index(completePaymentResponseViewModel) as ViewResult;
+            var result = controller.Index(request) as ViewResult;
 
             // Assert
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
+                controller.ViewData["amount"].Should().Be(expectedAmount);
                 result.Should().BeOfType<ViewResult>();
             }
 
@@ -106,7 +110,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                result.ActionName.Should().Be("Index");
+                result!.ActionName.Should().Be("Index");
                 result.ControllerName.Should().Be("Error");
             }
         }
@@ -133,7 +137,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                result.Content.Should().Be(expectedResponseContent);
+                result!.Content.Should().Be(expectedResponseContent);
                 result.ContentType.Should().Be("text/html");
                 _paymentsServiceMock.Verify(service => service.InitiatePaymentAsync(request, It.IsAny<CancellationToken>()), Times.Once());
             }
@@ -152,7 +156,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
 
             // Assert
             result.Should().NotBeNull();
-            result.ActionName.Should().Be("Index");
+            result!.ActionName.Should().Be("Index");
             result.ControllerName.Should().Be("Error");
         }
 
@@ -167,7 +171,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                result.ActionName.Should().Be("Index");
+                result!.ActionName.Should().Be("Index");
                 result.ControllerName.Should().Be("Error");
             }
         }
