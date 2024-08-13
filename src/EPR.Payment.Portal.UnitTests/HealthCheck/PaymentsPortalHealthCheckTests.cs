@@ -1,10 +1,13 @@
-﻿using AutoFixture.MSTest;
+﻿using AutoFixture;
+using AutoFixture.MSTest;
 using EPR.Payment.Portal.Common.UnitTests.TestHelpers;
 using EPR.Payment.Portal.HealthCheck;
 using EPR.Payment.Portal.Services.Interfaces;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Moq;
+using System.Net;
 
 namespace EPR.Payment.Portal.UnitTests.HealthCheck
 {
@@ -13,29 +16,77 @@ namespace EPR.Payment.Portal.UnitTests.HealthCheck
     public class PaymentsPortalHealthCheckTests : HealthChecksTestsBase
     {
         [TestMethod, AutoMoqData]
-        public async Task CheckHealthAsync_ValidQueryResult_ReturnsHealthyStatus(
-        [Frozen] Mock<IPaymentFacadeHealthService> paymentServiceHealthService,
-        HealthCheckContext healthCheckContext,
-        PaymentsPortalHealthCheck paymentsPortalHealthCheck)
+        public async Task CheckHealthAsync_WhenServiceIsHealthy_ShouldReturnHealthy(
+            [Frozen] Mock<IPaymentFacadeHealthService> _paymentFacadeHealthServiceMock,
+            [Frozen] PaymentsPortalHealthCheck _healthCheck)
         {
-            paymentServiceHealthService.Setup(x => x.GetHealthAsync(It.IsAny<CancellationToken>())).ReturnsAsync(ResponseMessageOk);
+            // Arrange
+            _healthCheck = new PaymentsPortalHealthCheck(_paymentFacadeHealthServiceMock.Object);
+            var httpResponse = new HttpResponseMessage(HttpStatusCode.OK);
+            _paymentFacadeHealthServiceMock
+                .Setup(service => service.GetHealthAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(httpResponse);
 
-            var actual = await paymentsPortalHealthCheck.CheckHealthAsync(healthCheckContext, CancellationToken.None);
+            var healthCheckContext = new HealthCheckContext();
 
-            actual.Status.Should().Be(HealthStatus.Healthy);
+            // Act
+            var result = await _healthCheck.CheckHealthAsync(healthCheckContext);
+
+            // Assert
+            using(new AssertionScope())
+            {
+                result.Status.Should().Be(HealthStatus.Healthy);
+                result.Description.Should().Be(PaymentsPortalHealthCheck.HealthCheckResultDescription);
+            }
         }
 
         [TestMethod, AutoMoqData]
-        public async Task CheckHealthAsync_NotValidQueryResult_ReturnsUnHealthyStatus(
-            [Frozen] Mock<IPaymentFacadeHealthService> paymentServiceHealthService,
-            HealthCheckContext healthCheckContext,
-            PaymentsPortalHealthCheck paymentsPortalHealthCheck)
+        public async Task CheckHealthAsync_WhenServiceIsUnhealthy_ShouldReturnUnhealthy(
+            [Frozen] Mock<IPaymentFacadeHealthService> _paymentFacadeHealthServiceMock,
+            [Frozen] PaymentsPortalHealthCheck _healthCheck)
         {
-            paymentServiceHealthService.Setup(x => x.GetHealthAsync(It.IsAny<CancellationToken>())).ReturnsAsync(ResponseMessageBadRequest);
+            // Arrange
+            var httpResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            _healthCheck = new PaymentsPortalHealthCheck(_paymentFacadeHealthServiceMock.Object);
+            _paymentFacadeHealthServiceMock
+                .Setup(service => service.GetHealthAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(httpResponse);
 
-            var actual = await paymentsPortalHealthCheck.CheckHealthAsync(healthCheckContext, CancellationToken.None);
+            var healthCheckContext = new HealthCheckContext();
 
-            actual.Status.Should().Be(HealthStatus.Unhealthy);
+            // Act
+            var result = await _healthCheck.CheckHealthAsync(healthCheckContext);
+
+            // Assert
+            using (new AssertionScope())
+            {
+                result.Status.Should().Be(HealthStatus.Unhealthy);
+                result.Description.Should().Be(PaymentsPortalHealthCheck.HealthCheckResultDescription);
+            }
+        }
+
+        [TestMethod, AutoMoqData]
+        public async Task CheckHealthAsync_WhenServiceThrowsException_ShouldReturnUnhealthy(
+            [Frozen] Mock<IPaymentFacadeHealthService> _paymentFacadeHealthServiceMock,
+            [Frozen] PaymentsPortalHealthCheck _healthCheck)
+        {
+            // Arrange
+            _paymentFacadeHealthServiceMock
+                .Setup(service => service.GetHealthAsync(It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new HttpRequestException());
+            _healthCheck = new PaymentsPortalHealthCheck(_paymentFacadeHealthServiceMock.Object);
+
+            var healthCheckContext = new HealthCheckContext();
+
+            // Act
+            var result = await _healthCheck.CheckHealthAsync(healthCheckContext);
+
+            // Assert
+            using (new AssertionScope())
+            {
+                result.Status.Should().Be(HealthStatus.Unhealthy);
+                result.Description.Should().Be(PaymentsPortalHealthCheck.HealthCheckResultDescription);
+            }
         }
     }
 }

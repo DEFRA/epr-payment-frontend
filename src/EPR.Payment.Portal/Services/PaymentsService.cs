@@ -32,6 +32,11 @@ namespace EPR.Payment.Portal.Services
                 var viewModel = _mapper.Map<CompletePaymentViewModel>(completePaymentResponseDto);
                 return viewModel;
             }
+            catch(ServiceException ex)
+            {
+                _logger.LogError(ex, ExceptionMessages.PaymentDataNotFound);
+                throw new ServiceException(ExceptionMessages.PaymentDataNotFound, ex);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ExceptionMessages.ErrorRetrievingCompletePayment);
