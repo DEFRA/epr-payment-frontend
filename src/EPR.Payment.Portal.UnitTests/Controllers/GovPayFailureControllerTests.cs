@@ -19,11 +19,12 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
     [TestClass]
     public class GovPayFailureControllerTests
     {
-        private IFixture? _fixture;
+        private IFixture _fixture = null!;
         private Mock<DashboardConfiguration> mockDashboardConfig = null!;
         private Mock<IOptions<DashboardConfiguration>> mockOptions = null!;
         private Mock<IPaymentsService> _paymentsServiceMock = null!;
         private Mock<ILogger<GovPayFailureController>> _loggerMock = null!;
+        private GovPayFailureController _controller = null!;
 
         [TestInitialize]
         public void SetUp()
@@ -46,6 +47,8 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             mockOptions.Setup(o => o.Value).Returns(mockDashboardConfig.Object);
             _loggerMock = _fixture.Freeze<Mock<ILogger<GovPayFailureController>>>();
 
+            _controller = new GovPayFailureController(_paymentsServiceMock.Object, mockOptions.Object, _loggerMock.Object);
+
         }
 
         [TestMethod]
@@ -62,32 +65,27 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         [TestMethod]
         public void Constructor_WhenConfigIsNotNull_ShouldInitialize()
         {
-            // Act
-            var controller = new GovPayFailureController(_paymentsServiceMock.Object, mockOptions.Object, _loggerMock.Object);
 
             // Assert
-            controller.Should().NotBeNull();
+            _controller.Should().NotBeNull();
         }
 
-        [TestMethod, AutoMoqData]
-        public void Index_WithCorrectConfiguration_ShouldReturnView([Frozen] CompletePaymentViewModel completePaymentResponseViewModel)
+        [TestMethod]
+        public void Index_WithCorrectConfiguration_ShouldReturnView()
         {
             // Arrange
-            var fixture = new Fixture();
-            var dashboardConfig = fixture.Build<DashboardConfiguration>()
-                .With(x => x.BackUrl, new Service() { Url = "https://backurl.com" })
-                .Create();
-            var options = Options.Create(dashboardConfig);
+            var expectedAmount = 500 / 100;
 
-            var controller = new GovPayFailureController(_paymentsServiceMock.Object, mockOptions.Object, _loggerMock.Object);
+            var request = _fixture.Build<CompletePaymentViewModel>().With(d => d.Amount, 500).Create();
 
             // Act
-            var result = controller.Index(completePaymentResponseViewModel) as ViewResult;
+            var result = _controller.Index(request) as ViewResult;
 
             // Assert
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
+                _controller.ViewData["amount"].Should().Be(expectedAmount);
                 result.Should().BeOfType<ViewResult>();
             }
 
@@ -96,17 +94,14 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         [TestMethod]
         public void Index_WithNullViewModel_ShoulReturnErrorView()
         {
-            // Arrange
-            var controller = new GovPayFailureController(_paymentsServiceMock.Object, mockOptions.Object, _loggerMock.Object);
-
             // Act
-            var result = controller.Index((CompletePaymentViewModel?)null) as RedirectToActionResult;
+            var result = _controller.Index((CompletePaymentViewModel?)null) as RedirectToActionResult;
 
             // Assert
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                result.ActionName.Should().Be("Index");
+                result!.ActionName.Should().Be("Index");
                 result.ControllerName.Should().Be("Error");
             }
         }
@@ -115,25 +110,17 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         public async Task InitiatePayment_WithValidRequest_ShoulReturnCorrectView([Frozen] PaymentRequestDto request, [Frozen] string expectedResponseContent)
         {
             // Arrange
-            var controller = new GovPayFailureController(_paymentsServiceMock.Object, mockOptions.Object, _loggerMock.Object);
-
-            CompletePaymentViewModel completePaymentViewModel = new CompletePaymentViewModel()
-            {
-                Status = Common.Enums.PaymentStatus.Success,
-                Reference = "Reference"
-            };
-
             _paymentsServiceMock.Setup(service => service.InitiatePaymentAsync(request, It.IsAny<CancellationToken>())).ReturnsAsync(expectedResponseContent);
 
 
             // Act
-            var result = await controller.InitiatePayment(request, It.IsAny<CancellationToken>()) as ContentResult;
+            var result = await _controller.InitiatePayment(request, It.IsAny<CancellationToken>()) as ContentResult;
 
             // Assert
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                result.Content.Should().Be(expectedResponseContent);
+                result!.Content.Should().Be(expectedResponseContent);
                 result.ContentType.Should().Be("text/html");
                 _paymentsServiceMock.Verify(service => service.InitiatePaymentAsync(request, It.IsAny<CancellationToken>()), Times.Once());
             }
@@ -143,16 +130,15 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         public async Task InitiatePayment_ServiceThrowsException_ShoulReturnErrorView([Frozen] PaymentRequestDto request)
         {
             // Arrange
-            var controller = new GovPayFailureController(_paymentsServiceMock.Object, mockOptions.Object, _loggerMock.Object);
             _paymentsServiceMock.Setup(service => service.InitiatePaymentAsync(request, It.IsAny<CancellationToken>())).ThrowsAsync(new Exception("Test Exception"));
 
 
             // Act
-            var result = await controller.InitiatePayment(request, It.IsAny<CancellationToken>()) as RedirectToActionResult;
+            var result = await _controller.InitiatePayment(request, It.IsAny<CancellationToken>()) as RedirectToActionResult;
 
             // Assert
             result.Should().NotBeNull();
-            result.ActionName.Should().Be("Index");
+            result!.ActionName.Should().Be("Index");
             result.ControllerName.Should().Be("Error");
         }
 
@@ -160,14 +146,13 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         public async Task InitiatePayment_WithNullRequest_ShoulReturnErrorView()
         {
             // Act
-            var controller = new GovPayFailureController(_paymentsServiceMock.Object, mockOptions.Object, _loggerMock.Object);
-            var result = await controller.InitiatePayment(null, It.IsAny<CancellationToken>()) as RedirectToActionResult;
+            var result = await _controller.InitiatePayment(null, It.IsAny<CancellationToken>()) as RedirectToActionResult;
 
             // Assert
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                result.ActionName.Should().Be("Index");
+                result!.ActionName.Should().Be("Index");
                 result.ControllerName.Should().Be("Error");
             }
         }

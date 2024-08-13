@@ -17,6 +17,9 @@ namespace EPR.Payment.Portal.Helpers
             RegisterHttpService<IHttpPaymentFacade, HttpPaymentFacade>(
                 services, nameof(FacadeConfiguration.FacadeService));
 
+            RegisterHttpService<IHttpPaymentFacadeHealthCheckService, HttpPaymentFacadeHealthCheckService>(
+                services, nameof(FacadeConfiguration.FacadeService), "health");
+
             return services;
         }
 
@@ -30,14 +33,14 @@ namespace EPR.Payment.Portal.Helpers
 
             services.AddScoped(s =>
             {
-                Trace.WriteLine($"Registering service {typeof(TImplementation).Name} for {configName}");
+                Trace.TraceInformation($"Registering service {typeof(TImplementation).Name} for {configName}");
 
                 var instance = Activator.CreateInstance(typeof(TImplementation),
                     s.GetRequiredService<IHttpContextAccessor>(),
                     s.GetRequiredService<IHttpClientFactory>(),
                     serviceOptions);
 
-                Trace.WriteLine(instance == null ? $"Failed to create instance of {typeof(TImplementation).Name}" : $"Successfully created instance of {typeof(TImplementation).Name}");
+                Trace.TraceError(instance == null ? $"Failed to create instance of {typeof(TImplementation).Name}" : $"Successfully created instance of {typeof(TImplementation).Name}");
 
                 return instance == null
                     ? throw new InvalidOperationException($"Failed to create instance of {typeof(TImplementation).Name}")

@@ -17,7 +17,7 @@ namespace EPR.Payment.Portal.Controllers
         }
         public async Task<IActionResult> Index(Guid id, CancellationToken cancellationToken)
         {
-            if (id == Guid.Empty)
+            if (!ModelState.IsValid || id == Guid.Empty)
             {
                 _logger.LogError(ExceptionMessages.ErrorExternalPaymentIdEmpty);
                 return RedirectToAction("Index", "Error", new { message = ExceptionMessages.ErrorExternalPaymentIdEmpty });
@@ -26,7 +26,7 @@ namespace EPR.Payment.Portal.Controllers
             try
             {
                 var viewModel = await _paymentsService.CompletePaymentAsync(id, cancellationToken);
-                string controllerName = (PaymentStatus)viewModel.Status == PaymentStatus.Success ? "GovPaySuccess" : "GovPayFailure";
+                string controllerName = viewModel.Status == PaymentStatus.Success ? "GovPaySuccess" : "GovPayFailure";
                 return RedirectToAction("Index", controllerName, viewModel);
             }
             catch (Exception ex)

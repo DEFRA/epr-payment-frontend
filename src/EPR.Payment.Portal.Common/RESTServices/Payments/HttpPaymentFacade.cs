@@ -40,7 +40,7 @@ namespace EPR.Payment.Portal.Common.RESTServices.Payments
             }
         }
 
-        public async Task<string> InitiatePaymentAsync(PaymentRequestDto request, CancellationToken cancellationToken)
+        public async Task<string> InitiatePaymentAsync(PaymentRequestDto? request, CancellationToken cancellationToken)
         {
             try
             {

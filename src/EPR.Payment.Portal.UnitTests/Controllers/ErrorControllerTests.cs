@@ -47,7 +47,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod, AutoMoqData]
-        public void Constructor_WhenConfigIsNotNull_ShouldInitialize(IOptions<DashboardConfiguration> config)
+        public void Constructor_WhenConfigIsNotNull_ShouldInitialize()
         {
             // Act
             var controller = new ErrorController(mockOptions.Object);
@@ -60,13 +60,6 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         public void Index_WithCorrectConfiguration_ShouldReturnView()
         {
             // Arrange
-            var fixture = new Fixture();
-            var dashboardConfig = fixture.Build<DashboardConfiguration>()
-                .With(x => x.BackUrl, new Service() { Url = "https://backurl.com" })
-                .With(x => x.OfflinePaymentUrl, new Service() { Url = "https://offlinepayment.com" })
-                .Create();
-            var options = Options.Create(dashboardConfig);
-
             var controller = new ErrorController(mockOptions.Object);
 
             // Act

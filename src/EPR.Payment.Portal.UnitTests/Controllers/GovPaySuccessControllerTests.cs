@@ -95,7 +95,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                result.ActionName.Should().Be("Index");
+                result!.ActionName.Should().Be("Index");
                 result.ControllerName.Should().Be("Error");
             }
         }

@@ -1,3 +1,4 @@
+using EPR.Payment.Portal.AppStart;
 using EPR.Payment.Portal.Common.Configuration;
 using EPR.Payment.Portal.Extension;
 using EPR.Payment.Portal.Helpers;
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddPortalDependencies(builder.Configuration);
+builder.Services.AddServiceHealthChecks();
 builder.Services.AddDependencies();
 builder.Services.Configure<DashboardConfiguration>(builder.Configuration.GetSection(DashboardConfiguration.SectionName));
 builder.Services.AddApplicationInsightsTelemetry();
@@ -28,10 +30,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseHealthChecks();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Error}/{action=Index}/{id?}");
 
-app.Run();
+await app.RunAsync();

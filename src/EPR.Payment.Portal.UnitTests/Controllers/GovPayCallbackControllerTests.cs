@@ -50,7 +50,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                result.ActionName.Should().Be("Index");
+                result!.ActionName.Should().Be("Index");
                 result.ControllerName.Should().Be("GovPaySuccess");
                 _paymentsServiceMock.Verify(service => service.CompletePaymentAsync(id, It.IsAny<CancellationToken>()), Times.Once());
             }
@@ -67,9 +67,12 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             var result = await _controller.Index(id, It.IsAny<CancellationToken>()) as RedirectToActionResult;
 
             // Assert
-            result.Should().NotBeNull();
-            result.ActionName.Should().Be("Index");
-            result.ControllerName.Should().Be("Error");
+            using (new AssertionScope())
+            {
+                result.Should().NotBeNull();
+                result!.ActionName.Should().Be("Index");
+                result.ControllerName.Should().Be("Error");
+            }
         }
 
         [TestMethod]
@@ -82,7 +85,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                result.ActionName.Should().Be("Index");
+                result!.ActionName.Should().Be("Index");
                 result.ControllerName.Should().Be("Error");
             }
         }
