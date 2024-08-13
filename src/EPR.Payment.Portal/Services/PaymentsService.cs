@@ -22,11 +22,6 @@ namespace EPR.Payment.Portal.Services
         }
         public async Task<CompletePaymentViewModel> CompletePaymentAsync(Guid externalPaymentId, CancellationToken cancellationToken)
         {
-            if (externalPaymentId == Guid.Empty)
-            {
-                _logger.LogError(ExceptionMessages.ErrorExternalPaymentIdEmpty);
-                throw new ArgumentException(ExceptionMessages.ErrorExternalPaymentIdEmpty);
-            }
             try
             {
                 var completePaymentResponseDto = await _httpPaymentFacade.CompletePaymentAsync(externalPaymentId, cancellationToken);
@@ -46,11 +41,6 @@ namespace EPR.Payment.Portal.Services
 
         public async Task<string> InitiatePaymentAsync(PaymentRequestDto? request, CancellationToken cancellationToken)
         {
-            if (request == null)
-            {
-                _logger.LogError(ExceptionMessages.ErrorInvalidPaymentRequestDto);
-                throw new ArgumentException(ExceptionMessages.ErrorInvalidPaymentRequestDto);
-            }
             try
             {
                 return await _httpPaymentFacade.InitiatePaymentAsync(request, cancellationToken);

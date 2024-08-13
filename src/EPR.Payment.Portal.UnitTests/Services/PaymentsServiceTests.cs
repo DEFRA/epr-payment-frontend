@@ -68,15 +68,6 @@ namespace EPR.Payment.Portal.UnitTests.Services
         }
 
         [TestMethod, AutoMoqData]
-        public async Task CompletePayment_NullExternalPaymentId_ThrowsArgumentException()
-        {
-            // Act & Assert
-            await _service.Invoking(async s => await s.CompletePaymentAsync(Guid.Empty, new CancellationToken()))
-                .Should().ThrowAsync<ArgumentException>()
-                .WithMessage(ExceptionMessages.ErrorExternalPaymentIdEmpty);
-        }
-
-        [TestMethod, AutoMoqData]
         public async Task CompletePayment_FailedCompletingPayment_ThrowsException(
             [Frozen] Guid externalPaymentId)
         {
@@ -108,15 +99,6 @@ namespace EPR.Payment.Portal.UnitTests.Services
 
             // Assert
             result.Should().BeEquivalentTo(contentResponse);
-        }
-
-        [TestMethod, AutoMoqData]
-        public async Task InitiatePaymentAsync_NullPaymentRequest_ThrowsArgumentException()
-        {
-            // Act & Assert
-            await _service.Invoking(async s => await s.InitiatePaymentAsync(null, new CancellationToken()))
-                .Should().ThrowAsync<ArgumentException>()
-                .WithMessage(ExceptionMessages.ErrorInvalidPaymentRequestDto);
         }
 
         [TestMethod, AutoMoqData]

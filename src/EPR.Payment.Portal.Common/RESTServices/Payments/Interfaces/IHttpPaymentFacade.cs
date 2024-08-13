@@ -6,6 +6,6 @@ namespace EPR.Payment.Portal.Common.RESTServices.Payments.Interfaces
     public interface IHttpPaymentFacade
     {
         Task<CompletePaymentResponseDto> CompletePaymentAsync(Guid externalPaymentId, CancellationToken cancellationToken);
-        Task<string> InitiatePaymentAsync(PaymentRequestDto request, CancellationToken cancellationToken);
+        Task<string> InitiatePaymentAsync(PaymentRequestDto? request, CancellationToken cancellationToken);
     }
 }
