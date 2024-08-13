@@ -5,6 +5,7 @@ using AutoMapper;
 using EPR.Payment.Portal.Common.Constants;
 using EPR.Payment.Portal.Common.Dtos.Request;
 using EPR.Payment.Portal.Common.Dtos.Response;
+using EPR.Payment.Portal.Common.Exceptions;
 using EPR.Payment.Portal.Common.Profiles;
 using EPR.Payment.Portal.Common.RESTServices.Payments.Interfaces;
 using EPR.Payment.Portal.Common.UnitTests.TestHelpers;
@@ -68,7 +69,7 @@ namespace EPR.Payment.Portal.UnitTests.Services
         }
 
         [TestMethod, AutoMoqData]
-        public async Task CompletePayment_FailedCompletingPayment_ThrowsException(
+        public async Task CompletePaymentAsync_FailedCompletingPayment_ThrowsException(
             [Frozen] Guid externalPaymentId)
         {
             // Arrange
@@ -82,7 +83,7 @@ namespace EPR.Payment.Portal.UnitTests.Services
 
             // Act & Assert
             await _service.Invoking(async s => await s.CompletePaymentAsync(externalPaymentId, new CancellationToken()))
-                .Should().ThrowAsync<Exception>().WithMessage(ExceptionMessages.ErrorRetrievingCompletePayment);
+                .Should().ThrowAsync<ServiceException>().WithMessage(ExceptionMessages.ErrorRetrievingCompletePayment);
         }
 
         [TestMethod, AutoMoqData]
@@ -107,11 +108,11 @@ namespace EPR.Payment.Portal.UnitTests.Services
         {
             // Arrange
             _httpPaymentFacadeMock.Setup(s => s.InitiatePaymentAsync(request, It.IsAny<CancellationToken>()))
-                .ThrowsAsync(new Exception(ExceptionMessages.ErrorInitiatePayment));
+                .ThrowsAsync(new ServiceException(ExceptionMessages.ErrorInitiatePayment));
 
             // Act & Assert
             await _service.Invoking(async s => await s.InitiatePaymentAsync(request, new CancellationToken()))
-                .Should().ThrowAsync<Exception>().WithMessage(ExceptionMessages.ErrorInitiatePayment);
+                .Should().ThrowAsync<ServiceException>().WithMessage(ExceptionMessages.ErrorInitiatePayment);
         }
     }
 }
