@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EPR.Payment.Portal.Common.Constants;
 using EPR.Payment.Portal.Common.Dtos.Request;
+using EPR.Payment.Portal.Common.Exceptions;
 using EPR.Payment.Portal.Common.Models;
 using EPR.Payment.Portal.Common.RESTServices.Payments.Interfaces;
 using EPR.Payment.Portal.Services.Interfaces;
@@ -31,7 +32,7 @@ namespace EPR.Payment.Portal.Services
                 var completePaymentResponseDto = await _httpPaymentFacade.CompletePaymentAsync(externalPaymentId, cancellationToken);
                 if (string.IsNullOrEmpty(completePaymentResponseDto.Reference))
                 {
-                    throw new Exception(ExceptionMessages.PaymentDataNotFound);
+                    throw new ServiceException(ExceptionMessages.PaymentDataNotFound);
                 }
                 var viewModel = _mapper.Map<CompletePaymentViewModel>(completePaymentResponseDto);
                 return viewModel;
@@ -39,7 +40,7 @@ namespace EPR.Payment.Portal.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, ExceptionMessages.ErrorRetrievingCompletePayment);
-                throw new Exception(ExceptionMessages.ErrorRetrievingCompletePayment, ex);
+                throw new ServiceException(ExceptionMessages.ErrorRetrievingCompletePayment, ex);
             }
         }
 
@@ -57,7 +58,7 @@ namespace EPR.Payment.Portal.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, ExceptionMessages.ErrorInitiatePayment);
-                throw new Exception(ExceptionMessages.ErrorInitiatePayment, ex);
+                throw new ServiceException(ExceptionMessages.ErrorInitiatePayment, ex);
             }
         }
     }

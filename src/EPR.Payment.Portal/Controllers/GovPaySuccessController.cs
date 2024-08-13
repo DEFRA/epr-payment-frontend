@@ -15,7 +15,7 @@ namespace EPR.Payment.Portal.Controllers
         }
         public IActionResult Index(CompletePaymentViewModel? completePaymentResponseViewModel)
         {
-            if (completePaymentResponseViewModel == null)
+            if (!ModelState.IsValid || completePaymentResponseViewModel == null)
             {
                 return RedirectToAction("Index", "Error", new { message = ExceptionMessages.ErrorInvalidViewModel });
             }

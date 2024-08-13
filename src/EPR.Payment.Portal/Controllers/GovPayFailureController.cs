@@ -23,7 +23,7 @@ namespace EPR.Payment.Portal.Controllers
 
         public IActionResult Index(CompletePaymentViewModel? completePaymentResponseViewModel)
         {
-            if (completePaymentResponseViewModel == null)
+            if (!ModelState.IsValid || completePaymentResponseViewModel == null)
             {
                 return RedirectToAction("Index", "Error", new { message = ExceptionMessages.ErrorInvalidViewModel });
             }
@@ -37,7 +37,7 @@ namespace EPR.Payment.Portal.Controllers
 
         public async Task<IActionResult> InitiatePayment(PaymentRequestDto? request, CancellationToken cancellationToken)
         {
-            if (request == null)
+            if (!ModelState.IsValid || request == null)
             {
                 _logger.LogError(ExceptionMessages.ErrorInvalidPaymentRequestDto);
                 return RedirectToAction("Index", "Error", new { message = ExceptionMessages.ErrorInvalidPaymentRequestDto });

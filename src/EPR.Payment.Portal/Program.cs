@@ -37,4 +37,4 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Error}/{action=Index}/{id?}");
 
-app.Run();
+await app.RunAsync();
