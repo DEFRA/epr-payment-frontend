@@ -1,11 +1,15 @@
-﻿using EPR.Payment.Portal.Common.Configuration;
+﻿using AutoFixture.MSTest;
+using EPR.Payment.Portal.Common.Configuration;
 using EPR.Payment.Portal.Common.RESTServices.Payments;
 using EPR.Payment.Portal.Common.RESTServices.Payments.Interfaces;
+using EPR.Payment.Portal.Common.UnitTests.TestHelpers;
 using EPR.Payment.Portal.Helpers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Moq;
 using System.Diagnostics;
 
 namespace EPR.Payment.Portal.UnitTests.Helpers
@@ -28,7 +32,6 @@ namespace EPR.Payment.Portal.UnitTests.Helpers
             Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
             Trace.AutoFlush = true;
         }
-
 
         [TestMethod]
         public void AddPortalDependencies_PaymentFacade_RegistersServicesCorrectly()

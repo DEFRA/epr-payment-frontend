@@ -21,6 +21,75 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
     {
 
         [TestMethod, AutoMoqData]
+        public void Constructor_WithValidArguments_ShouldNotThrow(
+            [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
+            [Frozen] DashboardConfiguration _dashboardConfig,
+            [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
+            [Frozen] Mock<ILogger<GovPayFailureController>> _loggerMock)
+        {
+            // Arrange
+            _dashboardConfigurationMock.Setup(x => x.Value).Returns(_dashboardConfig);
+
+            // Act
+            Action act = () => new GovPayFailureController(_paymentsServiceMock.Object, _dashboardConfigurationMock.Object,
+                _loggerMock.Object);
+
+            // Assert
+            act.Should().NotThrow();
+        }
+
+        [TestMethod, AutoMoqData]
+        public void Constructor_WithNullPaymentsService_ShouldThrowArgumentNullException(
+            [Frozen] DashboardConfiguration _dashboardConfig,
+            [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
+            [Frozen] Mock<ILogger<GovPayFailureController>> _loggerMock)
+        {
+            // Arrange
+            _dashboardConfigurationMock.Setup(x => x.Value).Returns(_dashboardConfig);
+
+            // Act
+            Action act = () => new GovPayFailureController(null!, _dashboardConfigurationMock.Object, _loggerMock.Object);
+
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>().WithMessage("*paymentsService*");
+        }
+
+        [TestMethod, AutoMoqData]
+        public void Constructor_WithNullDashboardConfiguration_ShouldThrowArgumentNullException(
+            [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
+            [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
+            [Frozen] Mock<ILogger<GovPayFailureController>> _loggerMock)
+        {
+            // Arrange
+            _dashboardConfigurationMock.Setup(x => x.Value).Returns((DashboardConfiguration)null!);
+
+
+            // Act
+            Action act = () => new GovPayFailureController(_paymentsServiceMock.Object, _dashboardConfigurationMock.Object,
+                _loggerMock.Object);
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>().WithMessage("*dashboardConfiguration*");
+        }
+
+        [TestMethod, AutoMoqData]
+        public void Constructor_WithNullLogger_ShouldThrowArgumentNullException(
+            [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
+            [Frozen] DashboardConfiguration _dashboardConfig,
+            [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock)
+        {
+            // Arrange
+            _dashboardConfigurationMock.Setup(x => x.Value).Returns(_dashboardConfig);
+
+            // Act
+            Action act = () => new GovPayFailureController(_paymentsServiceMock.Object, _dashboardConfigurationMock.Object, null!);
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>().WithMessage("*logger*");
+        }
+
+        [TestMethod, AutoMoqData]
         public void Index_WithInvalidModelState_ShouldRedirectToError(
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] DashboardConfiguration _dashboardConfig,
@@ -76,6 +145,33 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
                 var model = viewResult.Model as CompositeViewModel;
                 model!.completePaymentViewModel.Should().BeEquivalentTo(_completePaymentViewModel);
                 model.dashboardConfiguration.Should().BeEquivalentTo(_dashboardConfigurationMock.Object.Value);
+            }
+        }
+
+        [TestMethod, AutoMoqData]
+        public void Index_WithNullViewModel_ShouldRedirectToError(
+            [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
+            [Frozen] DashboardConfiguration _dashboardConfig,
+            [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
+            [Frozen] Mock<ILogger<GovPayFailureController>> _loggerMock,
+            [Greedy] GovPayFailureController _controller)
+        {
+            // Arrange
+            _dashboardConfigurationMock.Setup(x => x.Value).Returns(_dashboardConfig);
+            _controller = new GovPayFailureController(_paymentsServiceMock.Object, _dashboardConfigurationMock.Object,
+                _loggerMock.Object);
+
+            // Act
+            var result = _controller.Index(null);
+
+            // Assert
+            var redirectResult = result as RedirectToActionResult;
+            using (new AssertionScope())
+            {
+                redirectResult.Should().NotBeNull();
+                redirectResult!.ActionName.Should().Be("Index");
+                redirectResult.ControllerName.Should().Be("Error");
+                redirectResult!.RouteValues!["message"].Should().Be(ExceptionMessages.ErrorInvalidViewModel);
             }
         }
 
@@ -182,6 +278,45 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
                 redirectResult.ControllerName.Should().Be("Error");
                 redirectResult!.RouteValues!["message"].Should().Be(exceptionMessage);
             }
+        }
+
+        [TestMethod, AutoMoqData]
+        public async Task InitiatePayment_WithNullRequest_ShouldLogErrorAndRedirectToError(
+            [Frozen] PaymentRequestDto _paymentRequestDto,
+            [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
+            [Frozen] DashboardConfiguration _dashboardConfig,
+            [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
+            [Frozen] Mock<ILogger<GovPayFailureController>> _loggerMock,
+            [Greedy] GovPayFailureController _controller)
+        {
+            // Arrange
+            // Arrange
+            _dashboardConfigurationMock.Setup(x => x.Value).Returns(_dashboardConfig);
+            _controller = new GovPayFailureController(_paymentsServiceMock.Object, _dashboardConfigurationMock.Object,
+                _loggerMock.Object);
+            _controller.ModelState.Clear();
+            PaymentRequestDto? request = null;
+
+            // Act
+            var result = await _controller.InitiatePayment(request, CancellationToken.None);
+
+            // Assert
+            var redirectResult = result as RedirectToActionResult;
+            using (new AssertionScope())
+            {
+                redirectResult.Should().NotBeNull();
+                redirectResult!.ActionName.Should().Be("Index");
+                redirectResult.ControllerName.Should().Be("Error");
+                redirectResult!.RouteValues!["message"].Should().Be(ExceptionMessages.ErrorInvalidPaymentRequestDto);
+
+                _loggerMock.Verify(logger => logger.Log(
+                    It.Is<LogLevel>(l => l == LogLevel.Error),
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains(ExceptionMessages.ErrorInvalidPaymentRequestDto)),
+                    It.IsAny<Exception>(),
+                    It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)), Times.Once);
+            }
+
         }
     }
 }
