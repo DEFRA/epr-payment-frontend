@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EPR.Payment.Portal.Common.UnitTests.TestHelpers
 {
+    [ExcludeFromCodeCoverage]
     public class TestLogger<T> : ILogger<T>
     {
         public List<(LogLevel, string, Exception?)> LogEntries { get; } = new List<(LogLevel, string, Exception?)>();

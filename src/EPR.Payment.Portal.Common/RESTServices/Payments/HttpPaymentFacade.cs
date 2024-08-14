@@ -2,6 +2,7 @@
 using EPR.Payment.Portal.Common.Constants;
 using EPR.Payment.Portal.Common.Dtos.Request;
 using EPR.Payment.Portal.Common.Dtos.Response;
+using EPR.Payment.Portal.Common.Exceptions;
 using EPR.Payment.Portal.Common.RESTServices.Payments.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
@@ -36,7 +37,7 @@ namespace EPR.Payment.Portal.Common.RESTServices.Payments
             }
             catch (Exception ex)
             {
-                throw new Exception(ExceptionMessages.ErrorCompletePayment, ex);
+                throw new ServiceException(ExceptionMessages.ErrorCompletePayment, ex);
             }
         }
 
@@ -50,7 +51,7 @@ namespace EPR.Payment.Portal.Common.RESTServices.Payments
             }
             catch (Exception ex)
             {
-                throw new Exception(ExceptionMessages.ErrorInitiatePayment, ex);
+                throw new ServiceException(ExceptionMessages.ErrorInitiatePayment, ex);
             }
         }
     }

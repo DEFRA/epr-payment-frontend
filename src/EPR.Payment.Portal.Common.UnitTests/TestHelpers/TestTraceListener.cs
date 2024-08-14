@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EPR.Payment.Portal.Common.UnitTests.TestHelpers
 {
+    [ExcludeFromCodeCoverage]
     public class TestTraceListener : TraceListener
     {
         private readonly List<string> _messages = new List<string>();
