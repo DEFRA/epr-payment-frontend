@@ -1,7 +1,7 @@
-﻿using AutoFixture;
-using AutoFixture.AutoMoq;
-using AutoFixture.MSTest;
+﻿using AutoFixture.MSTest;
+using AutoMapper.Configuration.Annotations;
 using EPR.Payment.Portal.Common.Configuration;
+using EPR.Payment.Portal.Common.Constants;
 using EPR.Payment.Portal.Common.Dtos.Request;
 using EPR.Payment.Portal.Common.Models;
 using EPR.Payment.Portal.Common.UnitTests.TestHelpers;
@@ -19,141 +19,168 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
     [TestClass]
     public class GovPayFailureControllerTests
     {
-        private IFixture _fixture = null!;
-        private Mock<DashboardConfiguration> mockDashboardConfig = null!;
-        private Mock<IOptions<DashboardConfiguration>> mockOptions = null!;
-        private Mock<IPaymentsService> _paymentsServiceMock = null!;
-        private Mock<ILogger<GovPayFailureController>> _loggerMock = null!;
-        private GovPayFailureController _controller = null!;
 
-        [TestInitialize]
-        public void SetUp()
-        {
-            _fixture = new Fixture().Customize(new AutoMoqCustomization { ConfigureMembers = true });
-            _paymentsServiceMock = new Mock<IPaymentsService>();
-
-            mockDashboardConfig = new Mock<DashboardConfiguration>();
-            mockDashboardConfig.SetupAllProperties();
-            mockDashboardConfig.Object.MenuUrl.Url = "https://menuurl.com";
-            mockDashboardConfig.Object.MenuUrl.Description = "Menu Url";
-            mockDashboardConfig.Object.BackUrl.Url = "https://backurl.com";
-            mockDashboardConfig.Object.BackUrl.Description = "Back Url";
-            mockDashboardConfig.Object.FeedbackUrl.Url = "https://feedbackurl.com";
-            mockDashboardConfig.Object.FeedbackUrl.Description = "Feedback Url";
-            mockDashboardConfig.Object.OfflinePaymentUrl.Url = "https://offlinepayment.com";
-            mockDashboardConfig.Object.OfflinePaymentUrl.Description = "OfflinePayment Url";
-
-            mockOptions = new Mock<IOptions<DashboardConfiguration>>();
-            mockOptions.Setup(o => o.Value).Returns(mockDashboardConfig.Object);
-            _loggerMock = _fixture.Freeze<Mock<ILogger<GovPayFailureController>>>();
-
-            _controller = new GovPayFailureController(_paymentsServiceMock.Object, mockOptions.Object, _loggerMock.Object);
-
-        }
-
-        [TestMethod]
-        public void Constructor_WhenConfigIsNull_ShouldThrowArgumentNullException()
-        {
-            // Act
-            mockOptions.Setup(o => o.Value).Returns((DashboardConfiguration)null!);
-            Action act = () => new GovPayFailureController(_paymentsServiceMock.Object, mockOptions.Object, _loggerMock.Object);
-
-            // Assert
-            act.Should().Throw<ArgumentNullException>().WithMessage("*dashboardConfiguration*");
-        }
-
-        [TestMethod]
-        public void Constructor_WhenConfigIsNotNull_ShouldInitialize()
-        {
-
-            // Assert
-            _controller.Should().NotBeNull();
-        }
-
-        [TestMethod]
-        public void Index_WithCorrectConfiguration_ShouldReturnView()
+        [TestMethod, AutoMoqData]
+        public void Index_WithInvalidModelState_ShouldRedirectToError(
+            [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
+            [Frozen] DashboardConfiguration _dashboardConfig,
+            [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
+            [Frozen] Mock<ILogger<GovPayFailureController>> _loggerMock,
+            [Greedy] GovPayFailureController _controller)
         {
             // Arrange
-            var expectedAmount = 500 / 100;
-
-            var request = _fixture.Build<CompletePaymentViewModel>().With(d => d.Amount, 500).Create();
+            _dashboardConfigurationMock.Setup(x => x.Value).Returns(_dashboardConfig);
+            _controller = new GovPayFailureController(_paymentsServiceMock.Object, _dashboardConfigurationMock.Object,
+                _loggerMock.Object);
+            _controller.ModelState.AddModelError("key", "error message");
 
             // Act
-            var result = _controller.Index(request) as ViewResult;
+            var result = _controller.Index(null);
 
             // Assert
             using (new AssertionScope())
             {
-                result.Should().NotBeNull();
-                _controller.ViewData["amount"].Should().Be(expectedAmount);
+                result.Should().BeOfType<RedirectToActionResult>();
+                var redirectResult = result as RedirectToActionResult;
+                redirectResult!.ActionName.Should().Be("Index");
+                redirectResult.ControllerName.Should().Be("Error");
+                redirectResult!.RouteValues!["message"].Should().Be(ExceptionMessages.ErrorInvalidViewModel);
+            }
+
+        }
+
+        [TestMethod, AutoMoqData]
+        public void Index_WithValidModelState_ShouldReturnView(
+            [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
+            [Frozen] DashboardConfiguration _dashboardConfig,
+            [Frozen] CompletePaymentViewModel _completePaymentViewModel,
+            [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
+            [Frozen] Mock<ILogger<GovPayFailureController>> _loggerMock,
+            [Greedy] GovPayFailureController _controller)
+        {
+            // Arrange
+            _dashboardConfigurationMock.Setup(x => x.Value).Returns(_dashboardConfig);
+            _controller = new GovPayFailureController(_paymentsServiceMock.Object, _dashboardConfigurationMock.Object,
+                _loggerMock.Object);
+            _completePaymentViewModel.Amount = 10000;
+
+            // Act
+            var result = _controller.Index(_completePaymentViewModel);
+
+            // Assert
+            using (new AssertionScope())
+            {
                 result.Should().BeOfType<ViewResult>();
-            }
-
-        }
-
-        [TestMethod]
-        public void Index_WithNullViewModel_ShoulReturnErrorView()
-        {
-            // Act
-            var result = _controller.Index((CompletePaymentViewModel?)null) as RedirectToActionResult;
-
-            // Assert
-            using (new AssertionScope())
-            {
-                result.Should().NotBeNull();
-                result!.ActionName.Should().Be("Index");
-                result.ControllerName.Should().Be("Error");
+                var viewResult = result as ViewResult;
+                viewResult!.ViewData["amount"].Should().Be(_completePaymentViewModel.Amount / 100);
+                var model = viewResult.Model as CompositeViewModel;
+                model!.completePaymentViewModel.Should().BeEquivalentTo(_completePaymentViewModel);
+                model.dashboardConfiguration.Should().BeEquivalentTo(_dashboardConfigurationMock.Object.Value);
             }
         }
 
         [TestMethod, AutoMoqData]
-        public async Task InitiatePayment_WithValidRequest_ShoulReturnCorrectView([Frozen] PaymentRequestDto request, [Frozen] string expectedResponseContent)
+        public async Task InitiatePayment_WithInvalidModelState_ShouldLogErrorAndRedirectToError(
+            [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
+            [Frozen] DashboardConfiguration _dashboardConfig,
+            [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
+            [Frozen] Mock<ILogger<GovPayFailureController>> _loggerMock,
+            [Greedy] GovPayFailureController _controller)
         {
             // Arrange
-            _paymentsServiceMock.Setup(service => service.InitiatePaymentAsync(request, It.IsAny<CancellationToken>())).ReturnsAsync(expectedResponseContent);
-
+            _dashboardConfigurationMock.Setup(x => x.Value).Returns(_dashboardConfig);
+            _controller = new GovPayFailureController(_paymentsServiceMock.Object, _dashboardConfigurationMock.Object,
+                _loggerMock.Object);
+            _controller.ModelState.AddModelError("key", "error message");
+            var cancellationToken = CancellationToken.None;
 
             // Act
-            var result = await _controller.InitiatePayment(request, It.IsAny<CancellationToken>()) as ContentResult;
+            var result = await _controller.InitiatePayment(null, cancellationToken);
 
             // Assert
             using (new AssertionScope())
             {
-                result.Should().NotBeNull();
-                result!.Content.Should().Be(expectedResponseContent);
-                result.ContentType.Should().Be("text/html");
-                _paymentsServiceMock.Verify(service => service.InitiatePaymentAsync(request, It.IsAny<CancellationToken>()), Times.Once());
+                _loggerMock.Verify(logger => logger.Log(
+                It.Is<LogLevel>(l => l == LogLevel.Error),
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains(ExceptionMessages.ErrorInvalidPaymentRequestDto)),
+                It.IsAny<Exception>(),
+                It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)), Times.Once);
+
+                result.Should().BeOfType<RedirectToActionResult>();
+                var redirectResult = result as RedirectToActionResult;
+                redirectResult!.ActionName.Should().Be("Index");
+                redirectResult.ControllerName.Should().Be("Error");
+                redirectResult!.RouteValues!["message"].Should().Be(ExceptionMessages.ErrorInvalidPaymentRequestDto);
             }
         }
 
         [TestMethod, AutoMoqData]
-        public async Task InitiatePayment_ServiceThrowsException_ShoulReturnErrorView([Frozen] PaymentRequestDto request)
+        public async Task InitiatePayment_WithValidRequest_ShouldReturnContent(
+            [Frozen] PaymentRequestDto _paymentRequestDto,
+            [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
+            [Frozen] DashboardConfiguration _dashboardConfig,
+            [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
+            [Frozen] Mock<ILogger<GovPayFailureController>> _loggerMock,
+            [Greedy] GovPayFailureController _controller)
         {
             // Arrange
-            _paymentsServiceMock.Setup(service => service.InitiatePaymentAsync(request, It.IsAny<CancellationToken>())).ThrowsAsync(new Exception("Test Exception"));
-
+            _dashboardConfigurationMock.Setup(x => x.Value).Returns(_dashboardConfig);
+            _controller = new GovPayFailureController(_paymentsServiceMock.Object, _dashboardConfigurationMock.Object,
+                _loggerMock.Object);
+            
+            var expectedContent = "<html><body>Payment Initiated</body></html>";
+            _paymentsServiceMock.Setup(service => service.InitiatePaymentAsync(_paymentRequestDto, It.IsAny<CancellationToken>()))
+                                .ReturnsAsync(expectedContent);
 
             // Act
-            var result = await _controller.InitiatePayment(request, It.IsAny<CancellationToken>()) as RedirectToActionResult;
-
-            // Assert
-            result.Should().NotBeNull();
-            result!.ActionName.Should().Be("Index");
-            result.ControllerName.Should().Be("Error");
-        }
-
-        [TestMethod]
-        public async Task InitiatePayment_WithNullRequest_ShoulReturnErrorView()
-        {
-            // Act
-            var result = await _controller.InitiatePayment(null, It.IsAny<CancellationToken>()) as RedirectToActionResult;
+            var result = await _controller.InitiatePayment(_paymentRequestDto, CancellationToken.None);
 
             // Assert
             using (new AssertionScope())
             {
-                result.Should().NotBeNull();
-                result!.ActionName.Should().Be("Index");
-                result.ControllerName.Should().Be("Error");
+                result.Should().BeOfType<ContentResult>();
+                var contentResult = result as ContentResult;
+                contentResult!.Content.Should().Be(expectedContent);
+                contentResult.ContentType.Should().Be("text/html");
+            }
+        }
+
+        [TestMethod, AutoMoqData]
+        public async Task InitiatePayment_WithException_ShouldLogErrorAndRedirectToError(
+            [Frozen] PaymentRequestDto _paymentRequestDto,
+            [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
+            [Frozen] DashboardConfiguration _dashboardConfig,
+            [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
+            [Frozen] Mock<ILogger<GovPayFailureController>> _loggerMock,
+            [Greedy] GovPayFailureController _controller)
+        {
+            // Arrange
+            _dashboardConfigurationMock.Setup(x => x.Value).Returns(_dashboardConfig);
+            _controller = new GovPayFailureController(_paymentsServiceMock.Object, _dashboardConfigurationMock.Object,
+                _loggerMock.Object);
+            var exceptionMessage = "Payment initiation failed";
+            _paymentsServiceMock.Setup(service => service.InitiatePaymentAsync(_paymentRequestDto, It.IsAny<CancellationToken>()))
+                                .ThrowsAsync(new Exception(exceptionMessage));
+
+            // Act
+            var result = await _controller.InitiatePayment(_paymentRequestDto, CancellationToken.None);
+
+            // Assert
+            using (new AssertionScope())
+            {
+                _loggerMock.Verify(logger => logger.Log(
+                It.Is<LogLevel>(l => l == LogLevel.Error),
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains(ExceptionMessages.ErrorInitiatePayment)),
+                It.IsAny<Exception>(),
+                It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)), Times.Once);
+
+                result.Should().BeOfType<RedirectToActionResult>();
+                var redirectResult = result as RedirectToActionResult;
+                redirectResult!.ActionName.Should().Be("Index");
+                redirectResult.ControllerName.Should().Be("Error");
+                redirectResult!.RouteValues!["message"].Should().Be(exceptionMessage);
             }
         }
     }

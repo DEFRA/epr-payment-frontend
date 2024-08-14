@@ -16,10 +16,17 @@ namespace EPR.Payment.Portal.HealthCheck
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
-            var response = await _paymentFacadeHealthService.GetHealthAsync(cancellationToken);
-            return response.IsSuccessStatusCode
-                ? HealthCheckResult.Healthy(HealthCheckResultDescription)
-                : HealthCheckResult.Unhealthy(HealthCheckResultDescription);
+            try
+            {
+                var response = await _paymentFacadeHealthService.GetHealthAsync(cancellationToken);
+                return response.IsSuccessStatusCode
+                    ? HealthCheckResult.Healthy(HealthCheckResultDescription)
+                    : HealthCheckResult.Unhealthy(HealthCheckResultDescription);
+            }
+            catch (Exception)
+            {
+                return HealthCheckResult.Unhealthy(HealthCheckResultDescription);
+            }
         }
     }
 }

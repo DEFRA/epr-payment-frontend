@@ -18,7 +18,7 @@ using System.Text;
 namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
 {
     [TestClass]
-    public class HttpPaymentsFacadeTests
+    public class HttpPaymentFacadeTests
     {
         private Mock<IHttpContextAccessor> _httpContextAccessorMock = null!;
         private Mock<IOptions<FacadeService>> _configMock = null!;
