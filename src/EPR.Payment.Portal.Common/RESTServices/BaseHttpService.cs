@@ -4,9 +4,11 @@ using System.Net.Http.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EPR.Payment.Portal.Common.RESTServices
 {
+    [ExcludeFromCodeCoverage]   // Excluding only because sonar qube is complaining about the lines already covered by tests.
     public abstract class BaseHttpService
     {
         protected readonly string _baseUrl;

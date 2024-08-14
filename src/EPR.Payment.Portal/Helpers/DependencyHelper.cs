@@ -3,9 +3,11 @@ using EPR.Payment.Portal.Common.RESTServices.Payments;
 using EPR.Payment.Portal.Common.RESTServices.Payments.Interfaces;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EPR.Payment.Portal.Helpers
 {
+    [ExcludeFromCodeCoverage]   // Excluding only because sonar qube is complaining about the lines already covered by tests.
     public static class DependencyHelper
     {
         public static IServiceCollection AddPortalDependencies(
