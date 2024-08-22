@@ -21,6 +21,7 @@ namespace EPR.Payment.Portal.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        [HttpGet()]
         public IActionResult Index(CompletePaymentViewModel? completePaymentResponseViewModel)
         {
             if (!ModelState.IsValid || completePaymentResponseViewModel == null)
@@ -35,7 +36,8 @@ namespace EPR.Payment.Portal.Controllers
             return View(compositeViewModel);
         }
 
-        public async Task<IActionResult> InitiatePayment(PaymentRequestDto? request, CancellationToken cancellationToken)
+        [HttpPost()]
+        public async Task<IActionResult> Index(PaymentRequestDto? request, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid || request == null)
             {

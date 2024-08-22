@@ -1,5 +1,4 @@
 ﻿using AutoFixture.MSTest;
-using AutoMapper.Configuration.Annotations;
 using EPR.Payment.Portal.Common.Configuration;
 using EPR.Payment.Portal.Common.Constants;
 using EPR.Payment.Portal.Common.Dtos.Request;
@@ -90,7 +89,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod, AutoMoqData]
-        public void Index_WithInvalidModelState_ShouldRedirectToError(
+        public void Index_Get_WithInvalidModelState_ShouldRedirectToError(
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] DashboardConfiguration _dashboardConfig,
             [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
@@ -119,7 +118,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod, AutoMoqData]
-        public void Index_WithValidModelState_ShouldReturnView(
+        public void Index_Get_WithValidModelState_ShouldReturnView(
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] DashboardConfiguration _dashboardConfig,
             [Frozen] CompletePaymentViewModel _completePaymentViewModel,
@@ -149,7 +148,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod, AutoMoqData]
-        public void Index_WithNullViewModel_ShouldRedirectToError(
+        public void Index_Get_WithNullViewModel_ShouldRedirectToError(
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] DashboardConfiguration _dashboardConfig,
             [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
@@ -176,7 +175,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod, AutoMoqData]
-        public async Task InitiatePayment_WithInvalidModelState_ShouldLogErrorAndRedirectToError(
+        public async Task Index_Post_WithInvalidModelState_ShouldLogErrorAndRedirectToError(
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] DashboardConfiguration _dashboardConfig,
             [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
@@ -191,7 +190,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             var cancellationToken = CancellationToken.None;
 
             // Act
-            var result = await _controller.InitiatePayment(null, cancellationToken);
+            var result = await _controller.Index(null, cancellationToken);
 
             // Assert
             using (new AssertionScope())
@@ -212,7 +211,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod, AutoMoqData]
-        public async Task InitiatePayment_WithValidRequest_ShouldReturnContent(
+        public async Task Index_Post_WithValidRequest_ShouldReturnContent(
             [Frozen] PaymentRequestDto _paymentRequestDto,
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] DashboardConfiguration _dashboardConfig,
@@ -230,7 +229,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
                                 .ReturnsAsync(expectedContent);
 
             // Act
-            var result = await _controller.InitiatePayment(_paymentRequestDto, CancellationToken.None);
+            var result = await _controller.Index(_paymentRequestDto, CancellationToken.None);
 
             // Assert
             using (new AssertionScope())
@@ -243,7 +242,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod, AutoMoqData]
-        public async Task InitiatePayment_WithException_ShouldLogErrorAndRedirectToError(
+        public async Task Index_Post_WithException_ShouldLogErrorAndRedirectToError(
             [Frozen] PaymentRequestDto _paymentRequestDto,
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] DashboardConfiguration _dashboardConfig,
@@ -260,7 +259,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
                                 .ThrowsAsync(new Exception(exceptionMessage));
 
             // Act
-            var result = await _controller.InitiatePayment(_paymentRequestDto, CancellationToken.None);
+            var result = await _controller.Index(_paymentRequestDto, CancellationToken.None);
 
             // Assert
             using (new AssertionScope())
@@ -281,7 +280,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod, AutoMoqData]
-        public async Task InitiatePayment_WithNullRequest_ShouldLogErrorAndRedirectToError(
+        public async Task Index_Post_WithNullRequest_ShouldLogErrorAndRedirectToError(
             [Frozen] PaymentRequestDto _paymentRequestDto,
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] DashboardConfiguration _dashboardConfig,
@@ -298,7 +297,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             PaymentRequestDto? request = null;
 
             // Act
-            var result = await _controller.InitiatePayment(request, CancellationToken.None);
+            var result = await _controller.Index(request, CancellationToken.None);
 
             // Assert
             var redirectResult = result as RedirectToActionResult;
