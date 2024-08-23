@@ -17,7 +17,16 @@
             <p class="govuk-body">Contact your bank for more details. No money has been taken from your account.</p>
             <p></p>
             <p class="govuk-body">
-                <a href="@Url.Action("InitiatePayment","GovPayFailure", new { UserId = Model.completePaymentViewModel.UserId, OrganisationId = Model.completePaymentViewModel.OrganisationId,Reference = Model.completePaymentViewModel.Reference,Regulator = Model.completePaymentViewModel.Regulator,Amount = Model.completePaymentViewModel.Amount })">Try the payment again</a>
+                <form method="post">
+                    <input type="hidden" value="@Model.completePaymentViewModel.UserId" />
+                    <input type="hidden" value="@Model.completePaymentViewModel.OrganisationId" />
+                    <input type="hidden" value="@Model.completePaymentViewModel.Reference" />
+                    <input type="hidden" value="@Model.completePaymentViewModel.Regulator" />
+                    <input type="hidden" value="@Model.completePaymentViewModel.Amount" />
+                    <button class="govuk-button" data-module="govuk-button">
+                        Try the payment again
+                    </button>
+                </form>
             </p>
             <p></p>
             <h3 class="govuk-heading-s">To pay by bank transfer instead </h3>
@@ -31,6 +40,8 @@
                 Account name: EA RECEIPTS<br />
                 Reference: PK/PK/REP</p>
             <p></p>
+            <p></p>
+            <a href=@Model.dashboardConfiguration.BackUrl.Url class="govuk-back-link">Return to the dashboard</a>
         </div>
     </div>
 </main>
