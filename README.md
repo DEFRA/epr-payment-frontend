@@ -9,7 +9,7 @@ UI to calculate fees and manage payment records for EPR
 ### Prerequisites
 - EPR Payment Service - https://github.com/DEFRA/epr-payment-service
 - EPR Payment Facade - https://github.com/DEFRA/epr-payment-facade
-- .NET SDK
+- .NET 8 SDK
 - Visual Studio or Visual Studio Code
 
 ### Installation
