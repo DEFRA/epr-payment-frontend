@@ -45,7 +45,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod, AutoMoqData]
-        public async Task Index_WithValidId_ShoulReturnRedirectToSuccessRoute(
+        public async Task Index_WithValidId_ShouldReturnRedirectToSuccessRoute(
             [Frozen] Guid id,
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] TestLogger<GovPayCallbackController> _testLogger,
@@ -83,7 +83,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod, AutoMoqData]
-        public async Task Index_WithValidIdButFailedPayment_ShoulReturnRedirectToFailureRoute(
+        public async Task Index_WithValidIdButFailedPayment_ShouldReturnRedirectToFailureRoute(
             [Frozen] Guid id,
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] TestLogger<GovPayCallbackController> _testLogger,
@@ -121,7 +121,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod, AutoMoqData]
-        public async Task Index_ServiceThrowsException_ShoulLogExceptionAndReturnRedirectToErrorRoute(
+        public async Task Index_ServiceThrowsException_ShouldLogExceptionAndReturnRedirectToErrorRoute(
             [Frozen] Guid id,
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] TestLogger<GovPayCallbackController> _testLogger,
@@ -149,7 +149,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod, AutoMoqData]
-        public async Task Index_WithEmptyGuid_ShoulLogExceptionAndReturnRedirectToErrorRoute(
+        public async Task Index_WithEmptyGuid_ShouldLogExceptionAndReturnRedirectToErrorRoute(
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] TestLogger<GovPayCallbackController> _testLogger,
             [Greedy] GovPayCallbackController _controller)
@@ -171,7 +171,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod, AutoMoqData]
-        public async Task Index_WhenServiceThrowsException_ShoulLogExceptionAndReturnRedirectToErrorRoute(
+        public async Task Index_WhenServiceThrowsException_ShouldLogExceptionAndReturnRedirectToErrorRoute(
             [Frozen] Guid id,
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] TestLogger<GovPayCallbackController> _testLogger,
