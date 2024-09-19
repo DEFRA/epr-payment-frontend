@@ -1,21 +1,18 @@
 ﻿using EPR.Payment.Portal.Common.Configuration;
+using EPR.Payment.Portal.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace EPR.Payment.Portal.Controllers
 {
-    public class ErrorController : Controller
+    [Route("", Name = RouteNames.GovPay.PaymentError)]
+    public class ErrorController(IOptions<DashboardConfiguration> dashboardConfiguration) : Controller
     {
-        private readonly DashboardConfiguration _dashboardConfiguration;
+        private readonly DashboardConfiguration _dashboardConfiguration = dashboardConfiguration?.Value
+            ?? throw new ArgumentNullException(nameof(dashboardConfiguration));
 
-        public ErrorController(IOptions<DashboardConfiguration> dashboardConfiguration)
-        {
-            _dashboardConfiguration = dashboardConfiguration.Value ?? throw new ArgumentNullException(nameof(dashboardConfiguration));
-        }
-
-        public IActionResult Index()
-        {
-            return View(_dashboardConfiguration);
-        }
+        [HttpGet]
+        public IActionResult Index() => View(_dashboardConfiguration);
     }
+
 }

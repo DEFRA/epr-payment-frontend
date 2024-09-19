@@ -5,6 +5,7 @@ using EPR.Payment.Portal.Common.Dtos.Request;
 using EPR.Payment.Portal.Common.Models;
 using EPR.Payment.Portal.Common.UnitTests.TestHelpers;
 using EPR.Payment.Portal.Controllers;
+using EPR.Payment.Portal.Infrastructure;
 using EPR.Payment.Portal.Services.Interfaces;
 using FluentAssertions;
 using FluentAssertions.Execution;
@@ -89,7 +90,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod, AutoMoqData]
-        public void Index_Get_WithInvalidModelState_ShouldRedirectToError(
+        public void Index_Get_WithInvalidModelState_ShouldRedirectToPaymentError(
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] DashboardConfiguration _dashboardConfig,
             [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
@@ -108,11 +109,10 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             // Assert
             using (new AssertionScope())
             {
-                result.Should().BeOfType<RedirectToActionResult>();
-                var redirectResult = result as RedirectToActionResult;
-                redirectResult!.ActionName.Should().Be("Index");
-                redirectResult.ControllerName.Should().Be("Error");
-                redirectResult!.RouteValues!["message"].Should().Be(ExceptionMessages.ErrorInvalidViewModel);
+                var redirectResult = result.Should().BeOfType<RedirectToRouteResult>().Which;
+                redirectResult.RouteName.Should().Be(RouteNames.GovPay.PaymentError);
+                redirectResult.RouteValues.Should().ContainKey("message")
+                    .WhoseValue.Should().Be(ExceptionMessages.ErrorInvalidViewModel);
             }
 
         }
@@ -148,7 +148,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod, AutoMoqData]
-        public void Index_Get_WithNullViewModel_ShouldRedirectToError(
+        public void Index_Get_WithNullViewModel_ShouldRedirectToPaymentError(
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] DashboardConfiguration _dashboardConfig,
             [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
@@ -164,18 +164,17 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             var result = _controller.Index(null);
 
             // Assert
-            var redirectResult = result as RedirectToActionResult;
             using (new AssertionScope())
             {
-                redirectResult.Should().NotBeNull();
-                redirectResult!.ActionName.Should().Be("Index");
-                redirectResult.ControllerName.Should().Be("Error");
-                redirectResult!.RouteValues!["message"].Should().Be(ExceptionMessages.ErrorInvalidViewModel);
+                var redirectResult = result.Should().BeOfType<RedirectToRouteResult>().Which;
+                redirectResult.RouteName.Should().Be(RouteNames.GovPay.PaymentError);
+                redirectResult.RouteValues.Should().ContainKey("message")
+                    .WhoseValue.Should().Be(ExceptionMessages.ErrorInvalidViewModel);
             }
         }
 
         [TestMethod, AutoMoqData]
-        public async Task Index_Post_WithInvalidModelState_ShouldLogErrorAndRedirectToError(
+        public async Task Index_Post_WithInvalidModelState_ShouldLogErrorAndRedirectToPaymentError(
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] DashboardConfiguration _dashboardConfig,
             [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
@@ -202,16 +201,15 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
                 It.IsAny<Exception>(),
                 It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)), Times.Once);
 
-                result.Should().BeOfType<RedirectToActionResult>();
-                var redirectResult = result as RedirectToActionResult;
-                redirectResult!.ActionName.Should().Be("Index");
-                redirectResult.ControllerName.Should().Be("Error");
+                var redirectResult = result.Should().BeOfType<RedirectToRouteResult>().Which;
+                redirectResult.RouteName.Should().Be(RouteNames.GovPay.PaymentError);
+                redirectResult.RouteValues.Should().ContainKey("message");
                 redirectResult!.RouteValues!["message"].Should().Be(ExceptionMessages.ErrorInvalidPaymentRequestDto);
             }
         }
 
         [TestMethod, AutoMoqData]
-        public async Task Index_Post_WithValidRequest_ShouldReturnContent(
+        public async Task Index_Post_WhenPaymentServiceSucceeds_ShouldReturnContentAndShouldNotLogAnError(
             [Frozen] PaymentRequestDto _paymentRequestDto,
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] DashboardConfiguration _dashboardConfig,
@@ -234,15 +232,23 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             // Assert
             using (new AssertionScope())
             {
-                result.Should().BeOfType<ContentResult>();
-                var contentResult = result as ContentResult;
-                contentResult!.Content.Should().Be(expectedContent);
+                var contentResult = result.Should().BeOfType<ContentResult>().Which;
                 contentResult.ContentType.Should().Be("text/html");
+                contentResult.Content.Should().Be(expectedContent);
+
+                _loggerMock.Verify(
+                    x => x.Log(
+                        LogLevel.Error,
+                        It.IsAny<EventId>(),
+                        It.Is<It.IsAnyType>((o, t) => true),
+                        It.IsAny<Exception>(),
+                        It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)),
+                    Times.Never);
             }
         }
 
         [TestMethod, AutoMoqData]
-        public async Task Index_Post_WithException_ShouldLogErrorAndRedirectToError(
+        public async Task Index_Post_WhenServiceThrowsException_ShouldRedirectToPaymentError(
             [Frozen] PaymentRequestDto _paymentRequestDto,
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] DashboardConfiguration _dashboardConfig,
@@ -264,23 +270,22 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             // Assert
             using (new AssertionScope())
             {
-                _loggerMock.Verify(logger => logger.Log(
-                It.Is<LogLevel>(l => l == LogLevel.Error),
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains(ExceptionMessages.ErrorInitiatePayment)),
-                It.IsAny<Exception>(),
-                It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)), Times.Once);
-
-                result.Should().BeOfType<RedirectToActionResult>();
-                var redirectResult = result as RedirectToActionResult;
-                redirectResult!.ActionName.Should().Be("Index");
-                redirectResult.ControllerName.Should().Be("Error");
+                var redirectResult = result.Should().BeOfType<RedirectToRouteResult>().Which;
+                redirectResult.RouteName.Should().Be(RouteNames.GovPay.PaymentError);
+                redirectResult.RouteValues.Should().ContainKey("message");
                 redirectResult!.RouteValues!["message"].Should().Be(exceptionMessage);
+
+                _loggerMock.Verify(logger => logger.Log(
+                    It.Is<LogLevel>(l => l == LogLevel.Error),
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains(ExceptionMessages.ErrorInitiatePayment)),
+                    It.IsAny<Exception>(),
+                    It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)), Times.Once);
             }
         }
 
         [TestMethod, AutoMoqData]
-        public async Task Index_Post_WithNullRequest_ShouldLogErrorAndRedirectToError(
+        public async Task Index_Post_WithNullRequest_ShouldRedirectToPaymentError(
             [Frozen] PaymentRequestDto _paymentRequestDto,
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] DashboardConfiguration _dashboardConfig,
@@ -300,12 +305,11 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             var result = await _controller.Index(request, CancellationToken.None);
 
             // Assert
-            var redirectResult = result as RedirectToActionResult;
             using (new AssertionScope())
             {
-                redirectResult.Should().NotBeNull();
-                redirectResult!.ActionName.Should().Be("Index");
-                redirectResult.ControllerName.Should().Be("Error");
+                var redirectResult = result.Should().BeOfType<RedirectToRouteResult>().Which;
+                redirectResult.RouteName.Should().Be(RouteNames.GovPay.PaymentError);
+                redirectResult.RouteValues.Should().ContainKey("message");
                 redirectResult!.RouteValues!["message"].Should().Be(ExceptionMessages.ErrorInvalidPaymentRequestDto);
 
                 _loggerMock.Verify(logger => logger.Log(
