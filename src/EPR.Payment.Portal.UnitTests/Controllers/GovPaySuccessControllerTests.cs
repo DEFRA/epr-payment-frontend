@@ -5,6 +5,7 @@ using EPR.Payment.Portal.Common.Constants;
 using EPR.Payment.Portal.Common.Models;
 using EPR.Payment.Portal.Common.UnitTests.TestHelpers;
 using EPR.Payment.Portal.Controllers;
+using EPR.Payment.Portal.Infrastructure;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +34,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod,AutoMoqData]
-        public void Index_WithInvalidModelState_ShouldRedirectToError(
+        public void Index_WithInvalidModelState_ShouldRedirectToPaymentError(
             [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
             [Frozen] DashboardConfiguration _dashboardConfiguration)
         {
@@ -48,19 +49,38 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             // Assert
             using (new AssertionScope())
             {
-                result.Should().BeOfType<RedirectToActionResult>();
-                var redirectResult = result as RedirectToActionResult;
-                redirectResult.Should().NotBeNull();
-                redirectResult!.ActionName.Should().Be("Index");
-                redirectResult.ControllerName.Should().Be("Error");
-                redirectResult.RouteValues.Should().ContainKey("message");
+                var redirectResult = result.Should().BeOfType<RedirectToRouteResult>().Which;
+                redirectResult.RouteName.Should().Be(RouteNames.GovPay.PaymentError);
                 redirectResult!.RouteValues!["message"].Should().Be(ExceptionMessages.ErrorInvalidViewModel);
             }
 
         }
 
         [TestMethod, AutoMoqData]
-        public void Index_WithValidModelState_ShouldReturnViewResult(
+        public void Index_WhenViewModelIsNull_ShouldRedirectToPaymentError(
+            [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
+            [Frozen] DashboardConfiguration _dashboardConfiguration)
+        {
+            // Arrange
+            CompletePaymentViewModel? _completePaymentViewModel = null;
+            _dashboardConfigurationMock.Setup(x => x.Value).Returns(_dashboardConfiguration);
+            var controller = new GovPaySuccessController(_dashboardConfigurationMock.Object);
+
+            // Act
+            var result = controller.Index(_completePaymentViewModel);
+
+            // Assert
+            using (new AssertionScope())
+            {
+                var redirectResult = result.Should().BeOfType<RedirectToRouteResult>().Which;
+                redirectResult.RouteName.Should().Be(RouteNames.GovPay.PaymentError);
+                redirectResult!.RouteValues!["message"].Should().Be(ExceptionMessages.ErrorInvalidViewModel);
+            }
+
+        }
+
+        [TestMethod, AutoMoqData]
+        public void Index_WithValidModelState_ShouldReturnViewWithCompositeViewModel(
             [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
             [Frozen] DashboardConfiguration _dashboardConfiguration,
             [Frozen] CompletePaymentViewModel _completePaymentViewModel)
@@ -75,13 +95,10 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             // Assert
             using (new AssertionScope())
             {
-                result.Should().BeOfType<ViewResult>();
-                var viewResult = result as ViewResult;
-                viewResult.Should().NotBeNull();
-                viewResult!.Model.Should().BeOfType<CompositeViewModel>();
-                var compositeViewModel = viewResult.Model as CompositeViewModel;
-                compositeViewModel!.completePaymentViewModel.Should().Be(_completePaymentViewModel);
-                compositeViewModel.dashboardConfiguration.Should().Be(_dashboardConfiguration);
+                var viewResult = result.Should().BeOfType<ViewResult>().Which;
+                var model = viewResult.Model.Should().BeOfType<CompositeViewModel>().Which;
+                model.completePaymentViewModel.Should().Be(_completePaymentViewModel);
+                model.dashboardConfiguration.Should().Be(_dashboardConfiguration);
             }
         }
     }

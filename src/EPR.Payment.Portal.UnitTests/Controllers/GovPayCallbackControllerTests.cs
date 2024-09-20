@@ -4,12 +4,12 @@ using EPR.Payment.Portal.Common.Exceptions;
 using EPR.Payment.Portal.Common.Models;
 using EPR.Payment.Portal.Common.UnitTests.TestHelpers;
 using EPR.Payment.Portal.Controllers;
+using EPR.Payment.Portal.Infrastructure;
 using EPR.Payment.Portal.Services.Interfaces;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
 using Moq;
 
 namespace EPR.Payment.Portal.UnitTests.Controllers
@@ -19,7 +19,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
     {
 
         [TestMethod, AutoMoqData]
-        public async Task Index_WithInvalidModelState_ShouldLogErrorAndRedirectToError(
+        public async Task Index_WithInvalidModelState_ShouldLogErrorAndReturnRedirectToErrorRoute(
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] TestLogger<GovPayCallbackController> _testLogger,
             [Greedy] GovPayCallbackController _controller)
@@ -38,16 +38,14 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
                 _testLogger.LogEntries.Should().ContainSingle()
                             .Which.Should().BeEquivalentTo((LogLevel.Error, ExceptionMessages.ErrorExternalPaymentIdEmpty));
 
-                result.Should().BeOfType<RedirectToActionResult>();
-                var redirectResult = result as RedirectToActionResult;
-                redirectResult!.ControllerName.Should().Be("Error");
-                redirectResult.ActionName.Should().Be("Index");
+                var redirectResult = result.Should().BeOfType<RedirectToRouteResult>().Which;
+                redirectResult.RouteName.Should().Be(RouteNames.GovPay.PaymentError);
                 redirectResult!.RouteValues!["message"].Should().Be(ExceptionMessages.ErrorExternalPaymentIdEmpty);
             }
         }
 
         [TestMethod, AutoMoqData]
-        public async Task Index_WithValidId_ShoulReturnCorrectViewAsSuccess(
+        public async Task Index_WithValidId_ShouldReturnRedirectToSuccessRoute(
             [Frozen] Guid id,
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] TestLogger<GovPayCallbackController> _testLogger,
@@ -65,20 +63,27 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
 
 
             // Act
-            var result = await _controller.Index(id, It.IsAny<CancellationToken>()) as RedirectToActionResult;
+            var result = await _controller.Index(id, It.IsAny<CancellationToken>()) as RedirectToRouteResult;
 
             // Assert
             using (new AssertionScope())
             {
-                result.Should().NotBeNull();
-                result!.ActionName.Should().Be("Index");
-                result.ControllerName.Should().Be("GovPaySuccess");
+                var redirectResult = result.Should().BeOfType<RedirectToRouteResult>().Which;
+                redirectResult.RouteName.Should().Be(RouteNames.GovPay.PaymentSuccess);
+                redirectResult!.RouteValues!["Status"].Should().BeEquivalentTo(completePaymentViewModel.Status);
+                redirectResult!.RouteValues!["Reference"].Should().BeEquivalentTo(completePaymentViewModel.Reference);
+                redirectResult!.RouteValues!["Message"].Should().BeEquivalentTo(completePaymentViewModel.Message);
+                redirectResult!.RouteValues!["UserId"].Should().BeEquivalentTo(completePaymentViewModel.UserId);
+                redirectResult!.RouteValues!["OrganisationId"].Should().BeEquivalentTo(completePaymentViewModel.OrganisationId);
+                redirectResult!.RouteValues!["Regulator"].Should().BeEquivalentTo(completePaymentViewModel.Regulator);
+                redirectResult!.RouteValues!["Amount"].Should().BeEquivalentTo(completePaymentViewModel.Amount);
+                redirectResult!.RouteValues!["Email"].Should().BeEquivalentTo(completePaymentViewModel.Email);
                 _paymentsServiceMock.Verify(service => service.CompletePaymentAsync(id, It.IsAny<CancellationToken>()), Times.Once());
             }
         }
 
         [TestMethod, AutoMoqData]
-        public async Task Index_WithValidId_ShoulReturnCorrectViewAsFailure(
+        public async Task Index_WithValidIdButFailedPayment_ShouldReturnRedirectToFailureRoute(
             [Frozen] Guid id,
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] TestLogger<GovPayCallbackController> _testLogger,
@@ -96,20 +101,27 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
 
 
             // Act
-            var result = await _controller.Index(id, It.IsAny<CancellationToken>()) as RedirectToActionResult;
+            var result = await _controller.Index(id, It.IsAny<CancellationToken>()) as RedirectToRouteResult;
 
             // Assert
             using (new AssertionScope())
             {
-                result.Should().NotBeNull();
-                result!.ActionName.Should().Be("Index");
-                result.ControllerName.Should().Be("GovPayFailure");
+                var redirectResult = result.Should().BeOfType<RedirectToRouteResult>().Which;
+                redirectResult.RouteName.Should().Be(RouteNames.GovPay.Paymentfailure);
+                redirectResult!.RouteValues!["Status"].Should().BeEquivalentTo(completePaymentViewModel.Status);
+                redirectResult!.RouteValues!["Reference"].Should().BeEquivalentTo(completePaymentViewModel.Reference);
+                redirectResult!.RouteValues!["Message"].Should().BeEquivalentTo(completePaymentViewModel.Message);
+                redirectResult!.RouteValues!["UserId"].Should().BeEquivalentTo(completePaymentViewModel.UserId);
+                redirectResult!.RouteValues!["OrganisationId"].Should().BeEquivalentTo(completePaymentViewModel.OrganisationId);
+                redirectResult!.RouteValues!["Regulator"].Should().BeEquivalentTo(completePaymentViewModel.Regulator);
+                redirectResult!.RouteValues!["Amount"].Should().BeEquivalentTo(completePaymentViewModel.Amount);
+                redirectResult!.RouteValues!["Email"].Should().BeEquivalentTo(completePaymentViewModel.Email);
                 _paymentsServiceMock.Verify(service => service.CompletePaymentAsync(id, It.IsAny<CancellationToken>()), Times.Once());
             }
         }
 
         [TestMethod, AutoMoqData]
-        public async Task Index_ServiceThrowsException_ShoulReturnErrorView(
+        public async Task Index_ServiceThrowsException_ShouldLogExceptionAndReturnRedirectToErrorRoute(
             [Frozen] Guid id,
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] TestLogger<GovPayCallbackController> _testLogger,
@@ -118,41 +130,48 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             // Arrange
             _controller = new GovPayCallbackController(_paymentsServiceMock.Object, _testLogger);
             _paymentsServiceMock.Setup(service => service.CompletePaymentAsync(id, It.IsAny<CancellationToken>())).ThrowsAsync(new Exception("Test Exception"));
+            string loggedException = string.Concat("Error completing payment for ID ", id.ToString());
 
 
             // Act
-            var result = await _controller.Index(id, It.IsAny<CancellationToken>()) as RedirectToActionResult;
+            var result = await _controller.Index(id, It.IsAny<CancellationToken>()) as RedirectToRouteResult;
 
             // Assert
             using (new AssertionScope())
             {
-                result.Should().NotBeNull();
-                result!.ActionName.Should().Be("Index");
-                result.ControllerName.Should().Be("Error");
+                var redirectResult = result.Should().BeOfType<RedirectToRouteResult>().Which;
+                redirectResult.RouteName.Should().Be(RouteNames.GovPay.PaymentError);
+                redirectResult!.RouteValues!["message"].Should().Be("Test Exception");
+
+                _testLogger.LogEntries.Should().ContainSingle()
+                    .Which.Should().BeEquivalentTo((LogLevel.Error, loggedException));
             }
         }
 
         [TestMethod, AutoMoqData]
-        public async Task Index_WithEmptyGuidId_ShoulReturnErrorView(
+        public async Task Index_WithEmptyGuid_ShouldLogExceptionAndReturnRedirectToErrorRoute(
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] TestLogger<GovPayCallbackController> _testLogger,
             [Greedy] GovPayCallbackController _controller)
         {
             // Act
             _controller = new GovPayCallbackController(_paymentsServiceMock.Object, _testLogger);
-            var result = await _controller.Index(Guid.Empty, It.IsAny<CancellationToken>()) as RedirectToActionResult;
+            var result = await _controller.Index(Guid.Empty, It.IsAny<CancellationToken>()) as RedirectToRouteResult;
 
             // Assert
             using (new AssertionScope())
             {
-                result.Should().NotBeNull();
-                result!.ActionName.Should().Be("Index");
-                result.ControllerName.Should().Be("Error");
+                var redirectResult = result.Should().BeOfType<RedirectToRouteResult>().Which;
+                redirectResult.RouteName.Should().Be(RouteNames.GovPay.PaymentError);
+                redirectResult!.RouteValues!["message"].Should().Be(ExceptionMessages.ErrorExternalPaymentIdEmpty);
+
+                _testLogger.LogEntries.Should().ContainSingle()
+                    .Which.Should().BeEquivalentTo((LogLevel.Error, ExceptionMessages.ErrorExternalPaymentIdEmpty));
             }
         }
 
         [TestMethod, AutoMoqData]
-        public async Task Index_WhenServiceThrowsException_ShouldLogErrorAndRedirectToError(
+        public async Task Index_WhenServiceThrowsException_ShouldLogExceptionAndReturnRedirectToErrorRoute(
             [Frozen] Guid id,
             [Frozen] Mock<IPaymentsService> _paymentsServiceMock,
             [Frozen] TestLogger<GovPayCallbackController> _testLogger,
@@ -163,21 +182,20 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             var exception = new ServiceException("Service exception");
             _paymentsServiceMock.Setup(ps => ps.CompletePaymentAsync(id, It.IsAny<CancellationToken>()))
                                 .ThrowsAsync(exception);
+            string loggedException = string.Concat("Error completing payment for ID ", id.ToString());
 
             // Act
-            var result = await _controller.Index(id, CancellationToken.None);
+            var result = await _controller.Index(id, CancellationToken.None) as RedirectToRouteResult;
 
             // Assert
             using (new AssertionScope())
             {
-                _testLogger.LogEntries.Should().ContainSingle()
-                    .Which.Item2.Should().Contain("Error completing payment for ID");
+                var redirectResult = result.Should().BeOfType<RedirectToRouteResult>().Which;
+                redirectResult.RouteName.Should().Be(RouteNames.GovPay.PaymentError);
+                redirectResult!.RouteValues!["message"].Should().Be("Service exception");
 
-                result.Should().BeOfType<RedirectToActionResult>();
-                var redirectResult = result as RedirectToActionResult;
-                redirectResult!.ControllerName.Should().Be("Error");
-                redirectResult.ActionName.Should().Be("Index");
-                redirectResult!.RouteValues!["message"].Should().Be(exception.Message);
+                _testLogger.LogEntries.Should().ContainSingle()
+                    .Which.Should().BeEquivalentTo((LogLevel.Error, loggedException));
             }
         }
     }
