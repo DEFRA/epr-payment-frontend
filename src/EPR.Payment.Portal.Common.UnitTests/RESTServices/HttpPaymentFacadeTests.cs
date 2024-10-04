@@ -53,9 +53,8 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
         public async Task CompletePaymentAsync_Success_ReturnsPaymentDetailsDto(
             [Frozen] Mock<HttpMessageHandler> handlerMock,
             HttpPaymentFacade httpPaymentsFacade,
-            CancellationToken cancellationToken,
             Guid externalPaymentId,
-            CompletePaymentResponseDto completePaymentResponseDto)
+            CompletePaymentResponseDto completePaymentResponseDto, CancellationToken cancellationToken)
         {
             // Arrange
             handlerMock.Protected()
@@ -89,8 +88,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
         public async Task CompletePaymentAsync_Failure_ThrowsException(
             [Frozen] Mock<HttpMessageHandler> handlerMock,
             HttpPaymentFacade httpPaymentsFacade,
-            CancellationToken cancellationToken,
-            Guid externalPaymentId)
+            Guid externalPaymentId, CancellationToken cancellationToken)
         {
             // Arrange
 
@@ -121,9 +119,8 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
         public async Task InitiatePaymentAsync_Success_ReturnsPaymentDetailsDto(
             [Frozen] Mock<HttpMessageHandler> handlerMock,
             HttpPaymentFacade httpPaymentsFacade,
-            CancellationToken cancellationToken,
             PaymentRequestDto request,
-            string response)
+            string response, CancellationToken cancellationToken)
         {
             // Arrange
             handlerMock.Protected()
@@ -157,8 +154,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
         public async Task InitiatePaymentAsync_Failure_ThrowsException(
             [Frozen] Mock<HttpMessageHandler> handlerMock,
             HttpPaymentFacade httpPaymentsFacade,
-            CancellationToken cancellationToken,
-            PaymentRequestDto request)
+            PaymentRequestDto request, CancellationToken cancellationToken)
         {
             // Arrange
 

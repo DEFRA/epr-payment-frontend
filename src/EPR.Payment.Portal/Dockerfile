@@ -27,8 +27,8 @@ COPY ["EPR.Payment.Portal/EPR.Payment.Portal.csproj", "EPR.Payment.Portal/"]
 COPY ["EPR.Payment.Portal.Common/EPR.Payment.Portal.Common.csproj", "EPR.Payment.Portal.Common/"]
 RUN dotnet restore "EPR.Payment.Portal/EPR.Payment.Portal.csproj"
  
-COPY --chown=dotnet:dotnet EPR.Payment.Portal/. ./EPR.Payment.Portal/.
-COPY --chown=dotnet:dotnet EPR.Payment.Portal.Common/. ./EPR.Payment.Portal.Common/.
+COPY EPR.Payment.Portal/. ./EPR.Payment.Portal/.
+COPY EPR.Payment.Portal.Common/. ./EPR.Payment.Portal.Common/.
  
 # Install Gulp CLI globally and project dependencies
 WORKDIR "/src/EPR.Payment.Portal"

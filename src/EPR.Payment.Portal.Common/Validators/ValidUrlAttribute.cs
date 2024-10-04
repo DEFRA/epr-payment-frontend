@@ -14,8 +14,9 @@ namespace EPR.Payment.Portal.Common.Validators
 
             string url = value.ToString()!;
             string pattern = @"^(http|https)://([\w-]+(\.[\w-]+)+)([/#?]?.*)$";
+            var matchTimeout = TimeSpan.FromMilliseconds(100);
 
-            if (!Regex.IsMatch(url, pattern))
+            if (!Regex.IsMatch(url, pattern, RegexOptions.None, matchTimeout))
             {
                 return new ValidationResult("The URL is not valid.");
             }
