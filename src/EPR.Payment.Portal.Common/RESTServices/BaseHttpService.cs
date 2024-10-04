@@ -26,7 +26,7 @@ namespace EPR.Payment.Portal.Common.RESTServices
             // Initialize _baseUrl in the constructor
             _baseUrl = string.IsNullOrWhiteSpace(baseUrl) ? throw new ArgumentNullException(nameof(baseUrl)) : baseUrl;
 
-           ArgumentNullException.ThrowIfNull(httpClientFactory, nameof(httpClientFactory));
+           ArgumentNullException.ThrowIfNull(httpClientFactory);
 
             if (string.IsNullOrWhiteSpace(endPointName))
                 throw new ArgumentNullException(nameof(endPointName));
