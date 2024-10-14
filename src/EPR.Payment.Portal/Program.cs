@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddPortalDependencies(builder.Configuration);
+builder.Services.RegisterAuthenication(builder.Configuration);
 builder.Services.AddServiceHealthChecks();
 builder.Services.AddDependencies();
 builder.Services.Configure<DashboardConfiguration>(builder.Configuration.GetSection(DashboardConfiguration.SectionName));
@@ -31,6 +32,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseHealthChecks();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
