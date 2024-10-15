@@ -32,7 +32,7 @@ COPY EPR.Payment.Portal.Common/. ./EPR.Payment.Portal.Common/.
  
 # Install Gulp CLI globally and project dependencies
 WORKDIR "/src/EPR.Payment.Portal"
-RUN npm install -g gulp-cli --ignore-scripts && npm install --ignore-scripts
+RUN npm install -g gulp-cli && npm install --ignore-scripts
  
 # Run Gulp build task
 RUN gulp build-frontend
