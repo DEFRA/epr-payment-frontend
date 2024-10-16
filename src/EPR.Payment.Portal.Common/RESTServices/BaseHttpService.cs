@@ -26,8 +26,7 @@ namespace EPR.Payment.Portal.Common.RESTServices
             // Initialize _baseUrl in the constructor
             _baseUrl = string.IsNullOrWhiteSpace(baseUrl) ? throw new ArgumentNullException(nameof(baseUrl)) : baseUrl;
 
-            if (httpClientFactory == null)
-                throw new ArgumentNullException(nameof(httpClientFactory));
+           ArgumentNullException.ThrowIfNull(httpClientFactory);
 
             if (string.IsNullOrWhiteSpace(endPointName))
                 throw new ArgumentNullException(nameof(endPointName));
@@ -35,7 +34,7 @@ namespace EPR.Payment.Portal.Common.RESTServices
             _httpClient = httpClientFactory.CreateClient();
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
-            if (_baseUrl.EndsWith("/"))
+            if (_baseUrl.EndsWith('/'))
                 _baseUrl = _baseUrl.TrimEnd('/');
 
             _baseUrl = $"{_baseUrl}/{endPointName}";
