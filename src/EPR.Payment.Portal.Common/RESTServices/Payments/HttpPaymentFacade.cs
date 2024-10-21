@@ -31,7 +31,7 @@ namespace EPR.Payment.Portal.Common.RESTServices.Payments
         {
             try
             {
-                var url = UrlConstants.PaymentsComplete.Replace("{externalPaymentId}", externalPaymentId.ToString());
+                var url = UrlConstants.OnlinePaymentsComplete.Replace("{externalPaymentId}", externalPaymentId.ToString());
                 var response = await Post<CompletePaymentResponseDto>(url, externalPaymentId, cancellationToken);
                 return response;
             }
@@ -45,7 +45,7 @@ namespace EPR.Payment.Portal.Common.RESTServices.Payments
         {
             try
             {
-                var url = UrlConstants.PaymentsInitiate;
+                var url = UrlConstants.OnlinePaymentsInitiate;
                 var response = await Post<string>(url, request, cancellationToken);
                 return response;
             }
