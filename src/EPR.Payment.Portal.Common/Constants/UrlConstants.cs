@@ -3,7 +3,7 @@
     public static class UrlConstants
     {
         // Payments facade endpoints
-        public const string PaymentsComplete = "payments/{externalPaymentId}/complete";
-        public const string PaymentsInitiate = "payments";
+        public const string OnlinePaymentsComplete = "online-payments/{externalPaymentId}/complete";
+        public const string OnlinePaymentsInitiate = "online-payments";
     }
 }
