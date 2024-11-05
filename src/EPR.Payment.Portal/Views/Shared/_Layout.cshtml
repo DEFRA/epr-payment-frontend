@@ -19,6 +19,7 @@
     <link rel="apple-touch-icon" href="~/assets/images/govuk-icon-180.png">
     <link rel="manifest" href="~/assets/manifest.json">
     <link rel="stylesheet" href="~/css/govuk-frontend.min.css">
+    <link rel="stylesheet" href="~/css/application.css">
 </head>
 
 <body class="govuk-template__body">
@@ -61,6 +62,10 @@
         </p>
     </div>
     <div class="govuk-width-container">
+        <div class="govuk-grid-column-full">
+            @await Component.InvokeAsync("LanguageSwitcher")
+        </div>
+        
         @RenderBody()
     </div>
     <footer class="govuk-footer " role="contentinfo">
