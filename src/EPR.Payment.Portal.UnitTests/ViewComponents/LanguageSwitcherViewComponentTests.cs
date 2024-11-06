@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.Extensions.Options;
+using Microsoft.FeatureManagement;
 using Moq;
 using System.Globalization;
 
@@ -21,6 +22,7 @@ namespace EPR.Payment.Portal.UnitTests.ViewComponents
         private Mock<HttpContext> _httpContextMock = null!;
         private Mock<HttpRequest> _httpRequestMock = null!;
         private IOptions<RequestLocalizationOptions> _localizationOptions = null!;
+        private Mock<IFeatureManager> _featureManagerMock = null!;
         private LanguageSwitcherViewComponent _viewComponent = null!;
 
         [TestInitialize]
@@ -32,8 +34,13 @@ namespace EPR.Payment.Portal.UnitTests.ViewComponents
             options.AddSupportedCultures(Language.English, Language.Welsh);
             _localizationOptions = Options.Create(options);
 
+            // Set up Feature Manager mock to enable ShowLanguageSwitcher
+            _featureManagerMock = new Mock<IFeatureManager>();
+            _featureManagerMock.Setup(x => x.IsEnabledAsync(nameof(FeatureFlags.ShowLanguageSwitcher)))
+                .ReturnsAsync(true);
+
             // Initialize the view component
-            _viewComponent = new LanguageSwitcherViewComponent(_localizationOptions);
+            _viewComponent = new LanguageSwitcherViewComponent(_localizationOptions, _featureManagerMock.Object);
 
             // Set up Mock for HttpContext and HttpRequest
             _httpContextMock = new Mock<HttpContext>();
