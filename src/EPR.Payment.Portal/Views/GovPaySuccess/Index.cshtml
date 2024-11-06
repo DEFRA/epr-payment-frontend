@@ -8,11 +8,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content">
+<main class="govuk-main-wrapper govuk-!-padding-top-8" id="main-content">
     <div class="govuk-grid-row">
         <div class="govuk-panel govuk-panel--confirmation">
             <h1 class="govuk-panel__title">
-                Payment successful
+                @Localizer["payment_successful"]
             </h1>
             <div class="govuk-panel__body">
                 Your registration reference number is <br><strong>@Model.completePaymentViewModel.Reference</strong>
@@ -22,7 +22,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             <p class="govuk-body">
-                We have sent an email confirmation to <a href="">@Model.completePaymentViewModel.Email</a>
+                @Localizer["email_confirmation_sent"] <a href="">@Model.completePaymentViewModel.Email</a>
             </p>
             <p></p>
             <h3 class="govuk-heading-s">What happens next</h3>

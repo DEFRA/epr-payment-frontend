@@ -2,11 +2,13 @@ using EPR.Payment.Portal.AppStart;
 using EPR.Payment.Portal.Common.Configuration;
 using EPR.Payment.Portal.Extension;
 using EPR.Payment.Portal.Helpers;
+using Microsoft.FeatureManagement;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddFeatureManagement();
+builder.Services.AddControllersWithViews().AddViewLocalization();
 builder.Services.AddPortalDependencies(builder.Configuration);
 builder.Services.AddServiceHealthChecks();
 builder.Services.AddDependencies();
@@ -15,8 +17,20 @@ builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddDataProtection();
 builder.Services.AddLogging();
 
-var app = builder.Build();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
+builder.Services
+    .AddHttpContextAccessor()
+    .RegisterWebComponents(builder.Configuration);
+
+var app = builder.Build();
+app.UseSession();
+app.UseRequestLocalization();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -31,6 +45,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseHealthChecks();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
