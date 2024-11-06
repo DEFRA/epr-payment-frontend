@@ -1,6 +1,7 @@
 ﻿using EPR.Payment.Portal.Common.Constants;
 using EPR.Payment.Portal.Sessions;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using System;
@@ -53,8 +54,12 @@ namespace EPR.Payment.Portal.UnitTests.Sessions
             var result = await _provider.DetermineProviderCultureResult(_httpContextMock.Object);
 
             // Assert
-            result.Should().NotBeNull();
-            result!.Cultures.First().Value.Should().Be(Language.English);
+            using(new AssertionScope())
+            {
+                result.Should().NotBeNull();
+                result!.Cultures.First().Value.Should().Be(Language.English);
+            }
+
         }
 
         [TestMethod]
@@ -68,8 +73,11 @@ namespace EPR.Payment.Portal.UnitTests.Sessions
             var result = await _provider.DetermineProviderCultureResult(_httpContextMock.Object);
 
             // Assert
-            result.Should().NotBeNull();
-            result!.Cultures.First().Value.Should().Be(expectedCulture);
+            using (new AssertionScope())
+            {
+                result.Should().NotBeNull();
+                result!.Cultures.First().Value.Should().Be(expectedCulture);
+            }
         }
     }
 }

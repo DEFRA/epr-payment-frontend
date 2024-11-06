@@ -1,6 +1,7 @@
 ﻿using EPR.Payment.Portal.Common.Constants;
 using EPR.Payment.Portal.Controllers.Culture;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using System.Text;
@@ -48,8 +49,11 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             var result = _systemUnderTest.UpdateCulture(CultureEn, ReturnUrl);
 
             // Assert
-            result.Url.Should().Be(ReturnUrl);
-            _sessionMock.Verify(x => x.Set(Language.SessionLanguageKey, cultureBytes), Times.Once);
+            using (new AssertionScope())
+            {
+                result.Url.Should().Be(ReturnUrl);
+                _sessionMock.Verify(x => x.Set(Language.SessionLanguageKey, cultureBytes), Times.Once);
+            }
         }
     }
 }
