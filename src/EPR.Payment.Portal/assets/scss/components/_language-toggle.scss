@@ -1,0 +1,19 @@
+﻿@import "node_modules/govuk-frontend/dist/govuk/settings/index";
+
+.language-toggle {
+    list-style: none;
+    padding: 0;
+    float: right;
+    font-family: $govuk-font-family;
+    font-size: $govuk-root-font-size;
+
+    &__option {
+        display: inline;
+
+        &:not(:last-child) {
+            margin-right: 10px;
+            padding-right: 10px;
+            border-right: 1px solid govuk-colour("black");
+        }
+    }
+}

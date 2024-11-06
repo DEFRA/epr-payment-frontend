@@ -1,5 +1,14 @@
 ﻿const gulp = require('gulp');
 const concat = require('gulp-concat');
+const sass = require('gulp-sass')(require('sass'))
+
+// Define paths to the SCSS files
+const paths = {
+    scss: [
+        'assets/scss/components/_language-toggle.scss'
+    ],
+    output: 'wwwroot/css'
+};
 
 // Task to compile GOV.UK Frontend SCSS
 gulp.task('copy-govuk-styles', function () {
@@ -34,5 +43,16 @@ gulp.task('copy-govuk-manifest', function () {
 
 });
 
+// Task to compile and bundle SCSS into a single CSS file
+gulp.task('compile-scss', function () {
+    return gulp.src(paths.scss)
+        .pipe(concat('application.css'))
+        .pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
+        .pipe(gulp.dest(paths.output));
+});
+
+
 // Default task
-gulp.task('build-frontend', gulp.series('copy-govuk-styles', 'copy-govuk-scripts', 'copy-govuk-images', 'copy-govuk-fonts', 'copy-govuk-manifest')); 
+gulp.task('build-frontend', gulp.series('copy-govuk-styles', 'copy-govuk-scripts', 'copy-govuk-images',
+    'copy-govuk-fonts', 'copy-govuk-manifest', 'compile-scss')); 
+
