@@ -1,6 +1,4 @@
-﻿using AutoFixture;
-using EPR.Payment.Portal.Common.Constants;
-using EPR.Payment.Portal.Common.UnitTests.TestHelpers;
+﻿using EPR.Payment.Portal.Common.Constants;
 using EPR.Payment.Portal.ViewComponents;
 using EPR.Payment.Portal.ViewModels;
 using FluentAssertions;
@@ -12,12 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.Extensions.Options;
 using Moq;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EPR.Payment.Portal.UnitTests.ViewComponents
 {

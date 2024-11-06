@@ -1,14 +1,9 @@
-﻿using AutoFixture;
-using EPR.Payment.Portal.Common.Constants;
+﻿using EPR.Payment.Portal.Common.Constants;
 using EPR.Payment.Portal.Controllers.Culture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace EPR.Payment.Portal.UnitTests.Controllers
 {
