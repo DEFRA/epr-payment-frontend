@@ -138,4 +138,70 @@
   <data name="sign_out_descriptive_text" xml:space="preserve">
     <value>Click this link if you wish to go to Sign Out Page</value>
   </data>
+  <data name="get_help" xml:space="preserve">
+    <value>Get help</value>
+  </data>
+  <data name="email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="telephone" xml:space="preserve">
+    <value>Telephone</value>
+  </data>
+  <data name="monday_friday" xml:space="preserve">
+    <value>Monday to Friday, 8:30am to 4:30pm</value>
+  </data>
+  <data name="cookies" xml:space="preserve">
+    <value>Cookies</value>
+  </data>
+  <data name="privacy" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
+  <data name="accessibility" xml:space="preserve">
+    <value>Accessibility statement</value>
+  </data>
+  <data name="license_description_3" xml:space="preserve">
+    <value>, except where otherwise stated</value>
+  </data>
+  <data name="crown_copyright" xml:space="preserve">
+    <value>Crown copyright</value>
+  </data>
+  <data name="license_description_1" xml:space="preserve">
+    <value>All content is available under the</value>
+  </data>
+  <data name="license_description_2" xml:space="preserve">
+    <value> Open Government Licence v3.0</value>
+  </data>
+  <data name="policy" xml:space="preserve">
+    <value>Policy</value>
+  </data>
+  <data name="feedback_descriptive_text" xml:space="preserve">
+    <value>Click this link if you wish to go to the feedback Page</value>
+  </data>
+  <data name="feedback" xml:space="preserve">
+    <value>feedback</value>
+  </data>
+  <data name="private_beta" xml:space="preserve">
+    <value>PRIVATE BETA</value>
+  </data>
+  <data name="private_beta_1" xml:space="preserve">
+    <value>This is a new service – your </value>
+  </data>
+  <data name="private_beta_2" xml:space="preserve">
+    <value>will help us to improve it.</value>
+  </data>
+  <data name="cookies_descriptive_text" xml:space="preserve">
+    <value>Click this link if you wish to go to the cookies Page</value>
+  </data>
+  <data name="policy_descriptive_text" xml:space="preserve">
+    <value>Click this link if you wish to go to the policy Page</value>
+  </data>
+  <data name="accessibility_descriptive_text" xml:space="preserve">
+    <value>Click this link if you wish to go to the accessibility Page</value>
+  </data>
+  <data name="ogl_descriptive_text" xml:space="preserve">
+    <value>Click this link if you wish to go to the open government license Page</value>
+  </data>
+  <data name="crown_copyright_descriptive_text" xml:space="preserve">
+    <value>Click this link if you wish to go to the crown copyright Page</value>
+  </data>
 </root>

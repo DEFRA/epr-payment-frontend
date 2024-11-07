@@ -22,3 +22,4 @@ appsettings.Test.json
 /node_modules
 /bin/Debug
 /obj
+/src/EPR.Payment.Portal/appsettings.development.json

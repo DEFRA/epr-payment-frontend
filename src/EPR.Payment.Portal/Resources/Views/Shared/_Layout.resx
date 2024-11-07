@@ -138,4 +138,70 @@
   <data name="sign_out_descriptive_text" xml:space="preserve">
     <value />
   </data>
+  <data name="get_help" xml:space="preserve">
+    <value />
+  </data>
+  <data name="email" xml:space="preserve">
+    <value />
+  </data>
+  <data name="telephone" xml:space="preserve">
+    <value />
+  </data>
+  <data name="monday_friday" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cookies" xml:space="preserve">
+    <value />
+  </data>
+  <data name="privacy" xml:space="preserve">
+    <value />
+  </data>
+  <data name="accessibility" xml:space="preserve">
+    <value />
+  </data>
+  <data name="license_description_3" xml:space="preserve">
+    <value />
+  </data>
+  <data name="crown_copyright" xml:space="preserve">
+    <value />
+  </data>
+  <data name="license_description_1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="license_description_2" xml:space="preserve">
+    <value />
+  </data>
+  <data name="policy" xml:space="preserve">
+    <value />
+  </data>
+  <data name="feedback_descriptive_text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="feedback" xml:space="preserve">
+    <value />
+  </data>
+  <data name="private_beta" xml:space="preserve">
+    <value />
+  </data>
+  <data name="private_beta_1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="private_beta_2" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cookies_descriptive_text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="policy_descriptive_text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="accessibility_descriptive_text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ogl_descriptive_text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="crown_copyright_descriptive_text" xml:space="preserve">
+    <value />
+  </data>
 </root>
