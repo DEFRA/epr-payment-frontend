@@ -2,6 +2,8 @@
 @inject IConfiguration configuration;
 @{
     var menuUrl = @configuration.GetSection("Dashboard:MenuUrl")["Url"];
+    var manageAccountUrl = @configuration.GetSection("Dashboard:ManageAccountUrl")["Url"];
+    var signOutUrl = @configuration.GetSection("Dashboard:SignOutUrl")["Url"];
     var feedbackUrl = @configuration.GetSection("Dashboard:FeedbackUrl")["Url"];
 }
 <!DOCTYPE html>
@@ -46,8 +48,28 @@
             </div>
             <div class="govuk-header__content">
                 <a href="@menuUrl" class="govuk-header__link govuk-header__service-name">
-                    Collection and Packaging Reforms
+                    @Localizer["report_packaging_data"]
                 </a>
+                <nav aria-label="Menu" class="govuk-header__navigation ">
+                    <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide menu" hidden="">Menu</button>
+                    <ul id="navigation" class="govuk-header__navigation-list">
+                        <li class="govuk-header__navigation-item">
+                            <a class="govuk-header__link" href="@menuUrl" aria-label="@Localizer["home_descriptive_text"]">
+                                @Localizer["home"]
+                            </a>
+                        </li>
+                        <li class="govuk-header__navigation-item">
+                            <a class="govuk-header__link" href="@manageAccountUrl" aria-label="@Localizer["manage_account_descriptive_text"]">
+                                @Localizer["manage_account"]
+                            </a>
+                        </li>
+                        <li class="govuk-header__navigation-item">
+                            <a class="govuk-header__link" href="@signOutUrl" aria-label="@Localizer["sign_out_descriptive_text"]">
+                                @Localizer["sign_out"]
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </header>

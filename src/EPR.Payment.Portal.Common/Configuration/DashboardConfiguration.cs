@@ -6,6 +6,7 @@
 
         public Service MenuUrl { get; set; } = new Service();
         public Service BackUrl { get; set; } = new Service();
+        public Service RegistrationTaskList { get; set; } = new Service();
         public Service FeedbackUrl { get; set; } = new Service();
         public Service OfflinePaymentUrl { get; set; } = new Service();
     }

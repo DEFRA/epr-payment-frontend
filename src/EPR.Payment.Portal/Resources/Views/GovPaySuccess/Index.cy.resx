@@ -118,19 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="application_reference_number" xml:space="preserve">
-    <value>Cyfeirnod eich cais: [Rhif cyfeirnod]</value>
+    <value>Cyfeirnod eich cais:</value>
   </data>
   <data name="email_confirmation_sent" xml:space="preserve">
     <value>Rydyn ni wedi anfon neges ebost i gadarnhau hyn at</value>
   </data>
-  <data name="home" xml:space="preserve">
-    <value>Hafan</value>
-  </data>
   <data name="last_step_before_review" xml:space="preserve">
     <value>Cyflwyno'ch manylion cofrestru fel y cam olaf cyn i'ch cais gael ei adolygu.</value>
-  </data>
-  <data name="manage_account" xml:space="preserve">
-    <value>Rheoli'r cyfrif</value>
   </data>
   <data name="payment_successful" xml:space="preserve">
     <value>Y taliad yn llwyddiannus</value>
@@ -144,13 +138,16 @@
   <data name="return_dashboard" xml:space="preserve">
     <value>Yn ôl i'r dangosfwrdd</value>
   </data>
-  <data name="sign_out" xml:space="preserve">
-    <value>Allgofnodi</value>
-  </data>
   <data name="submit_registration_application" xml:space="preserve">
     <value>Cyflwyno'ch cais am gofrestru</value>
   </data>
   <data name="what_happens_next" xml:space="preserve">
     <value>Beth sy'n digwydd nesaf</value>
+  </data>
+  <data name="return_to_dashboard_descriptive_text" xml:space="preserve">
+    <value>Click on this link if you wish to return to the dashboard</value>
+  </data>
+  <data name="submit_registration_application_descriptive_text" xml:space="preserve">
+    <value>Click on this link if you wish to submit your registration application to the regulator</value>
   </data>
 </root>

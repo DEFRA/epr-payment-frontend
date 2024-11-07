@@ -118,19 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="application_reference_number" xml:space="preserve">
-    <value>Your application reference: [Reference number]</value>
+    <value>Your application reference:</value>
   </data>
   <data name="email_confirmation_sent" xml:space="preserve">
     <value>We have sent an email confirmation to</value>
   </data>
-  <data name="home" xml:space="preserve">
-    <value>Home</value>
-  </data>
   <data name="last_step_before_review" xml:space="preserve">
     <value>Submit your registration details as the last step before your application is reviewed.</value>
-  </data>
-  <data name="manage_account" xml:space="preserve">
-    <value>Manage account</value>
   </data>
   <data name="payment_successful" xml:space="preserve">
     <value>Payment successful</value>
@@ -144,13 +138,16 @@
   <data name="return_dashboard" xml:space="preserve">
     <value>Return to the dashboard</value>
   </data>
-  <data name="sign_out" xml:space="preserve">
-    <value>Sign out</value>
-  </data>
   <data name="submit_registration_application" xml:space="preserve">
     <value>Submit your registration application</value>
   </data>
   <data name="what_happens_next" xml:space="preserve">
     <value>What happens next</value>
+  </data>
+  <data name="return_to_dashboard_descriptive_text" xml:space="preserve">
+    <value>Click on this link if you wish to return to the dashboard</value>
+  </data>
+  <data name="submit_registration_application_descriptive_text" xml:space="preserve">
+    <value>Click on this link if you wish to submit your registration application to the regulator</value>
   </data>
 </root>

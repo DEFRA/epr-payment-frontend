@@ -117,37 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="application_reference_number" xml:space="preserve">
-    <value />
-  </data>
-  <data name="email_confirmation_sent" xml:space="preserve">
-    <value />
-  </data>
-  <data name="last_step_before_review" xml:space="preserve">
-    <value />
-  </data>
-  <data name="payment_successful" xml:space="preserve">
-    <value />
-  </data>
-  <data name="registration_fee_paid" xml:space="preserve">
-    <value />
-  </data>
   <data name="report_packaging_data" xml:space="preserve">
     <value />
   </data>
-  <data name="return_dashboard" xml:space="preserve">
+  <data name="home" xml:space="preserve">
     <value />
   </data>
-  <data name="submit_registration_application" xml:space="preserve">
+  <data name="manage_account" xml:space="preserve">
     <value />
   </data>
-  <data name="what_happens_next" xml:space="preserve">
+  <data name="sign_out" xml:space="preserve">
     <value />
   </data>
-  <data name="return_to_dashboard_descriptive_text" xml:space="preserve">
+  <data name="home_descriptive_text" xml:space="preserve">
     <value />
   </data>
-  <data name="submit_registration_application_descriptive_text" xml:space="preserve">
+  <data name="manage_account_descriptive_text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="sign_out_descriptive_text" xml:space="preserve">
     <value />
   </data>
 </root>
