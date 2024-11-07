@@ -123,8 +123,14 @@
   <data name="email_confirmation_sent" xml:space="preserve">
     <value>We have sent an email confirmation to</value>
   </data>
+  <data name="home" xml:space="preserve">
+    <value>Home</value>
+  </data>
   <data name="last_step_before_review" xml:space="preserve">
     <value>Submit your registration details as the last step before your application is reviewed.</value>
+  </data>
+  <data name="manage_account" xml:space="preserve">
+    <value>Manage account</value>
   </data>
   <data name="payment_successful" xml:space="preserve">
     <value>Payment successful</value>
@@ -137,6 +143,9 @@
   </data>
   <data name="return_dashboard" xml:space="preserve">
     <value>Return to the dashboard</value>
+  </data>
+  <data name="sign_out" xml:space="preserve">
+    <value>Sign out</value>
   </data>
   <data name="submit_registration_application" xml:space="preserve">
     <value>Submit your registration application</value>

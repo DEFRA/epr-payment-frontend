@@ -2,10 +2,12 @@ using EPR.Payment.Portal.AppStart;
 using EPR.Payment.Portal.Common.Configuration;
 using EPR.Payment.Portal.Extension;
 using EPR.Payment.Portal.Helpers;
+using Microsoft.FeatureManagement;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddFeatureManagement();
 builder.Services.AddControllersWithViews().AddViewLocalization();
 builder.Services.AddPortalDependencies(builder.Configuration);
 builder.Services.AddServiceHealthChecks();
