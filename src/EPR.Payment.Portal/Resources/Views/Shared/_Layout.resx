@@ -117,46 +117,91 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="application_reference_number" xml:space="preserve">
-    <value>Your application reference:</value>
-  </data>
-  <data name="email_confirmation_sent" xml:space="preserve">
-    <value>We have sent an email confirmation to</value>
+  <data name="report_packaging_data" xml:space="preserve">
+    <value />
   </data>
   <data name="home" xml:space="preserve">
-    <value>Home</value>
-  </data>
-  <data name="last_step_before_review" xml:space="preserve">
-    <value>Submit your registration details as the last step before your application is reviewed.</value>
+    <value />
   </data>
   <data name="manage_account" xml:space="preserve">
-    <value>Manage account</value>
-  </data>
-  <data name="payment_successful" xml:space="preserve">
-    <value>Payment successful</value>
-  </data>
-  <data name="registration_fee_paid" xml:space="preserve">
-    <value>Your registration fee has been paid</value>
-  </data>
-  <data name="report_packaging_data" xml:space="preserve">
-    <value>Report packaging data</value>
-  </data>
-  <data name="return_dashboard" xml:space="preserve">
-    <value>Return to the dashboard</value>
+    <value />
   </data>
   <data name="sign_out" xml:space="preserve">
-    <value>Sign out</value>
+    <value />
   </data>
-  <data name="submit_registration_application" xml:space="preserve">
-    <value>Submit your registration application</value>
+  <data name="home_descriptive_text" xml:space="preserve">
+    <value />
   </data>
-  <data name="what_happens_next" xml:space="preserve">
-    <value>What happens next</value>
+  <data name="manage_account_descriptive_text" xml:space="preserve">
+    <value />
   </data>
-  <data name="return_to_dashboard_descriptive_text" xml:space="preserve">
-    <value>Click on this link if you wish to return to the dashboard</value>
+  <data name="sign_out_descriptive_text" xml:space="preserve">
+    <value />
   </data>
-  <data name="submit_registration_application_descriptive_text" xml:space="preserve">
-    <value>Click on this link if you wish to submit your registration application to the regulator</value>
+  <data name="get_help" xml:space="preserve">
+    <value />
+  </data>
+  <data name="email" xml:space="preserve">
+    <value />
+  </data>
+  <data name="telephone" xml:space="preserve">
+    <value />
+  </data>
+  <data name="monday_friday" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cookies" xml:space="preserve">
+    <value />
+  </data>
+  <data name="privacy" xml:space="preserve">
+    <value />
+  </data>
+  <data name="accessibility" xml:space="preserve">
+    <value />
+  </data>
+  <data name="license_description_3" xml:space="preserve">
+    <value />
+  </data>
+  <data name="crown_copyright" xml:space="preserve">
+    <value />
+  </data>
+  <data name="license_description_1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="license_description_2" xml:space="preserve">
+    <value />
+  </data>
+  <data name="policy" xml:space="preserve">
+    <value />
+  </data>
+  <data name="feedback_descriptive_text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="feedback" xml:space="preserve">
+    <value />
+  </data>
+  <data name="private_beta" xml:space="preserve">
+    <value />
+  </data>
+  <data name="private_beta_1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="private_beta_2" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cookies_descriptive_text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="policy_descriptive_text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="accessibility_descriptive_text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ogl_descriptive_text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="crown_copyright_descriptive_text" xml:space="preserve">
+    <value />
   </data>
 </root>
