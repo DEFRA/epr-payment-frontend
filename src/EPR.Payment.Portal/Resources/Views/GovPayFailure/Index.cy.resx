@@ -120,4 +120,61 @@
   <data name="service_unavailable" xml:space="preserve">
     <value>Mae'n ddrwg gennym - nid yw'r gwasanaeth ar gael</value>
   </data>
+  <data name="payment_unsuccessful" xml:space="preserve">
+    <value>Y taliad yn aflwyddiannus</value>
+  </data>
+  <data name="payment_not_completed" xml:space="preserve">
+    <value>Mae eich taliad heb gael ei gwblhau a does dim arian wedi'i gymryd o'ch cyfrif banc.</value>
+  </data>
+  <data name="try_online_payment_again" xml:space="preserve">
+    <value>Rhoi cynnig arall ar eich taliad ar-lein</value>
+  </data>
+  <data name="reference_number_is" xml:space="preserve">
+    <value>Eich cyfeirnod yw</value>
+  </data>
+  <data name="note_reference" xml:space="preserve">
+    <value>Cadwch nodyn o'r cyfeirnod yma, gan y bydd ei angen arnoch i roi cynnig arall ar y taliad.</value>
+  </data>
+  <data name="use_these_details" xml:space="preserve">
+    <value>Defnyddio'r manylion hyn i wneud taliad o </value>
+  </data>
+  <data name="pay_by_bank_transfer" xml:space="preserve">
+    <value>Talu drwy drosglwyddiad banc</value>
+  </data>
+  <data name="pay_by_phone" xml:space="preserve">
+    <value>Talu dros y ffôn</value>
+  </data>
+  <data name="call_charges" xml:space="preserve">
+    <value>Gwybodaeth am y taliadau am alwadau</value>
+  </data>
+  <data name="return_to_dashboard" xml:space="preserve">
+    <value>Yn ôl i'r dangosfwrdd</value>
+  </data>
+  <data name="environment_agency" xml:space="preserve">
+    <value>Asiantaeth yr Amgylchedd</value>
+  </data>
+  <data name="account_number" xml:space="preserve">
+    <value>Rhif y cyfrif</value>
+  </data>
+  <data name="sort_code" xml:space="preserve">
+    <value>Cod didoli</value>
+  </data>
+  <data name="bank_name" xml:space="preserve">
+    <value>Enw'r banc</value>
+  </data>
+  <data name="telephone" xml:space="preserve">
+    <value>Ffôn</value>
+  </data>
+  <data name="telephone_outside_uk" xml:space="preserve">
+    <value>Ffôn o'r tu allan i'r Deyrnas Unedig</value>
+  </data>
+  <data name="monday_friday" xml:space="preserve">
+    <value>Dydd Llun i ddydd Gwener, 8am i 6pm</value>
+  </data>
+  <data name="account_name" xml:space="preserve">
+    <value>!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</value>
+  </data>
+  <data name="return_to_dashboard_descriptive_text" xml:space="preserve">
+    <value>Click on this link if you wish to return to the dashboard</value>
+  </data>
 </root>
