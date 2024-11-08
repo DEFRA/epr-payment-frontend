@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="application_reference_number" xml:space="preserve">
-    <value>Cyfeirnod eich cais: [Rhif cyfeirnod]</value>
+    <value>Cyfeirnod eich cais:</value>
   </data>
   <data name="email_confirmation_sent" xml:space="preserve">
     <value>Rydyn ni wedi anfon neges ebost i gadarnhau hyn at</value>
@@ -152,5 +152,11 @@
   </data>
   <data name="what_happens_next" xml:space="preserve">
     <value>Beth sy'n digwydd nesaf</value>
+  </data>
+  <data name="return_to_dashboard_descriptive_text" xml:space="preserve">
+    <value>Click on this link if you wish to return to the dashboard</value>
+  </data>
+  <data name="submit_registration_application_descriptive_text" xml:space="preserve">
+    <value>Click on this link if you wish to submit your registration application to the regulator</value>
   </data>
 </root>

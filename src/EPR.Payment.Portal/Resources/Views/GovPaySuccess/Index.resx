@@ -144,13 +144,19 @@
   <data name="return_dashboard" xml:space="preserve">
     <value />
   </data>
-  <data name="sign_out" xml:space="preserve">
-    <value />
-  </data>
   <data name="submit_registration_application" xml:space="preserve">
     <value />
   </data>
   <data name="what_happens_next" xml:space="preserve">
+	<value />
+  </data>
+  <data name="sign_out" xml:space="preserve">
+    <value />
+  </data>
+  <data name="return_to_dashboard_descriptive_text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="submit_registration_application_descriptive_text" xml:space="preserve">
     <value />
   </data>
 </root>
