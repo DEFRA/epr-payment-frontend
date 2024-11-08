@@ -2,7 +2,12 @@
 @inject IConfiguration configuration;
 @{
     var menuUrl = @configuration.GetSection("Dashboard:MenuUrl")["Url"];
+    var manageAccountUrl = @configuration.GetSection("Dashboard:ManageAccountUrl")["Url"];
+    var signOutUrl = @configuration.GetSection("Dashboard:SignOutUrl")["Url"];
     var feedbackUrl = @configuration.GetSection("Dashboard:FeedbackUrl")["Url"];
+    var cookiesUrl = @configuration.GetSection("Dashboard:CookiesUrl")["Url"];
+    var policyUrl = @configuration.GetSection("Dashboard:PolicyUrl")["Url"];
+    var accessibilityUrl = @configuration.GetSection("Dashboard:AccessibilityUrl")["Url"];
 }
 <!DOCTYPE html>
 <!DOCTYPE html>
@@ -46,18 +51,38 @@
             </div>
             <div class="govuk-header__content">
                 <a href="@menuUrl" class="govuk-header__link govuk-header__service-name">
-                    Collection and Packaging Reforms
+                    @Localizer["report_packaging_data"]
                 </a>
+                <nav aria-label="Menu" class="govuk-header__navigation ">
+                    <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide menu" hidden="">Menu</button>
+                    <ul id="navigation" class="govuk-header__navigation-list">
+                        <li class="govuk-header__navigation-item">
+                            <a class="govuk-header__link" href="@menuUrl" aria-label="@Localizer["home_descriptive_text"]">
+                                @Localizer["home"]
+                            </a>
+                        </li>
+                        <li class="govuk-header__navigation-item">
+                            <a class="govuk-header__link" href="@manageAccountUrl" aria-label="@Localizer["manage_account_descriptive_text"]">
+                                @Localizer["manage_account"]
+                            </a>
+                        </li>
+                        <li class="govuk-header__navigation-item">
+                            <a class="govuk-header__link" href="@signOutUrl" aria-label="@Localizer["sign_out_descriptive_text"]">
+                                @Localizer["sign_out"]
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </header>
     <div class="govuk-width-container govuk-phase-banner">
         <p class="govuk-phase-banner__content">
             <strong class="govuk-tag govuk-phase-banner__content__tag">
-                PRIVATE BETA
+                @Localizer["private_beta"]
             </strong>
             <span class="govuk-phase-banner__text">
-                This is a new service – your <a class="govuk-link" href="@feedbackUrl">feedback</a> will help us to improve it.
+                @Localizer["private_beta_1"]<a class="govuk-link" href="@feedbackUrl" aria-label="@Localizer["feedback_descriptive_text"]">@Localizer["feedback"]</a> @Localizer["private_beta_2"]
             </span>
         </p>
     </div>
@@ -73,34 +98,29 @@
             <div class="govuk-footer__meta">
                 <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
 
-                    <h2 class="govuk-heading-m">Get help</h2>
+                    <h2 class="govuk-heading-m">@Localizer["get_help"]</h2>
 
-                    <p class="govuk-body">Email: <a class="govuk-link govuk-link--no-visited-state" href="mailto:eprcustomerservice@defra.gov.uk">eprcustomerservice@defra.gov.uk</a></p>
+                    <p class="govuk-body">@Localizer["email"]: <a class="govuk-link govuk-link--no-visited-state" href="mailto:eprcustomerservice@defra.gov.uk">eprcustomerservice@defra.gov.uk</a></p>
 
-                    <p class="govuk-body govuk-!-margin-bottom-2">Telephone: 0300 060 0002</p>
+                    <p class="govuk-body govuk-!-margin-bottom-2">@Localizer["telephone"]: 0300 060 0002</p>
 
-                    <p class="govuk-body">Monday to Friday, 8am to 4:30pm</p>
+                    <p class="govuk-body">@Localizer["monday_friday"]</p>
 
                     <h2 class="govuk-visually-hidden">Support links</h2>
                     <ul class="govuk-footer__inline-list govuk-!-margin-top-7">
                         <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link" href="#">
-                                Cookies
+                            <a class="govuk-footer__link" href="@cookiesUrl" aria-label="@Localizer["cookies_descriptive_text"]">
+                                @Localizer["cookies"]
                             </a>
                         </li>
                         <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link" href="#">
-                                Policy
+                            <a class="govuk-footer__link" href="@policyUrl" aria-label="@Localizer["policy_descriptive_text"]">
+                                @Localizer["policy"]
                             </a>
                         </li>
                         <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link" href="#">
-                                Accessibility statement
-                            </a>
-                        </li>
-                        <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link" href="/clear">
-                                Clear data
+                            <a class="govuk-footer__link" href="@accessibilityUrl" aria-label="@Localizer["accessibility_descriptive_text"]">
+                                @Localizer["accessibility"]
                             </a>
                         </li>
                     </ul>
@@ -108,12 +128,11 @@
                         <path fill="currentColor" d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"></path>
                     </svg>
                     <span class="govuk-footer__licence-description">
-                        All content is available under the
-                        <a class="govuk-footer__link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated
+                        @Localizer["license_description_1"]<a class="govuk-footer__link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license" aria-label="@Localizer["ogl_descriptive_text"]">@Localizer["license_description_2"]</a>@Localizer["license_description_3"]
                     </span>
                 </div>
                 <div class="govuk-footer__meta-item">
-                    <a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">© Crown copyright</a>
+                    <a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/" aria-label="@Localizer["crown_copyright_descriptive_text"]">© @Localizer["crown_copyright"]</a>
                 </div>
             </div>
         </div>
