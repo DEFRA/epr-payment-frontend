@@ -130,13 +130,13 @@
     <value>Sign out</value>
   </data>
   <data name="home_descriptive_text" xml:space="preserve">
-    <value>Click this link if you wish to go to the Home Page</value>
+    <value>Click on this link if you wish to go to the Home page</value>
   </data>
   <data name="manage_account_descriptive_text" xml:space="preserve">
-    <value>Click this link if you wish to go to Manage account Page</value>
+    <value>Click on this link if you wish to go to Manage Account page</value>
   </data>
   <data name="sign_out_descriptive_text" xml:space="preserve">
-    <value>Click this link if you wish to go to Sign Out Page</value>
+    <value>Click on this link if you wish to go to Sign Out page</value>
   </data>
   <data name="get_help" xml:space="preserve">
     <value>Get help</value>
@@ -175,7 +175,7 @@
     <value>Policy</value>
   </data>
   <data name="feedback_descriptive_text" xml:space="preserve">
-    <value>Click this link if you wish to go to the feedback Page</value>
+    <value>Click on this link if you wish to go to the Feedback page</value>
   </data>
   <data name="feedback" xml:space="preserve">
     <value>feedback</value>
@@ -190,18 +190,18 @@
     <value>will help us to improve it.</value>
   </data>
   <data name="cookies_descriptive_text" xml:space="preserve">
-    <value>Click this link if you wish to go to the cookies Page</value>
+    <value>Click on this link if you wish to go to the Cookies page</value>
   </data>
   <data name="policy_descriptive_text" xml:space="preserve">
-    <value>Click this link if you wish to go to the policy Page</value>
+    <value>Click on this link if you wish to go to the Policy page</value>
   </data>
   <data name="accessibility_descriptive_text" xml:space="preserve">
-    <value>Click this link if you wish to go to the accessibility Page</value>
+    <value>Click on this link if you wish to go to the Accessibility Statement page</value>
   </data>
   <data name="ogl_descriptive_text" xml:space="preserve">
-    <value>Click this link if you wish to go to the open government license Page</value>
+    <value>Click on this link if you wish to go to the Open Government License v3.0 page</value>
   </data>
   <data name="crown_copyright_descriptive_text" xml:space="preserve">
-    <value>Click this link if you wish to go to the crown copyright Page</value>
+    <value>Click on this link if you wish to go to the Crown Copyright page</value>
   </data>
 </root>
