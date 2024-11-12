@@ -133,7 +133,7 @@
     <value>Your reference is</value>
   </data>
   <data name="note_reference" xml:space="preserve">
-    <value>Make a note of this reference, as you will need it to retry the payment.</value>
+    <value>Make a note - as you will need it to retry the payment.</value>
   </data>
   <data name="use_these_details" xml:space="preserve">
     <value>Use these details to make payment of </value>
@@ -176,5 +176,11 @@
   </data>
   <data name="return_to_dashboard_descriptive_text" xml:space="preserve">
     <value>Click on this link if you wish to return to the dashboard</value>
+  </data>
+  <data name="call_charges_descriptive_text" xml:space="preserve">
+    <value>Click on this link if you wish to pay by phone and need to find out about call charges</value>
+  </data>
+  <data name="try_online_payment_again_descriptive_text" xml:space="preserve">
+    <value>Click on this link if you wish to make an online payment again</value>
   </data>
 </root>

@@ -178,4 +178,10 @@
   <data name="return_to_dashboard_descriptive_text" xml:space="preserve">
     <value />
   </data>
+  <data name="call_charges_descriptive_text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="try_online_payment_again_descriptive_text" xml:space="preserve">
+    <value />
+  </data>
 </root>

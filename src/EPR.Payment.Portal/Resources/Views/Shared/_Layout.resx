@@ -204,4 +204,7 @@
   <data name="crown_copyright_descriptive_text" xml:space="preserve">
     <value />
   </data>
+  <data name="privacy_descriptive_text" xml:space="preserve">
+    <value />
+  </data>
 </root>

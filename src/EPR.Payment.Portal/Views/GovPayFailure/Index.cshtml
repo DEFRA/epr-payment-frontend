@@ -23,7 +23,7 @@
                     <input type="hidden" value="@Model.completePaymentViewModel.Reference" />
                     <input type="hidden" value="@Model.completePaymentViewModel.Regulator" />
                     <input type="hidden" value="@Model.completePaymentViewModel.Amount" />
-                    <button class="govuk-button" data-module="govuk-button">
+                    <button class="govuk-button" data-module="govuk-button" aria-label="@Localizer["try_online_payment_again_descriptive_text"]">
                         @Localizer["try_online_payment_again"]
                     </button>
                 </form>
@@ -37,7 +37,7 @@
             <h3 class="govuk-heading-s">@Localizer["pay_by_bank_transfer"]</h3>
             <p></p>
             <p class="govuk-body">
-                @Localizer["account_name"]: Environment Agency<br />
+                @Localizer["account_name"]: EA Receipts<br />
                 @Localizer["account_number"]: 10014411<br />
                 @Localizer["sort_code"]: 60-70-80<br />
                 @Localizer["bank_name"]: RBS/NatWest, London Corporate Service Centre, CPB Services, 2nd floor, 280 Bishopsgate, London EC2M 4RB<br />
@@ -48,8 +48,9 @@
                 @Localizer["environment_agency"]<br />
                 @Localizer["telephone"]: 03708 506 506<br />
                 @Localizer["telephone_outside_uk"]: +44 (0) 114 282 5312<br />
+                @Localizer["monday_friday"]<br />
             </p>
-            <p><a href="https://www.gov.uk/call-charges" class="govuk-link">@Localizer["call_charges"]</a></p>
+            <p><a href="https://www.gov.uk/call-charges" class="govuk-link" aria-label="@Localizer["call_charges_descriptive_text"]">@Localizer["call_charges"]</a></p>
             <p></p>
             <p class="govuk-body"><a href=@Model.dashboardConfiguration.BackUrl.Url aria-label="@Localizer["return_to_dashboard_descriptive_text"]">@Localizer["return_to_dashboard"]</a></p>
             <p></p>

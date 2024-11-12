@@ -6,7 +6,7 @@
     var signOutUrl = @configuration.GetSection("Dashboard:SignOutUrl")["Url"];
     var feedbackUrl = @configuration.GetSection("Dashboard:FeedbackUrl")["Url"];
     var cookiesUrl = @configuration.GetSection("Dashboard:CookiesUrl")["Url"];
-    var policyUrl = @configuration.GetSection("Dashboard:PolicyUrl")["Url"];
+    var privacyUrl = @configuration.GetSection("Dashboard:PrivacyUrl")["Url"];
     var accessibilityUrl = @configuration.GetSection("Dashboard:AccessibilityUrl")["Url"];
 }
 <!DOCTYPE html>
@@ -114,8 +114,8 @@
                             </a>
                         </li>
                         <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link" href="@policyUrl" aria-label="@Localizer["policy_descriptive_text"]">
-                                @Localizer["policy"]
+                            <a class="govuk-footer__link" href="@privacyUrl" aria-label="@Localizer["privacy_descriptive_text"]">
+                                @Localizer["privacy"]
                             </a>
                         </li>
                         <li class="govuk-footer__inline-list-item">
