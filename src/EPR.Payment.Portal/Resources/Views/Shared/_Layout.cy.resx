@@ -174,8 +174,34 @@
   <data name="policy" xml:space="preserve">
     <value>Polisi</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="feedback_descriptive_text" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="feedback_descriptive_text" xml:space="preserve">
+    <value>Click on this link if you wish to go to the Feedback page</value>
+  </data>
+  <data name="feedback" xml:space="preserve">
+    <value>feedback</value>
+  </data>
+  <data name="private_beta" xml:space="preserve">
+    <value>PRIVATE BETA</value>
+  </data>
+  <data name="private_beta_1" xml:space="preserve">
+    <value>This is a new service – your </value>
+  </data>
+  <data name="private_beta_2" xml:space="preserve">
+    <value>will help us to improve it.</value>
+  </data>
+  <data name="cookies_descriptive_text" xml:space="preserve">
+    <value>Click on this link if you wish to go to the Cookies page</value>
+  </data>
+  <data name="policy_descriptive_text" xml:space="preserve">
+    <value>Click on this link if you wish to go to the Policy page</value>
+  </data>
+  <data name="accessibility_descriptive_text" xml:space="preserve">
+    <value>Click on this link if you wish to go to the Accessibility Statement page</value>
+  </data>
+  <data name="ogl_descriptive_text" xml:space="preserve">
+    <value>Click on this link if you wish to go to the Open Government License v3.0 page</value>
+  </data>
+  <data name="crown_copyright_descriptive_text" xml:space="preserve">
+    <value>Click on this link if you wish to go to the Crown Copyright page</value>
   </data>
 </root>
