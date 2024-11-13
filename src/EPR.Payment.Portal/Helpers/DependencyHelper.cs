@@ -61,7 +61,7 @@ namespace EPR.Payment.Portal.Helpers
 
             var endPointName = endPointOverride ?? serviceConfig?.EndPointName;
 
-            return Options.Create(new FacadeService
+            return Microsoft.Extensions.Options.Options.Create(new FacadeService
             {
                 Url = serviceConfig?.Url,
                 EndPointName = endPointName,
