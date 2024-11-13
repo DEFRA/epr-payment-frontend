@@ -177,4 +177,10 @@
   <data name="return_to_dashboard_descriptive_text" xml:space="preserve">
     <value>Click on this link if you wish to return to the dashboard</value>
   </data>
+  <data name="call_charges_descriptive_text" xml:space="preserve">
+    <value>Click on this link if you wish to pay by phone and need to find out about call charges</value>
+  </data>
+  <data name="try_online_payment_again_descriptive_text" xml:space="preserve">
+    <value>Click on this link if you wish to make an online payment again</value>
+  </data>
 </root>

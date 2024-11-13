@@ -204,4 +204,7 @@
   <data name="crown_copyright_descriptive_text" xml:space="preserve">
     <value>Click on this link if you wish to go to the Crown Copyright page</value>
   </data>
+  <data name="privacy_descriptive_text" xml:space="preserve">
+    <value>Click on this link if you wish to go to the Privacy page</value>
+  </data>
 </root>
