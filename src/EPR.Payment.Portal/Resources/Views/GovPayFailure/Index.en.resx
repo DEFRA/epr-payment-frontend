@@ -169,10 +169,10 @@
     <value>Telephone from outside the UK</value>
   </data>
   <data name="monday_friday" xml:space="preserve">
-    <value>Monday to Friday, 8 am to 6 pm</value>
+    <value>Monday to Friday, 8am to 6pm</value>
   </data>
   <data name="account_name" xml:space="preserve">
-    <value>Account Name</value>
+    <value>Account name</value>
   </data>
   <data name="return_to_dashboard_descriptive_text" xml:space="preserve">
     <value>Click on this link if you wish to return to the dashboard</value>
