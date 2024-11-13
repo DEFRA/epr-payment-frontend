@@ -172,7 +172,7 @@
     <value>Dydd Llun i ddydd Gwener, 8am i 6pm</value>
   </data>
   <data name="account_name" xml:space="preserve">
-    <value>Account Name</value>
+    <value>Account name</value>
   </data>
   <data name="return_to_dashboard_descriptive_text" xml:space="preserve">
     <value>Click on this link if you wish to return to the dashboard</value>

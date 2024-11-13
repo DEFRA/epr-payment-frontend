@@ -142,7 +142,7 @@
     <value>Get help</value>
   </data>
   <data name="email" xml:space="preserve">
-    <value>Click on this link if you wish to send an email to eprcustomerservice@defra.gov.uk</value>
+    <value>Email</value>
   </data>
   <data name="telephone" xml:space="preserve">
     <value>Telephone</value>
@@ -206,5 +206,8 @@
   </data>
   <data name="privacy_descriptive_text" xml:space="preserve">
     <value>Click on this link if you wish to go to the Privacy page</value>
+  </data>
+  <data name="email_descriptive_text" xml:space="preserve">
+    <value>Click on this link if you wish to send an email to eprcustomerservice@defra.gov.uk</value>
   </data>
 </root>
