@@ -8,30 +8,37 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content">
+<main class="govuk-main-wrapper govuk-!-padding-top-8" id="main-content">
     <div class="govuk-grid-row">
         <div class="govuk-panel govuk-panel--confirmation">
             <h1 class="govuk-panel__title">
-                Payment successful
+                @Localizer["payment_successful"]
             </h1>
             <div class="govuk-panel__body">
-                Your registration reference number is <br><strong>@Model.completePaymentViewModel.Reference</strong>
+                @Localizer["registration_fee_paid"]
             </div>
         </div>
     </div>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             <p class="govuk-body">
-                We have sent an email confirmation to <a href="">@Model.completePaymentViewModel.Email</a>
+                @Localizer["email_confirmation_sent"] <a href="@Model.completePaymentViewModel.Email" aria-label="@Model.completePaymentViewModel.Email">@Model.completePaymentViewModel.Email</a>
+            </p>
+            <p class="govuk-body">
+                @Localizer["application_reference_number"] @Model.completePaymentViewModel.Reference
             </p>
             <p></p>
-            <h3 class="govuk-heading-s">What happens next</h3>
+            <h3 class="govuk-heading-s">@Localizer["what_happens_next"]</h3>
             <p></p>
             <p class="govuk-body">
-                We will review your application and contact you about the outcome - this usually takes up to 2 weeks.
+                @Localizer["last_step_before_review"]
             </p>
-            <p></p>
-            <p class="govuk-body"><a href=@Model.dashboardConfiguration.BackUrl.Url>Return to dashboard</a></p>
+            <div class="govuk-button-group">
+                <a href="@Model.dashboardConfiguration.RegistrationTaskList.Url" class="govuk-button" type="submit" aria-label="@Localizer["submit_registration_application_descriptive_text"]">@Localizer["submit_registration_application"]</a>
+            </div>
+            <p class="govuk-body">
+                <a href=@Model.dashboardConfiguration.BackUrl.Url aria-label="@Localizer["return_to_dashboard_descriptive_text"]">@Localizer["return_dashboard"]</a>
+            </p>
             <p></p>
         </div>
     </div>

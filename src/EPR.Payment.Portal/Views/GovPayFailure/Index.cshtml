@@ -4,7 +4,7 @@
 @model CompositeViewModel;
 
 @{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = "GovPay Unsuccessful";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -12,9 +12,9 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
 
-            <h1 class="govuk-heading-l">Your payment has been declined</h1>
+            <h1 class="govuk-heading-l">@Localizer["payment_unsuccessful"]</h1>
             <p></p>
-            <p class="govuk-body">Contact your bank for more details. No money has been taken from your account.</p>
+            <p class="govuk-body">@Localizer["payment_not_completed"]</p>
             <p></p>
             <p class="govuk-body">
                 <form method="post">
@@ -23,25 +23,36 @@
                     <input type="hidden" value="@Model.completePaymentViewModel.Reference" />
                     <input type="hidden" value="@Model.completePaymentViewModel.Regulator" />
                     <input type="hidden" value="@Model.completePaymentViewModel.Amount" />
-                    <button class="govuk-button" data-module="govuk-button">
-                        Try the payment again
+                    <button class="govuk-button" data-module="govuk-button" aria-label="@Localizer["try_online_payment_again_descriptive_text"]">
+                        @Localizer["try_online_payment_again"]
                     </button>
                 </form>
             </p>
+            <p class="govuk-body">
+                @Localizer["reference_number_is"] <strong>@Model.completePaymentViewModel.Reference</strong>.
+                <br>@Localizer["note_reference"]
+            </p>
+            <p class="govuk-body">@Localizer["use_these_details"] £@(((decimal?)Model.completePaymentViewModel.Amount??0)/100):</p>
             <p></p>
-            <h3 class="govuk-heading-s">To pay by bank transfer instead </h3>
+            <h3 class="govuk-heading-s">@Localizer["pay_by_bank_transfer"]</h3>
             <p></p>
-            <p class="govuk-body">Use these details to make payment of £@ViewData["amount"]:
+            <p class="govuk-body">
+                @Localizer["account_name"]: EA Receipts<br />
+                @Localizer["account_number"]: 10014411<br />
+                @Localizer["sort_code"]: 60-70-80<br />
+                @Localizer["bank_name"]: Royal Bank of Scotland, London Corporate Service Centre, CPB Services, 2nd floor, 280 Bishopsgate, London EC2M 4RB<br />
+            </p>
+            <h3 class="govuk-heading-s">@Localizer["pay_by_phone"]</h3>
             <p></p>
-            <p class="govuk-body">Company name: Environment Agency<br />
-                Bank: RBS/NatWest, London Corporate Service Centre, CPB Services, 2nd floor, 280 Bishopsgate, London EC2M 4RB<br/>
-                Sort Code: 60-70-80<br />
-                Account number: 10014411<br />
-                Account name: EA RECEIPTS<br />
-                Reference: PK/PK/REP</p>
+            <p class="govuk-body">
+                @Localizer["environment_agency"]<br />
+                @Localizer["telephone"]: 03708 506 506<br />
+                @Localizer["telephone_outside_uk"]: +44 (0) 114 282 5312<br />
+                @Localizer["monday_friday"]<br />
+            </p>
+            <p><a href="https://www.gov.uk/call-charges" class="govuk-link" aria-label="@Localizer["call_charges_descriptive_text"]">@Localizer["call_charges"]</a></p>
             <p></p>
-            <p></p>
-            <p class="govuk-body"><a href=@Model.dashboardConfiguration.BackUrl.Url>Return to the dashboard</a></p>
+            <p class="govuk-body"><a href=@Model.dashboardConfiguration.BackUrl.Url aria-label="@Localizer["return_to_dashboard_descriptive_text"]">@Localizer["return_to_dashboard"]</a></p>
             <p></p>
             
         </div>
