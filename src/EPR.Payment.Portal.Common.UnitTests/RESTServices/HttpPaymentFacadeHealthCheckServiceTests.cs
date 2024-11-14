@@ -23,7 +23,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
         public void Setup()
         {
             // Configure the options with valid values
-            _config = Options.Create(new FacadeService
+            _config = Microsoft.Extensions.Options.Options.Create(new FacadeService
             {
                 Url = "https://example.com",
                 EndPointName = "health"
@@ -84,7 +84,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             [Frozen] Mock<IHttpClientFactory> _httpClientFactoryMock)
         {
             // Arrange
-            _config = Options.Create(new FacadeService
+            _config = Microsoft.Extensions.Options.Options.Create(new FacadeService
             {
                 Url = null,
                 EndPointName = null
@@ -106,7 +106,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             [Frozen] Mock<IHttpClientFactory> _httpClientFactoryMock)
         {
             // Arrange
-            _config = Options.Create(new FacadeService
+            _config = Microsoft.Extensions.Options.Options.Create(new FacadeService
             {
                 Url = null,
                 EndPointName = "health"
@@ -128,7 +128,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             [Frozen] Mock<IHttpClientFactory> _httpClientFactoryMock)
         {
             // Arrange
-            _config = Options.Create(new FacadeService
+            _config = Microsoft.Extensions.Options.Options.Create(new FacadeService
             {
                 Url = "https://example.com",
                 EndPointName = null
