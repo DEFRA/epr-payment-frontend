@@ -22,7 +22,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             <p class="govuk-body">
-                @Localizer["email_confirmation_sent"] <a href="@Model.completePaymentViewModel.Email" aria-label="@Model.completePaymentViewModel.Email">@Model.completePaymentViewModel.Email</a>
+                @Localizer["email_confirmation_sent"] <a href="mailto:@Model.completePaymentViewModel.Email" aria-label="@Model.completePaymentViewModel.Email">@Model.completePaymentViewModel.Email</a>
             </p>
             <p class="govuk-body">
                 @Localizer["application_reference_number"] @Model.completePaymentViewModel.Reference
