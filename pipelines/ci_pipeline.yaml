@@ -70,7 +70,8 @@ extends:
     serviceName: $(serviceName)
     sonarqubeInstance: ${{ parameters.sonarqubeInstance }}
     dotnetVersion: ${{ variables.dotnetVersion }}
-    steps:
+  
+  steps:
     - task: UseNode@1
       inputs:
         version: '14.x'  # Specify the Node.js version you need
