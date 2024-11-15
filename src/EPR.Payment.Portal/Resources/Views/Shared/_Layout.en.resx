@@ -186,6 +186,9 @@
   <data name="private_beta_1" xml:space="preserve">
     <value>This is a new service. Help us Improve it and </value>
   </data>
+  <data name="private_beta_2" xml:space="preserve">
+    <value>will help us to improve it.</value>
+  </data>
   <data name="cookies_descriptive_text" xml:space="preserve">
     <value>Click on this link if you wish to go to the Cookies page</value>
   </data>

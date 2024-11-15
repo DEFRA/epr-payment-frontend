@@ -32,7 +32,7 @@ namespace EPR.Payment.Portal.UnitTests.ViewComponents
             // Set up Localization options
             var options = new RequestLocalizationOptions();
             options.AddSupportedCultures(Language.English, Language.Welsh);
-            _localizationOptions = Options.Create(options);
+            _localizationOptions = Microsoft.Extensions.Options.Options.Create(options);
 
             // Set up Feature Manager mock to enable ShowLanguageSwitcher
             _featureManagerMock = new Mock<IFeatureManager>();
@@ -80,7 +80,7 @@ namespace EPR.Payment.Portal.UnitTests.ViewComponents
                     ShowLanguageSwitcher = true
                 });
             }
-            
+
         }
     }
 }
