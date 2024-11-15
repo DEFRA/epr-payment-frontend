@@ -71,13 +71,13 @@ extends:
     sonarqubeInstance: ${{ parameters.sonarqubeInstance }}
     dotnetVersion: ${{ variables.dotnetVersion }}
 
-steps:
-  - task: UseNode@1
-    inputs:
-      version: '14.x'  # Specify the Node.js version you need
-  - script: |
-      npm install -g gulp-cli
-      npm install
-    displayName: 'Install Node.js and dependencies'
-  - script: gulp build-frontend
-    displayName: 'Run Gulp build-frontend task'
+  steps:
+    - task: UseNode@1
+      inputs:
+        version: '14.x'  # Specify the Node.js version you need
+    - script: |
+        npm install -g gulp-cli
+        npm install
+      displayName: 'Install Node.js and dependencies'
+    - script: gulp build-frontend
+      displayName: 'Run Gulp build-frontend task'
