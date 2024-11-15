@@ -207,4 +207,10 @@
   <data name="email_descriptive_text" xml:space="preserve">
     <value>Click on this link if you wish to send an email to eprcustomerservice@defra.gov.uk</value>
   </data>
+  <data name="privacy_url" xml:space="preserve">
+    <value>https://www.gov.uk/guidance/extended-producer-responsibility-for-packaging-privacy-policy.cy</value>
+  </data>
+  <data name="accessibility_url" xml:space="preserve">
+    <value>https://www.gov.uk/guidance/extended-producer-responsibility-for-packaging-accessibility-statement.cy</value>
+  </data>
 </root>

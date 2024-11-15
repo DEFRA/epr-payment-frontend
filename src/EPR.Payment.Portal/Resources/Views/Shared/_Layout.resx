@@ -207,4 +207,13 @@
   <data name="email_descriptive_text" xml:space="preserve">
     <value />
   </data>
+  <data name="privacy_url" xml:space="preserve">
+    <value />
+  </data>
+  <data name="accessibility_url" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cookies_url" xml:space="preserve">
+    <value />
+  </data>
 </root>
