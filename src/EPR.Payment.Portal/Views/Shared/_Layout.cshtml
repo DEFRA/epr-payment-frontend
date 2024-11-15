@@ -1,13 +1,12 @@
 ﻿@using Microsoft.Extensions.Configuration;
 @inject IConfiguration configuration;
 @{
-    var menuUrl = @configuration.GetSection("Dashboard:MenuUrl")["Url"];
-    var manageAccountUrl = @configuration.GetSection("Dashboard:ManageAccountUrl")["Url"];
+    var rpdRootUrl = @configuration.GetSection("Dashboard:RPDRootUrl")["Url"];
+    var menuUrl = rpdRootUrl + @configuration.GetSection("Dashboard:MenuUrl")["Url"];
+    var manageAccountUrl = rpdRootUrl + @configuration.GetSection("Dashboard:ManageAccountUrl")["Url"];
     var signOutUrl = @configuration.GetSection("Dashboard:SignOutUrl")["Url"];
     var feedbackUrl = @configuration.GetSection("Dashboard:FeedbackUrl")["Url"];
     var cookiesUrl = @configuration.GetSection("Dashboard:CookiesUrl")["Url"];
-    var privacyUrl = @configuration.GetSection("Dashboard:PrivacyUrl")["Url"];
-    var accessibilityUrl = @configuration.GetSection("Dashboard:AccessibilityUrl")["Url"];
 }
 <!DOCTYPE html>
 <!DOCTYPE html>
