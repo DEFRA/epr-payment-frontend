@@ -162,10 +162,10 @@
   <data name="packaging_fee_paid" xml:space="preserve">
     <value>Your packaging data resubmission fee has been paid</value>
   </data>
-  <data name="packaging_reference_number" xml:space="preserve">
+	<data name="packaging_reference_number" xml:space="preserve">
     <value>Your packaging data resubmission reference:</value>
   </data>
-  <data name="packaging_last_step" xml:space="preserve">
+	<data name="packaging_last_step" xml:space="preserve">
     <value>Submit your packaging data as the last step before it is reviewed by the regulator.</value>
   </data>
 </root>
