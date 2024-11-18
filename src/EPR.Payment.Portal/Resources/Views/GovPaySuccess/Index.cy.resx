@@ -159,13 +159,4 @@
   <data name="submit_registration_application_descriptive_text" xml:space="preserve">
     <value>Click on this link if you wish to submit your registration application to the regulator</value>
   </data>
-  <data name="packaging_fee_paid" xml:space="preserve">
-    <value>Mae eich ffi am eich ailgyflwyniad data pecynwaith wedi'i thalu</value>
-  </data>
-	<data name="packaging_reference_number" xml:space="preserve">
-    <value>Cyfeirnod eich ailgyflwyniad data pecynwaith:</value>
-  </data>
-	<data name="packaging_last_step" xml:space="preserve">
-    <value>Cyflwyno'ch data pecynwaith fel y cam olaf cyn iddo gael ei adolygu gan y rheoleiddiwr.</value>
-  </data>
 </root>

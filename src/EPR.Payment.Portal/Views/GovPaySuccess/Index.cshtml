@@ -1,5 +1,4 @@
 ﻿@using EPR.Payment.Portal.Common.Configuration
-@using EPR.Payment.Portal.Common.Constants
 @using EPR.Payment.Portal.Common.Models
 @using Microsoft.AspNetCore.Mvc.Routing;
 @model CompositeViewModel;
@@ -16,7 +15,7 @@
                 @Localizer["payment_successful"]
             </h1>
             <div class="govuk-panel__body">
-                @Localizer[@Model.completePaymentViewModel.Description == PaymentDescription.RegistrationFee ? "registration_fee_paid" : "packaging_fee_paid"]
+                @Localizer["registration_fee_paid"]
             </div>
         </div>
     </div>
@@ -26,20 +25,16 @@
                 @Localizer["email_confirmation_sent"] <a href="@Model.completePaymentViewModel.Email" aria-label="@Model.completePaymentViewModel.Email">@Model.completePaymentViewModel.Email</a>
             </p>
             <p class="govuk-body">
-                @Localizer[@Model.completePaymentViewModel.Description == PaymentDescription.RegistrationFee ? "application_reference_number" : "packaging_reference_number"]
-                @Model.completePaymentViewModel.Reference
+                @Localizer["application_reference_number"] @Model.completePaymentViewModel.Reference
             </p>
             <p></p>
             <h3 class="govuk-heading-s">@Localizer["what_happens_next"]</h3>
             <p></p>
             <p class="govuk-body">
-                @Localizer[@Model.completePaymentViewModel.Description == PaymentDescription.RegistrationFee ? "last_step_before_review" : "packaging_last_step"]            
+                @Localizer["last_step_before_review"]
             </p>
             <div class="govuk-button-group">
-                @if (Model.completePaymentViewModel.Description == PaymentDescription.RegistrationFee)
-                {
-                    <a href="@Model.dashboardConfiguration.RegistrationTaskList.Url" class="govuk-button" type="submit" aria-label="@Localizer["submit_registration_application_descriptive_text"]">@Localizer["submit_registration_application"]</a>
-                }                
+                <a href="@Model.dashboardConfiguration.RegistrationTaskList.Url" class="govuk-button" type="submit" aria-label="@Localizer["submit_registration_application_descriptive_text"]">@Localizer["submit_registration_application"]</a>
             </div>
             <p class="govuk-body">
                 <a href=@Model.dashboardConfiguration.BackUrl.Url aria-label="@Localizer["return_to_dashboard_descriptive_text"]">@Localizer["return_dashboard"]</a>

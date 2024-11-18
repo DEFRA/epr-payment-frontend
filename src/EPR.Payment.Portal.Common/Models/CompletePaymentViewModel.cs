@@ -12,6 +12,5 @@ namespace EPR.Payment.Portal.Common.Models
         public string? Regulator { get; set; }
         public int? Amount { get; set; }
         public string? Email { get; set; }
-        public string? Description { get; set; }
     }
 }
