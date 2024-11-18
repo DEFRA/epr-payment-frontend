@@ -144,14 +144,14 @@
   <data name="return_dashboard" xml:space="preserve">
     <value>Yn ôl i'r dangosfwrdd</value>
   </data>
-  <data name="sign_out" xml:space="preserve">
-    <value>Allgofnodi</value>
-  </data>
   <data name="submit_registration_application" xml:space="preserve">
     <value>Cyflwyno'ch cais am gofrestru</value>
   </data>
   <data name="what_happens_next" xml:space="preserve">
     <value>Beth sy'n digwydd nesaf</value>
+  </data>
+  <data name="sign_out" xml:space="preserve">
+    <value>Allgofnodi</value>
   </data>
   <data name="return_to_dashboard_descriptive_text" xml:space="preserve">
     <value>Click on this link if you wish to return to the dashboard</value>
@@ -162,10 +162,10 @@
   <data name="packaging_fee_paid" xml:space="preserve">
     <value>Mae eich ffi am eich ailgyflwyniad data pecynwaith wedi'i thalu</value>
   </data>
-	<data name="packaging_reference_number" xml:space="preserve">
+  <data name="packaging_reference_number" xml:space="preserve">
     <value>Cyfeirnod eich ailgyflwyniad data pecynwaith:</value>
   </data>
-	<data name="packaging_last_step" xml:space="preserve">
+  <data name="packaging_last_step" xml:space="preserve">
     <value>Cyflwyno'ch data pecynwaith fel y cam olaf cyn iddo gael ei adolygu gan y rheoleiddiwr.</value>
   </data>
 </root>
