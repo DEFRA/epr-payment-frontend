@@ -66,9 +66,7 @@
                             </a>
                         </li>
                         <li class="govuk-header__navigation-item">
-                            <a class="govuk-header__link" href="@signOutUrl" aria-label="@Localizer["sign_out_descriptive_text"]">
-                                @Localizer["sign_out"]
-                            </a>
+                            <a class="govuk-header__link" asp-controller="Account" asp-action="SignOut" aria-label="@Localizer["sign_out_descriptive_text"]">@Localizer["sign_out"]</a>
                         </li>
                     </ul>
                 </nav>
