@@ -14,7 +14,7 @@
                 }
                 else
                 {
-                    <a asp-controller="Culture" asp-action="UpdateCulture" asp-route-culture="@culture.Name" asp-route-returnUrl="@Model.ReturnUrl" class="govuk-link govuk-link--no-visited-state">@SharedLocalizer[culture.NativeName].Value</a>
+                    <a asp-controller="Culture" asp-action="UpdateCulture" asp-route-culture="@culture.Name" asp-route-returnUrl="@Model.ReturnUrl" class="govuk-link govuk-link--no-visited-state" aria-label="@SharedLocalizer[culture.NativeName].Value">@SharedLocalizer[culture.NativeName].Value</a>
                 }
             </li>
         }
