@@ -1,9 +1,11 @@
 ﻿namespace EPR.Payment.Portal.Controllers;
 
+using EPR.Payment.Portal.Common.Configuration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
@@ -14,8 +16,17 @@ using System.Web;
 /// Controller used in web apps to manage accounts.
 /// </summary>
 [Route("[controller]/[action]")]
-public class AccountController : Controller
+public class AccountController(IOptions<DashboardConfiguration> dashboardConfiguration) : Controller
 {
+    private readonly DashboardConfiguration _dashboardConfiguration = dashboardConfiguration?.Value
+        ?? throw new ArgumentNullException(nameof(dashboardConfiguration));
+
+    private readonly string _rpdRootUrl = dashboardConfiguration.Value?.RPDRootUrl?.Url 
+        ?? throw new ArgumentNullException(nameof(dashboardConfiguration.Value.RPDRootUrl));
+
+    private readonly string _signOutUrl = dashboardConfiguration.Value?.SignOutUrl?.Url 
+        ?? throw new ArgumentNullException(nameof(dashboardConfiguration.Value.SignOutUrl));
+
     /// <summary>
     /// Handles the user sign-out.
     /// </summary>
@@ -37,10 +48,8 @@ public class AccountController : Controller
         }
 
         scheme ??= OpenIdConnectDefaults.AuthenticationScheme;
-        //string baseUrl = Configuration["BaseDomain"]; // Load from configuration
-        //string relativeUrl = Url.Action("SignOut", "Account");
-        //string fullUrl = new Uri(new Uri(baseUrl), "/report-data" + relativeUrl).ToString();
-        var callbackUrl = Url.Action(action: "SignOut", controller: "Account", values: null, protocol: Request.Scheme).Replace("Account", "report-data/Account");
+
+        string callbackUrl = new Uri(new Uri(_rpdRootUrl), _signOutUrl).ToString();
 
         return SignOut(
             new AuthenticationProperties
