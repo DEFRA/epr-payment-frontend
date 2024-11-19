@@ -1,11 +1,14 @@
 ﻿using EPR.Common.Authorization.Extensions;
 using EPR.Payment.Portal.Common.Constants;
 using EPR.Payment.Portal.Common.Options;
+using EPR.Payment.Portal.Helpers;
 using EPR.Payment.Portal.Options;
 using EPR.Payment.Portal.Sessions;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
+using Microsoft.FeatureManagement;
 using Microsoft.Identity.Web;
 using System.Diagnostics.CodeAnalysis;
 using CookieOptions = EPR.Payment.Portal.Common.Options.CookieOptions;
@@ -49,28 +52,38 @@ namespace EPR.Payment.Portal.Extension
         {
             var sp = services.BuildServiceProvider();
             var cookieOptions = sp.GetRequiredService<IOptions<CookieOptions>>().Value;
+            var featureManager = sp.GetRequiredService<IFeatureManager>();
             var facadeApiOptions = sp.GetRequiredService<IOptions<AccountsFacadeApiOptions>>().Value;
 
-            services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApp(
-                    options =>
-                    {
-                        configuration.GetSection(AzureAdB2COptions.ConfigSection).Bind(options);
+            if (featureManager.IsEnabledAsync("EnableAuthenticationFeature").GetAwaiter().GetResult())
+            {
+                // Authentication is enabled
+                services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+                    .AddMicrosoftIdentityWebApp(
+                        options =>
+                        {
+                            configuration.GetSection(AzureAdB2COptions.ConfigSection).Bind(options);
 
-                        options.CorrelationCookie.Name = cookieOptions.CorrelationCookieName;
-                        options.NonceCookie.Name = cookieOptions.OpenIdCookieName;
-                        options.ErrorPath = "/error";
-                        options.ClaimActions.Add(new CorrelationClaimAction());
-                    },
-                    options =>
-                    {
-                        options.Cookie.Name = cookieOptions.AuthenticationCookieName;
-                        options.ExpireTimeSpan = TimeSpan.FromMinutes(cookieOptions.AuthenticationExpiryInMinutes);
-                        options.SlidingExpiration = true;
-                        options.Cookie.Path = "/";
-                    })
-                .EnableTokenAcquisitionToCallDownstreamApi(new[] { facadeApiOptions.DownstreamScope })
-                .AddDistributedTokenCaches();
+                            options.CorrelationCookie.Name = cookieOptions.CorrelationCookieName;
+                            options.NonceCookie.Name = cookieOptions.OpenIdCookieName;
+                            options.ErrorPath = "/error";
+                        },
+                        options =>
+                        {
+                            options.Cookie.Name = cookieOptions.AuthenticationCookieName;
+                            options.ExpireTimeSpan = TimeSpan.FromMinutes(cookieOptions.AuthenticationExpiryInMinutes);
+                            options.SlidingExpiration = true;
+                            options.Cookie.Path = "/";
+                        })
+                    .EnableTokenAcquisitionToCallDownstreamApi(new[] { facadeApiOptions.DownstreamScope })
+                    .AddDistributedTokenCaches();
+            }
+            else
+            {
+                services.AddAuthentication("NoOpScheme")
+                    .AddScheme<AuthenticationSchemeOptions, NoOpAuthenticationHandler>("NoOpScheme", options => { });
+                services.AddTransient<ITokenAcquisition, NoOpTokenAcquisition>();
+            }
         }
 
         private static void ConfigureAuthorization(IServiceCollection services, IConfiguration configuration)

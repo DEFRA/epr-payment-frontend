@@ -1,155 +1,114 @@
 ﻿using EPR.Payment.Portal.Common.Exceptions;
 using Microsoft.AspNetCore.Http;
-using System.Net.Http.Json;
+using Microsoft.FeatureManagement;
+using Microsoft.Identity.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Net.Http.Headers;
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
 namespace EPR.Payment.Portal.Common.RESTServices
 {
-    [ExcludeFromCodeCoverage]   // Excluding only because sonar qube is complaining about the lines already covered by tests.
+    [ExcludeFromCodeCoverage]
     public abstract class BaseHttpService
     {
         protected readonly string _baseUrl;
         protected readonly HttpClient _httpClient;
-        protected IHttpContextAccessor _httpContextAccessor;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ITokenAcquisition _tokenAcquisition;
+        private readonly string[] _scopes;
+        private readonly IFeatureManager _featureManager;
 
         public BaseHttpService(
             IHttpContextAccessor httpContextAccessor,
             IHttpClientFactory httpClientFactory,
             string baseUrl,
-            string endPointName)
+            string endPointName,
+            ITokenAcquisition tokenAcquisition,
+            string downstreamScope,
+            IFeatureManager featureManager)
         {
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+            _httpClient = httpClientFactory.CreateClient();
 
-            // Initialize _baseUrl in the constructor
-            _baseUrl = string.IsNullOrWhiteSpace(baseUrl) ? throw new ArgumentNullException(nameof(baseUrl)) : baseUrl;
-
-           ArgumentNullException.ThrowIfNull(httpClientFactory);
-
+            if (string.IsNullOrWhiteSpace(baseUrl))
+                throw new ArgumentNullException(nameof(baseUrl));
             if (string.IsNullOrWhiteSpace(endPointName))
                 throw new ArgumentNullException(nameof(endPointName));
 
-            _httpClient = httpClientFactory.CreateClient();
+            _baseUrl = baseUrl.TrimEnd('/') + "/" + endPointName;
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
-            if (_baseUrl.EndsWith('/'))
-                _baseUrl = _baseUrl.TrimEnd('/');
-
-            _baseUrl = $"{_baseUrl}/{endPointName}";
+            _tokenAcquisition = tokenAcquisition ?? throw new ArgumentNullException(nameof(tokenAcquisition));
+            _scopes = new[] { downstreamScope };
+            _featureManager = featureManager;
         }
 
-        protected void SetBearerToken(string token)
+        protected async Task PrepareAuthenticatedClient()
         {
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            if (await _featureManager.IsEnabledAsync("EnableAuthenticationFeature"))
+            {
+                try
+                {
+                    var token = await _tokenAcquisition.GetAccessTokenForUserAsync(_scopes);
+                    if (string.IsNullOrEmpty(token))
+                        throw new InvalidOperationException("Failed to acquire access token.");
+
+                    _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException("Failed to prepare the authenticated client.", ex);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Authentication is disabled. Skipping token acquisition.");
+            }
         }
 
-        /// <summary>
-        /// Performs an Http GET returning the specified object
-        /// </summary>
         protected async Task<T> Get<T>(string url, CancellationToken cancellationToken, bool includeTrailingSlash = true)
         {
-            url = string.IsNullOrEmpty(url) && !includeTrailingSlash ? _baseUrl : includeTrailingSlash ? $"{_baseUrl}/{url}/" : $"{_baseUrl}/{url}";
+            await PrepareAuthenticatedClient();
 
-            return await Send<T>(CreateMessage(url, null, HttpMethod.Get), cancellationToken);
+            var finalUrl = includeTrailingSlash ? $"{_baseUrl}/{url}/" : $"{_baseUrl}/{url}";
+            return await Send<T>(CreateMessage(finalUrl, null, HttpMethod.Get), cancellationToken);
         }
 
-        /// <summary>
-        /// Performs an Http POST returning the specified object
-        /// </summary>
         protected async Task<T> Post<T>(string url, object? payload, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(url))
-                throw new ArgumentNullException(nameof(url));
+                throw new ArgumentNullException(nameof(url), "URL cannot be null or empty.");
 
-            url = $"{_baseUrl}/{url}/";
+            await PrepareAuthenticatedClient();
 
-            return await Send<T>(CreateMessage(url, payload, HttpMethod.Post), cancellationToken);
+            var finalUrl = $"{_baseUrl}/{url}/";
+            return await Send<T>(CreateMessage(finalUrl, payload, HttpMethod.Post), cancellationToken);
         }
 
-        /// <summary>
-        /// Performs an Http POST without returning any data
-        /// </summary>
         protected async Task Post(string url, object? payload, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(url))
-                throw new ArgumentNullException(nameof(url));
-
-            url = $"{_baseUrl}/{url}/";
-
-            await Send(CreateMessage(url, payload, HttpMethod.Post), cancellationToken);
-        }
-
-        /// <summary>
-        /// Performs an Http PUT returning the specified object
-        /// </summary>
-        protected async Task<T> Put<T>(string url, object? payload, CancellationToken cancellationToken)
-        {
-            if (string.IsNullOrWhiteSpace(url))
-                throw new ArgumentNullException(nameof(url));
-
-            url = $"{_baseUrl}/{url}/";
-
-            return await Send<T>(CreateMessage(url, payload, HttpMethod.Put), cancellationToken);
-        }
-
-        /// <summary>
-        /// Performs an Http PUT without returning any data
-        /// </summary>
-        protected async Task Put(string url, object? payload, CancellationToken cancellationToken)
-        {
-            if (string.IsNullOrWhiteSpace(url))
-                throw new ArgumentNullException(nameof(url));
-
-            url = $"{_baseUrl}/{url}/";
-
-            await Send(CreateMessage(url, payload, HttpMethod.Put), cancellationToken);
-        }
-
-        /// <summary>
-        /// Performs an Http DELETE returning the specified object
-        /// </summary>
-        protected async Task<T> Delete<T>(string url, object? payload, CancellationToken cancellationToken)
-        {
-            if (string.IsNullOrWhiteSpace(url))
-                throw new ArgumentNullException(nameof(url));
-
-            url = $"{_baseUrl}/{url}/";
-
-            return await Send<T>(CreateMessage(url, payload, HttpMethod.Delete), cancellationToken);
-        }
-
-        /// <summary>
-        /// Performs an Http DELETE without returning any data
-        /// </summary>
-        protected async Task Delete(string url, object? payload, CancellationToken cancellationToken)
-        {
-            if (string.IsNullOrWhiteSpace(url))
-                throw new ArgumentNullException(nameof(url));
-
-            url = $"{_baseUrl}/{url}/";
-
-            await Send(CreateMessage(url, payload, HttpMethod.Delete), cancellationToken);
-        }
-
-        private HttpRequestMessage CreateMessage(
-            string url,
-            object? payload,
-            HttpMethod httpMethod)
-        {
-            var msg = new HttpRequestMessage
             {
-                RequestUri = new Uri(url),
-                Method = httpMethod
-            };
-
-            if (payload != null)
-            {
-                msg.Content = JsonContent.Create(payload);
+                throw new ArgumentNullException(nameof(url), "Value cannot be null or empty.");
             }
 
-            return msg;
+            await PrepareAuthenticatedClient();
+
+            var finalUrl = $"{_baseUrl}/{url}/";
+            await Send(CreateMessage(finalUrl, payload, HttpMethod.Post), cancellationToken);
+        }
+
+        private HttpRequestMessage CreateMessage(string url, object? payload, HttpMethod method)
+        {
+            var message = new HttpRequestMessage
+            {
+                RequestUri = new Uri(url),
+                Method = method,
+                Content = payload != null ? JsonContent.Create(payload) : null
+            };
+            return message;
         }
 
         private async Task<T> Send<T>(HttpRequestMessage requestMessage, CancellationToken cancellationToken)
@@ -158,58 +117,76 @@ namespace EPR.Payment.Portal.Common.RESTServices
 
             if (response.IsSuccessStatusCode)
             {
-                var responseStream = await response.Content.ReadAsStreamAsync();
-                using var streamReader = new StreamReader(responseStream);
-                var content = await streamReader.ReadToEndAsync();
-
-                if (string.IsNullOrWhiteSpace(content))
-                    return default!;
-
-                return ReturnValue<T>(content);
+                var content = await response.Content.ReadAsStringAsync();
+                return IsValidJson(content) ? JsonConvert.DeserializeObject<T>(content)! : default!;
             }
-            else
-            {
-                // get any message from the response
-                var responseStream = await response.Content.ReadAsStreamAsync();
-                var content = default(string);
 
-                if (responseStream.Length > 0)
-                {
-                    using var streamReader = new StreamReader(responseStream);
-                    content = await streamReader.ReadToEndAsync();
-                }
-
-                // set the response status code and throw the exception for the middleware to handle
-                throw new ResponseCodeException(response.StatusCode, content!);
-            }
+            throw new ResponseCodeException(response.StatusCode, await response.Content.ReadAsStringAsync());
         }
 
         private async Task Send(HttpRequestMessage requestMessage, CancellationToken cancellationToken)
         {
             var response = await _httpClient.SendAsync(requestMessage, cancellationToken);
-
             if (!response.IsSuccessStatusCode)
-            {
-                _httpContextAccessor.HttpContext.Response.StatusCode = (int)response.StatusCode;
-                // for now we don't know how we're going to handle errors specifically,
-                // so we'll just throw an error with the error code
-                throw new Exception($"Error occurred calling API with error code: {response.StatusCode}. Message: {response.ReasonPhrase}");
-            }
+                throw new Exception($"Error calling API: {response.StatusCode}");
         }
 
-        private T ReturnValue<T>(string value)
+
+        protected async Task<T> Put<T>(string url, object? payload, CancellationToken cancellationToken)
         {
-            if (IsValidJson(value))
-                return JsonConvert.DeserializeObject<T>(value)!;
-            else
-                return (T)Convert.ChangeType(value, typeof(T));
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                throw new ArgumentNullException(nameof(url), "Value cannot be null or empty.");
+            }
+
+            await PrepareAuthenticatedClient();
+
+            var finalUrl = $"{_baseUrl}/{url}/";
+            return await Send<T>(CreateMessage(finalUrl, payload, HttpMethod.Put), cancellationToken);
+        }
+
+        protected async Task Put(string url, object? payload, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                throw new ArgumentNullException(nameof(url), "Value cannot be null or empty.");
+            }
+
+            await PrepareAuthenticatedClient();
+
+            var finalUrl = $"{_baseUrl}/{url}/";
+            await Send(CreateMessage(finalUrl, payload, HttpMethod.Put), cancellationToken);
+        }
+
+
+        protected async Task<T> Delete<T>(string url, object? payload, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+                throw new ArgumentNullException(nameof(url), "Value cannot be null or whitespace.");
+
+            await PrepareAuthenticatedClient();
+
+            var finalUrl = $"{_baseUrl}/{url}/";
+            return await Send<T>(CreateMessage(finalUrl, payload, HttpMethod.Delete), cancellationToken);
+        }
+
+
+        protected async Task Delete(string url, object? payload, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+                throw new ArgumentNullException(nameof(url), "URL cannot be null or empty.");
+
+            await PrepareAuthenticatedClient();
+
+            var finalUrl = $"{_baseUrl}/{url}/";
+            await Send(CreateMessage(finalUrl, payload, HttpMethod.Delete), cancellationToken);
         }
 
         private bool IsValidJson(string stringValue)
         {
             try
             {
-                var val = JToken.Parse(stringValue);
+                JToken.Parse(stringValue);
                 return true;
             }
             catch
