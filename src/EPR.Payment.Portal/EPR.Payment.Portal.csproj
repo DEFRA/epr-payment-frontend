@@ -89,4 +89,16 @@
 		</SonarQubeSetting>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <EmbeddedResource Update="Resources\Views\Shared\Components\LanguageSwitcher\Default.cy.resx">
+	    <SubType>Designer</SubType>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Views\Shared\Components\LanguageSwitcher\Default.en.resx">
+	    <SubType>Designer</SubType>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Views\Shared\Components\LanguageSwitcher\Default.resx">
+	    <SubType>Designer</SubType>
+	  </EmbeddedResource>
+	</ItemGroup>
+
 </Project>
