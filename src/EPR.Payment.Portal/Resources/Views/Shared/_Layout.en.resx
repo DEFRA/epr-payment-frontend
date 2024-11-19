@@ -186,9 +186,6 @@
   <data name="private_beta_1" xml:space="preserve">
     <value>This is a new service. Help us Improve it and </value>
   </data>
-  <data name="private_beta_2" xml:space="preserve">
-    <value>will help us to improve it.</value>
-  </data>
   <data name="cookies_descriptive_text" xml:space="preserve">
     <value>Click on this link if you wish to go to the Cookies page</value>
   </data>
@@ -215,5 +212,8 @@
   </data>
   <data name="accessibility_url" xml:space="preserve">
     <value>https://www.gov.uk/guidance/extended-producer-responsibility-for-packaging-accessibility-statement</value>
+  </data>
+  <data name="gov_uk" xml:space="preserve">
+    <value>Click on this link if you wish to go to Gov.UK site</value>
   </data>
 </root>

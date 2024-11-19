@@ -144,19 +144,19 @@
   <data name="return_dashboard" xml:space="preserve">
     <value>Yn ôl i'r dangosfwrdd</value>
   </data>
-  <data name="sign_out" xml:space="preserve">
-    <value>Allgofnodi</value>
-  </data>
   <data name="submit_registration_application" xml:space="preserve">
     <value>Cyflwyno'ch cais am gofrestru</value>
   </data>
   <data name="what_happens_next" xml:space="preserve">
     <value>Beth sy'n digwydd nesaf</value>
   </data>
+  <data name="sign_out" xml:space="preserve">
+    <value>Allgofnodi</value>
+  </data>
   <data name="return_to_dashboard_descriptive_text" xml:space="preserve">
-    <value>Click on this link if you wish to return to the dashboard</value>
+    <value>Cliciwch ar y ddolen yma os hoffech chi fynd yn ôl i'r dangosfwrdd</value>
   </data>
   <data name="submit_registration_application_descriptive_text" xml:space="preserve">
-    <value>Click on this link if you wish to submit your registration application to the regulator</value>
+    <value>Cliciwch ar y ddolen yma os hoffech chi gyflwyno'ch cais am gofrestru i'r rheoleiddiwr</value>
   </data>
 </root>
