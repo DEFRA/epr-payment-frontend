@@ -22,7 +22,6 @@ namespace EPR.Payment.Portal.Extension
         {
             ConfigureOptions(services, configuration);
             ConfigureLocalization(services);
-            ConfigureAuthentication(services, configuration);
             ConfigureAuthorization(services, configuration);
             return services;
         }
@@ -41,56 +40,6 @@ namespace EPR.Payment.Portal.Extension
                     new SessionRequestCultureProvider(),
                     };
                 });
-        }
-
-        private static void ConfigureOptions(IServiceCollection services, IConfiguration configuration)
-        {
-            services.Configure<CookieOptions>(configuration.GetSection(CookieOptions.ConfigSection));
-        }
-
-        private static void ConfigureAuthentication(IServiceCollection services, IConfiguration configuration)
-        {
-            var sp = services.BuildServiceProvider();
-            var cookieOptions = sp.GetRequiredService<IOptions<CookieOptions>>().Value;
-            var facadeApiOptions = sp.GetRequiredService<IOptions<AccountsFacadeApiOptions>>().Value;
-
-            services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApp(
-                    options =>
-                    {
-                        configuration.GetSection(AzureAdB2COptions.ConfigSection).Bind(options);
-
-                        options.CorrelationCookie.Name = cookieOptions.CorrelationCookieName;
-                        options.NonceCookie.Name = cookieOptions.OpenIdCookieName;
-                        options.ErrorPath = "/error";
-                        options.ClaimActions.Add(new CorrelationClaimAction());
-                    },
-                    options =>
-                    {
-                        options.Cookie.Name = cookieOptions.AuthenticationCookieName;
-                        options.ExpireTimeSpan = TimeSpan.FromMinutes(cookieOptions.AuthenticationExpiryInMinutes);
-                        options.SlidingExpiration = true;
-                        options.Cookie.Path = "/";
-                    })
-                .EnableTokenAcquisitionToCallDownstreamApi(new[] { facadeApiOptions.DownstreamScope })
-                .AddDistributedTokenCaches();
-        }
-
-        private static void ConfigureAuthorization(IServiceCollection services, IConfiguration configuration)
-        {
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.Cookie.HttpOnly = true;
-
-                var azureB2COptions = services.BuildServiceProvider().GetRequiredService<IOptions<AzureAdB2COptions>>().Value;
-
-                options.LoginPath = azureB2COptions.SignedOutCallbackPath;
-                options.AccessDeniedPath = azureB2COptions.SignedOutCallbackPath;
-
-                options.SlidingExpiration = true;
-            });
-
-            services.RegisterPolicy<PaymentPortalSession>(configuration);
         }
 
         private static void ConfigureOptions(IServiceCollection services, IConfiguration configuration)
