@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.FeatureManagement;
 using Microsoft.Identity.Web;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
@@ -16,7 +17,7 @@ using System.Web;
 /// Controller used in web apps to manage accounts.
 /// </summary>
 [Route("[controller]/[action]")]
-public class AccountController(IOptions<DashboardConfiguration> dashboardConfiguration) : Controller
+public class AccountController(IOptions<DashboardConfiguration> dashboardConfiguration, IFeatureManager featureManager) : Controller
 {
     private readonly DashboardConfiguration _dashboardConfiguration = dashboardConfiguration?.Value
         ?? throw new ArgumentNullException(nameof(dashboardConfiguration));
@@ -27,6 +28,8 @@ public class AccountController(IOptions<DashboardConfiguration> dashboardConfigu
     private readonly string _signOutUrl = dashboardConfiguration.Value?.SignOutUrl?.Url 
         ?? throw new ArgumentNullException(nameof(dashboardConfiguration.Value.SignOutUrl));
 
+    public IFeatureManager FeatureManager { get; } = featureManager;
+
     /// <summary>
     /// Handles the user sign-out.
     /// </summary>
@@ -34,29 +37,34 @@ public class AccountController(IOptions<DashboardConfiguration> dashboardConfigu
     /// <returns>Sign out result.</returns>
     [ExcludeFromCodeCoverage(Justification = "Unable to mock authentication")]
     [HttpGet("{scheme?}")]
-    public IActionResult SignOut(
-        [FromRoute] string? scheme)
+    public IActionResult SignOut([FromRoute] string? scheme)
     {
-        if (AppServicesAuthenticationInformation.IsAppServicesAadAuthenticationEnabled)
+        if (featureManager.IsEnabledAsync("EnableAuthenticationFeature").GetAwaiter().GetResult())
         {
-            if (AppServicesAuthenticationInformation.LogoutUrl != null)
+            if (AppServicesAuthenticationInformation.IsAppServicesAadAuthenticationEnabled)
             {
-                return LocalRedirect(AppServicesAuthenticationInformation.LogoutUrl);
+                if (AppServicesAuthenticationInformation.LogoutUrl != null)
+                {
+                    return LocalRedirect(AppServicesAuthenticationInformation.LogoutUrl);
+                }
+
+                return Ok();
             }
 
+            scheme ??= OpenIdConnectDefaults.AuthenticationScheme;
+
+            string callbackUrl = new Uri(new Uri(_rpdRootUrl), _signOutUrl).ToString();
+
+            return SignOut(
+                new AuthenticationProperties
+                {
+                    RedirectUri = callbackUrl,
+                },
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                scheme);
+        }
+        else {
             return Ok();
         }
-
-        scheme ??= OpenIdConnectDefaults.AuthenticationScheme;
-
-        string callbackUrl = new Uri(new Uri(_rpdRootUrl), _signOutUrl).ToString();
-
-        return SignOut(
-            new AuthenticationProperties
-            {
-                RedirectUri = callbackUrl,
-            },
-            CookieAuthenticationDefaults.AuthenticationScheme,
-            scheme);
     }
 }

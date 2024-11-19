@@ -1,5 +1,9 @@
-﻿@using Microsoft.Extensions.Configuration;
+﻿@using EPR.Payment.Portal.Common.Constants
+@using Microsoft.Extensions.Configuration;
+@using Microsoft.FeatureManagement
 @inject IConfiguration configuration;
+@inject IFeatureManager featureManager
+
 @{
     var rpdRootUrl = @configuration.GetSection("Dashboard:RPDRootUrl")["Url"];
     var menuUrl = rpdRootUrl + @configuration.GetSection("Dashboard:MenuUrl")["Url"];
@@ -7,6 +11,8 @@
     var signOutUrl = @configuration.GetSection("Dashboard:SignOutUrl")["Url"];
     var feedbackUrl = @configuration.GetSection("Dashboard:FeedbackUrl")["Url"];
     var cookiesUrl = @configuration.GetSection("Dashboard:CookiesUrl")["Url"];
+
+    var EnableAuthenticationFeature = await featureManager.IsEnabledAsync(nameof(FeatureFlags.EnableAuthenticationFeature));
 }
 <!DOCTYPE html>
 <!DOCTYPE html>
@@ -60,14 +66,17 @@
                                 @Localizer["home"]
                             </a>
                         </li>
-                        <li class="govuk-header__navigation-item">
-                            <a class="govuk-header__link" href="@manageAccountUrl" aria-label="@Localizer["manage_account_descriptive_text"]">
-                                @Localizer["manage_account"]
-                            </a>
-                        </li>
-                        <li class="govuk-header__navigation-item">
-                            <a class="govuk-header__link" asp-controller="Account" asp-action="SignOut" aria-label="@Localizer["sign_out_descriptive_text"]">@Localizer["sign_out"]</a>
-                        </li>
+                        @if (EnableAuthenticationFeature)
+                        {
+                            <li class="govuk-header__navigation-item">
+                                <a class="govuk-header__link" href="@manageAccountUrl" aria-label="@Localizer["manage_account_descriptive_text"]">
+                                    @Localizer["manage_account"]
+                                </a>
+                            </li>
+                            <li class="govuk-header__navigation-item">
+                                <a class="govuk-header__link" asp-controller="Account" asp-action="SignOut" aria-label="@Localizer["sign_out_descriptive_text"]">@Localizer["sign_out"]</a>
+                            </li>
+                        }
                     </ul>
                 </nav>
             </div>
