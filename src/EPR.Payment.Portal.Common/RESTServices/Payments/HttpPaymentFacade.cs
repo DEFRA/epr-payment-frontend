@@ -39,7 +39,7 @@ namespace EPR.Payment.Portal.Common.RESTServices.Payments
             }
             catch (Exception ex)
             {
-                throw new ServiceException("Error completing payment", ex);
+                throw new ServiceException(ExceptionMessages.ErrorCompletePayment, ex);
             }
         }
 
@@ -51,7 +51,7 @@ namespace EPR.Payment.Portal.Common.RESTServices.Payments
             }
             catch (Exception ex)
             {
-                throw new ServiceException("Error initiating payment", ex);
+                throw new ServiceException(ExceptionMessages.ErrorInitiatePayment, ex);
             }
         }
     }

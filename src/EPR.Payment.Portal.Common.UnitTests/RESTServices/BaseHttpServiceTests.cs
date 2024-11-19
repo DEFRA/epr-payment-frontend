@@ -541,7 +541,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             using (new AssertionScope())
             {
                 await act.Should().ThrowAsync<Exception>()
-                    .WithMessage("*Error calling API: BadRequest*");
+                    .WithMessage("Error occurred calling API with error code: BadRequest. Message: Bad Request");
 
                 _handlerMock.Protected().Verify(
                     "SendAsync",
@@ -638,31 +638,41 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             // Arrange
             var payload = new { Id = 1, Name = "Test" };
             var cancellationToken = CancellationToken.None;
-            var validUrl = "valid-endpoint"; // Provide a valid URL
 
             _handlerMock
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
-                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.Is<HttpRequestMessage>(req =>
+                        req.Method == HttpMethod.Put &&
+                        req.RequestUri!.ToString() == expectedUrl),
                     ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(new HttpResponseMessage
                 {
                     StatusCode = HttpStatusCode.BadRequest,
                     Content = new StringContent("Bad Request"),
-                });
+                })
+                .Verifiable();
 
             // Act
-            Func<Task> act = async () => await _testableHttpService.PublicPut(validUrl, payload, cancellationToken);
+            Func<Task> act = async () => await _testableHttpService.PublicPut(url, payload, cancellationToken);
 
             // Assert
             using (new AssertionScope())
             {
                 await act.Should().ThrowAsync<Exception>()
-                    .WithMessage("*Error calling API: BadRequest*");
+                    .WithMessage("Error occurred calling API with error code: BadRequest. Message: Bad Request");
+
+                _handlerMock.Protected().Verify(
+                    "SendAsync",
+                    Times.Once(),
+                    ItExpr.Is<HttpRequestMessage>(msg =>
+                        msg.Method == HttpMethod.Put &&
+                        msg.RequestUri!.ToString() == expectedUrl &&
+                        msg.Content!.Headers.ContentType!.MediaType == "application/json"),
+                    ItExpr.IsAny<CancellationToken>());
             }
         }
-
 
 
         [TestMethod]
@@ -774,7 +784,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             using (new AssertionScope())
             {
                 await act.Should().ThrowAsync<Exception>()
-                    .WithMessage("Error calling API: BadRequest");
+                    .WithMessage("Error occurred calling API with error code: BadRequest. Message: Bad Request");
 
                 _handlerMock.Protected().Verify(
                     "SendAsync",
