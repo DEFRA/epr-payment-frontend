@@ -29,20 +29,22 @@ namespace EPR.Payment.Portal.Common.RESTServices
             string downstreamScope,
             IFeatureManager featureManager)
         {
+            _tokenAcquisition = tokenAcquisition ?? throw new ArgumentNullException(nameof(tokenAcquisition)); // Moved up
+            _featureManager = featureManager ?? throw new ArgumentNullException(nameof(featureManager));
+
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-            _httpClient = httpClientFactory.CreateClient();
+            _httpClient = httpClientFactory?.CreateClient() ?? throw new ArgumentNullException(nameof(httpClientFactory));
 
             if (string.IsNullOrWhiteSpace(baseUrl))
-                throw new ArgumentNullException(nameof(baseUrl));
+                throw new ArgumentNullException(nameof(baseUrl), "Base URL is required.");
+
             if (string.IsNullOrWhiteSpace(endPointName))
-                throw new ArgumentNullException(nameof(endPointName));
+                throw new ArgumentNullException(nameof(endPointName), "Endpoint name is required.");
 
             _baseUrl = baseUrl.TrimEnd('/') + "/" + endPointName;
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
-            _tokenAcquisition = tokenAcquisition ?? throw new ArgumentNullException(nameof(tokenAcquisition));
-            _scopes = new[] { downstreamScope };
-            _featureManager = featureManager;
+            _scopes = new[] { downstreamScope ?? throw new ArgumentNullException(nameof(downstreamScope)) };
         }
 
         protected async Task PrepareAuthenticatedClient()

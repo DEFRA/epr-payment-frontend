@@ -858,7 +858,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             // Act
             Action act = () => new TestableBaseHttpService(
                 _httpContextAccessorMock.Object,
-                null!,
+                null!, // HttpClientFactory is null
                 baseUrl,
                 endPointName,
                 _tokenAcquisitionMock.Object,
@@ -867,7 +867,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
 
             // Assert
             act.Should().Throw<ArgumentNullException>()
-                .WithMessage("Value cannot be null. (Parameter 'factory')");
+                .WithMessage("Value cannot be null. (Parameter 'httpClientFactory')");
         }
 
         [TestMethod]
