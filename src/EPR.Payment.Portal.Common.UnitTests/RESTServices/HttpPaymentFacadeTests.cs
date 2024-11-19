@@ -3,12 +3,15 @@ using EPR.Payment.Portal.Common.Configuration;
 using EPR.Payment.Portal.Common.Constants;
 using EPR.Payment.Portal.Common.Dtos.Request;
 using EPR.Payment.Portal.Common.Dtos.Response;
+using EPR.Payment.Portal.Common.Exceptions;
 using EPR.Payment.Portal.Common.RESTServices.Payments;
 using EPR.Payment.Portal.Common.UnitTests.TestHelpers;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using Microsoft.FeatureManagement;
+using Microsoft.Identity.Web;
 using Moq;
 using Moq.Protected;
 using Newtonsoft.Json;
@@ -22,7 +25,8 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
     {
         private Mock<IHttpContextAccessor> _httpContextAccessorMock = null!;
         private Mock<IOptions<FacadeService>> _configMock = null!;
-
+        private Mock<ITokenAcquisition> _tokenAcquisitionMock = null!;
+        private Mock<IFeatureManager> _featureManagerMock = null!;
 
         [TestInitialize]
         public void Initialize()
@@ -32,21 +36,27 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             {
                 Url = "https://example.com",
                 EndPointName = "payments",
-                HttpClientName = "HttpClientName"
+                HttpClientName = "HttpClientName",
+                DownstreamScope = "scope_value"
             };
 
             _configMock = new Mock<IOptions<FacadeService>>();
             _configMock.Setup(x => x.Value).Returns(config);
 
             _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
+            _tokenAcquisitionMock = new Mock<ITokenAcquisition>();
+            _featureManagerMock = new Mock<IFeatureManager>();
         }
+
 
         private HttpPaymentFacade CreateHttpPaymentsService(HttpClient httpClient)
         {
             return new HttpPaymentFacade(
                 _httpContextAccessorMock!.Object,
                 new HttpClientFactoryMock(httpClient),
-                _configMock!.Object);
+                _tokenAcquisitionMock!.Object,
+                _configMock!.Object,
+                _featureManagerMock.Object);
         }
 
         [TestMethod, AutoMoqData]
@@ -91,7 +101,6 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             Guid externalPaymentId, CancellationToken cancellationToken)
         {
             // Arrange
-
             handlerMock.Protected()
                        .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                        .ThrowsAsync(new HttpRequestException(ExceptionMessages.ErrorCompletePayment));
@@ -105,7 +114,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             // Assert
             using (new AssertionScope())
             {
-                await act.Should().ThrowAsync<Exception>().WithMessage(ExceptionMessages.ErrorCompletePayment);
+                await act.Should().ThrowAsync<ServiceException>().WithMessage("Error completing payment");
                 handlerMock.Protected().Verify(
                     "SendAsync",
                     Times.Once(),
@@ -157,10 +166,9 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             PaymentRequestDto request, CancellationToken cancellationToken)
         {
             // Arrange
-
             handlerMock.Protected()
                        .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-                       .ThrowsAsync(new HttpRequestException(ExceptionMessages.ErrorCompletePayment));
+                       .ThrowsAsync(new HttpRequestException(ExceptionMessages.ErrorInitiatePayment));
 
             var httpClient = new HttpClient(handlerMock.Object);
             httpPaymentsFacade = CreateHttpPaymentsService(httpClient);
@@ -171,7 +179,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             // Assert
             using (new AssertionScope())
             {
-                await act.Should().ThrowAsync<Exception>().WithMessage(ExceptionMessages.ErrorInitiatePayment);
+                await act.Should().ThrowAsync<ServiceException>().WithMessage("Error initiating payment");
                 handlerMock.Protected().Verify(
                     "SendAsync",
                     Times.Once(),

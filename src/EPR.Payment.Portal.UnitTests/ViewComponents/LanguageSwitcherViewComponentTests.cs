@@ -65,7 +65,7 @@ namespace EPR.Payment.Portal.UnitTests.ViewComponents
             var result = await _viewComponent.InvokeAsync() as ViewViewComponentResult;
 
             // Assert
-            using(new AssertionScope())
+            using (new AssertionScope())
             {
                 result.Should().NotBeNull();
                 result!.ViewData!.Model.Should().BeEquivalentTo(new LanguageSwitcherModel

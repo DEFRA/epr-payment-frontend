@@ -2,12 +2,13 @@
 using EPR.Payment.Portal.Common.RESTServices.Payments;
 using EPR.Payment.Portal.Common.RESTServices.Payments.Interfaces;
 using Microsoft.Extensions.Options;
+using Microsoft.FeatureManagement;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace EPR.Payment.Portal.Helpers
 {
-    [ExcludeFromCodeCoverage]   // Excluding only because sonar qube is complaining about the lines already covered by tests.
+    [ExcludeFromCodeCoverage] // Excluding only because sonar qube is complaining about the lines already covered by tests.
     public static class DependencyHelper
     {
         public static IServiceCollection AddPortalDependencies(
@@ -40,7 +41,9 @@ namespace EPR.Payment.Portal.Helpers
                 var instance = Activator.CreateInstance(typeof(TImplementation),
                     s.GetRequiredService<IHttpContextAccessor>(),
                     s.GetRequiredService<IHttpClientFactory>(),
-                    serviceOptions);
+                    s.GetRequiredService<Microsoft.Identity.Web.ITokenAcquisition>(),
+                    serviceOptions,
+                    s.GetRequiredService<IFeatureManager>());
 
                 Trace.TraceError(instance == null ? $"Failed to create instance of {typeof(TImplementation).Name}" : $"Successfully created instance of {typeof(TImplementation).Name}");
 
@@ -65,7 +68,8 @@ namespace EPR.Payment.Portal.Helpers
             {
                 Url = serviceConfig?.Url,
                 EndPointName = endPointName,
-                HttpClientName = serviceConfig?.HttpClientName
+                HttpClientName = serviceConfig?.HttpClientName,
+                DownstreamScope = serviceConfig?.DownstreamScope
             });
         }
 
@@ -79,6 +83,11 @@ namespace EPR.Payment.Portal.Helpers
             if (serviceConfig.EndPointName == null)
             {
                 throw new InvalidOperationException($"{configName} EndPointName configuration is missing.");
+            }
+
+            if (serviceConfig.DownstreamScope == null)
+            {
+                throw new InvalidOperationException($"{configName} DownstreamScope configuration is missing.");
             }
         }
     }
