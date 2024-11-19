@@ -213,4 +213,7 @@
   <data name="accessibility_url" xml:space="preserve">
     <value>https://www.gov.uk/guidance/extended-producer-responsibility-for-packaging-accessibility-statement</value>
   </data>
+  <data name="gov_uk" xml:space="preserve">
+    <value>Click on this link if you wish to go to Gov.UK site</value>
+  </data>
 </root>

@@ -130,13 +130,13 @@
     <value>Allgofnodi</value>
   </data>
   <data name="home_descriptive_text" xml:space="preserve">
-    <value>Hafan</value>
+    <value>Cliciwch ar y ddolen yma os hoffech chi fynd i'r tudalen Hafan</value>
   </data>
   <data name="manage_account_descriptive_text" xml:space="preserve">
-    <value>Rheoli'r cyfrif</value>
+    <value>Cliciwch ar y ddolen yma os hoffech chi fynd i'r tudalen Rheoli'r Cyfrif</value>
   </data>
   <data name="sign_out_descriptive_text" xml:space="preserve">
-    <value>Allgofnodi</value>
+    <value>Cliciwch ar y ddolen yma os hoffech chi fynd i'r tudalen Allgofnodi</value>
   </data>
   <data name="get_help" xml:space="preserve">
     <value>Cael help</value>
@@ -175,42 +175,49 @@
     <value>Polisi</value>
   </data>
   <data name="feedback_descriptive_text" xml:space="preserve">
-    <value>Click on this link if you wish to go to the Feedback page</value>
+    <value>Cliciwch ar y ddolen yma os hoffech chi roi'ch adborth ynglŷn â'r tudalen yma</value>
   </data>
   <data name="feedback" xml:space="preserve">
-    <value>give your feedback (opens in new tab)</value>
+    <value>rhowch eich adborth (yn agor mewn tab newydd).</value>
   </data>
   <data name="private_beta" xml:space="preserve">
     <value>BETA</value>
   </data>
   <data name="private_beta_1" xml:space="preserve">
-    <value>This is a new service. Help us Improve it and </value>
+    <value>Gwasanaeth newydd yw hwn. Helpwch ni i'w wella a </value>
   </data>
   <data name="cookies_descriptive_text" xml:space="preserve">
-    <value>Click on this link if you wish to go to the Cookies page</value>
+    <value>Cliciwch ar y ddolen yma os hoffech chi fynd i'r tudalen Cwcis</value>
   </data>
   <data name="policy_descriptive_text" xml:space="preserve">
     <value>Click on this link if you wish to go to the Policy page</value>
   </data>
   <data name="accessibility_descriptive_text" xml:space="preserve">
-    <value>Click on this link if you wish to go to the Accessibility Statement page</value>
+    <value>Cliciwch ar y ddolen yma os hoffech chi fynd i'r tudalen Datganiad Hygyrchedd</value>
   </data>
   <data name="ogl_descriptive_text" xml:space="preserve">
-    <value>Click on this link if you wish to go to the Open Government License v3.0 page</value>
+    <value>Cliciwch ar y ddolen yma os hoffech chi fynd i'r tudalen Trwydded Llywodraeth Agored v3.0 </value>
   </data>
   <data name="crown_copyright_descriptive_text" xml:space="preserve">
-    <value>Click on this link if you wish to go to the Crown Copyright page</value>
+    <value>Cliciwch ar y ddolen yma os hoffech chi fynd i'r tudalen Hawlfraint y Goron</value>
   </data>
   <data name="privacy_descriptive_text" xml:space="preserve">
-    <value>Click on this link if you wish to go to the Privacy page</value>
+    <value>Cliciwch ar y ddolen yma os hoffech chi fynd i'r tudalen Preifatrwydd</value>
   </data>
   <data name="email_descriptive_text" xml:space="preserve">
-    <value>Click on this link if you wish to send an email to eprcustomerservice@defra.gov.uk</value>
+    <value>Cliciwch ar y ddolen yma os hoffech chi dalu dros y ffôn a bod arnoch chi angen gwybodaeth am daliadau am alwadau</value>
   </data>
   <data name="privacy_url" xml:space="preserve">
     <value>https://www.gov.uk/guidance/extended-producer-responsibility-for-packaging-privacy-policy.cy</value>
   </data>
   <data name="accessibility_url" xml:space="preserve">
     <value>https://www.gov.uk/guidance/extended-producer-responsibility-for-packaging-accessibility-statement.cy</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="cookies_url" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="gov_uk" xml:space="preserve">
+    <value>Cliciwch ar y ddolen yma os hoffech chi fynd i wefan Gov.UK</value>
   </data>
 </root>

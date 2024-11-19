@@ -172,15 +172,15 @@
     <value>Dydd Llun i ddydd Gwener, 8am i 6pm</value>
   </data>
   <data name="account_name" xml:space="preserve">
-    <value>Account name</value>
+    <value>Enw'r cyfrif</value>
   </data>
   <data name="return_to_dashboard_descriptive_text" xml:space="preserve">
-    <value>Click on this link if you wish to return to the dashboard</value>
+    <value>Cliciwch ar y ddolen yma os hoffech chi fynd yn ôl i'r dangosfwrdd</value>
   </data>
   <data name="call_charges_descriptive_text" xml:space="preserve">
-    <value>Click on this link if you wish to pay by phone and need to find out about call charges</value>
+    <value>Cliciwch ar y ddolen yma os hoffech chi dalu dros y ffôn a bod arnoch chi angen gwybodaeth am daliadau am alwadau</value>
   </data>
   <data name="try_online_payment_again_descriptive_text" xml:space="preserve">
-    <value>Click on this link if you wish to make an online payment again</value>
+    <value>Cliciwch ar y ddolen yma os hoffech chi wneud taliad ar-lein eto</value>
   </data>
 </root>
