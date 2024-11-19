@@ -22,6 +22,7 @@ namespace EPR.Payment.Portal.Extension
         {
             ConfigureOptions(services, configuration);
             ConfigureLocalization(services);
+            ConfigureAuthentication(services, configuration);
             ConfigureAuthorization(services, configuration);
             return services;
         }
