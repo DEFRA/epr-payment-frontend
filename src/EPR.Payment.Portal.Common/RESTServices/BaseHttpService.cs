@@ -10,7 +10,7 @@ using System.Net.Http.Json;
 
 namespace EPR.Payment.Portal.Common.RESTServices
 {
-    [ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage] // Excluding only because sonar qube is complaining about the lines already covered by tests.
     public abstract class BaseHttpService
     {
         protected readonly string _baseUrl;
@@ -62,12 +62,11 @@ namespace EPR.Payment.Portal.Common.RESTServices
                     throw new InvalidOperationException("Failed to prepare the authenticated client.", ex);
                 }
             }
-            else
-            {
-                Console.WriteLine("Authentication is disabled. Skipping token acquisition.");
-            }
         }
 
+        /// <summary>
+        /// Performs an Http GET returning the specified object
+        /// </summary>
         protected async Task<T> Get<T>(string url, CancellationToken cancellationToken, bool includeTrailingSlash = true)
         {
             await PrepareAuthenticatedClient();
@@ -76,6 +75,9 @@ namespace EPR.Payment.Portal.Common.RESTServices
             return await Send<T>(CreateMessage(finalUrl, null, HttpMethod.Get), cancellationToken);
         }
 
+        /// <summary>
+        /// Performs an Http POST returning the specified object
+        /// </summary>
         protected async Task<T> Post<T>(string url, object? payload, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(url))
@@ -87,6 +89,9 @@ namespace EPR.Payment.Portal.Common.RESTServices
             return await Send<T>(CreateMessage(finalUrl, payload, HttpMethod.Post), cancellationToken);
         }
 
+        /// <summary>
+        /// Performs an Http POST without returning any data
+        /// </summary>
         protected async Task Post(string url, object? payload, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(url))
@@ -100,38 +105,9 @@ namespace EPR.Payment.Portal.Common.RESTServices
             await Send(CreateMessage(finalUrl, payload, HttpMethod.Post), cancellationToken);
         }
 
-        private HttpRequestMessage CreateMessage(string url, object? payload, HttpMethod method)
-        {
-            var message = new HttpRequestMessage
-            {
-                RequestUri = new Uri(url),
-                Method = method,
-                Content = payload != null ? JsonContent.Create(payload) : null
-            };
-            return message;
-        }
-
-        private async Task<T> Send<T>(HttpRequestMessage requestMessage, CancellationToken cancellationToken)
-        {
-            var response = await _httpClient.SendAsync(requestMessage, cancellationToken);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                return IsValidJson(content) ? JsonConvert.DeserializeObject<T>(content)! : default!;
-            }
-
-            throw new ResponseCodeException(response.StatusCode, await response.Content.ReadAsStringAsync());
-        }
-
-        private async Task Send(HttpRequestMessage requestMessage, CancellationToken cancellationToken)
-        {
-            var response = await _httpClient.SendAsync(requestMessage, cancellationToken);
-            if (!response.IsSuccessStatusCode)
-                throw new Exception($"Error calling API: {response.StatusCode}");
-        }
-
-
+        /// <summary>
+        /// Performs an Http PUT returning the specified object
+        /// </summary>
         protected async Task<T> Put<T>(string url, object? payload, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(url))
@@ -145,6 +121,9 @@ namespace EPR.Payment.Portal.Common.RESTServices
             return await Send<T>(CreateMessage(finalUrl, payload, HttpMethod.Put), cancellationToken);
         }
 
+        /// <summary>
+        /// Performs an Http PUT without returning any data
+        /// </summary>
         protected async Task Put(string url, object? payload, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(url))
@@ -158,7 +137,9 @@ namespace EPR.Payment.Portal.Common.RESTServices
             await Send(CreateMessage(finalUrl, payload, HttpMethod.Put), cancellationToken);
         }
 
-
+        /// <summary>
+        /// Performs an Http DELETE returning the specified object
+        /// </summary>
         protected async Task<T> Delete<T>(string url, object? payload, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(url))
@@ -170,7 +151,9 @@ namespace EPR.Payment.Portal.Common.RESTServices
             return await Send<T>(CreateMessage(finalUrl, payload, HttpMethod.Delete), cancellationToken);
         }
 
-
+        /// <summary>
+        /// Performs an Http DELETE without returning any data
+        /// </summary>
         protected async Task Delete(string url, object? payload, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(url))
@@ -182,11 +165,83 @@ namespace EPR.Payment.Portal.Common.RESTServices
             await Send(CreateMessage(finalUrl, payload, HttpMethod.Delete), cancellationToken);
         }
 
+        private HttpRequestMessage CreateMessage(
+            string url,
+            object? payload,
+            HttpMethod httpMethod)
+        {
+            var msg = new HttpRequestMessage
+            {
+                RequestUri = new Uri(url),
+                Method = httpMethod
+            };
+
+            if (payload != null)
+            {
+                msg.Content = JsonContent.Create(payload);
+            }
+
+            return msg;
+        }
+
+        private async Task<T> Send<T>(HttpRequestMessage requestMessage, CancellationToken cancellationToken)
+        {
+            var response = await _httpClient.SendAsync(requestMessage, cancellationToken);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseStream = await response.Content.ReadAsStreamAsync();
+                using var streamReader = new StreamReader(responseStream);
+                var content = await streamReader.ReadToEndAsync();
+
+                if (string.IsNullOrWhiteSpace(content))
+                    return default!;
+
+                return ReturnValue<T>(content);
+            }
+            else
+            {
+                // get any message from the response
+                var responseStream = await response.Content.ReadAsStreamAsync();
+                var content = default(string);
+
+                if (responseStream.Length > 0)
+                {
+                    using var streamReader = new StreamReader(responseStream);
+                    content = await streamReader.ReadToEndAsync();
+                }
+
+                // set the response status code and throw the exception for the middleware to handle
+                throw new ResponseCodeException(response.StatusCode, content!);
+            }
+        }
+
+        private async Task Send(HttpRequestMessage requestMessage, CancellationToken cancellationToken)
+        {
+            var response = await _httpClient.SendAsync(requestMessage, cancellationToken);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                _httpContextAccessor.HttpContext.Response.StatusCode = (int)response.StatusCode;
+                // for now we don't know how we're going to handle errors specifically,
+                // so we'll just throw an error with the error code
+                throw new Exception($"Error occurred calling API with error code: {response.StatusCode}. Message: {response.ReasonPhrase}");
+            }
+        }
+
+        private T ReturnValue<T>(string value)
+        {
+            if (IsValidJson(value))
+                return JsonConvert.DeserializeObject<T>(value)!;
+            else
+                return (T)Convert.ChangeType(value, typeof(T));
+        }
+
         private bool IsValidJson(string stringValue)
         {
             try
             {
-                JToken.Parse(stringValue);
+                var val = JToken.Parse(stringValue);
                 return true;
             }
             catch

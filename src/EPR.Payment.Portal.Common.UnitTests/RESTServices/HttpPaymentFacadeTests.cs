@@ -114,7 +114,8 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             // Assert
             using (new AssertionScope())
             {
-                await act.Should().ThrowAsync<ServiceException>().WithMessage("Error completing payment");
+                await act.Should().ThrowAsync<ServiceException>().WithMessage("Error occured while completing payment.");
+
                 handlerMock.Protected().Verify(
                     "SendAsync",
                     Times.Once(),
@@ -179,7 +180,8 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             // Assert
             using (new AssertionScope())
             {
-                await act.Should().ThrowAsync<ServiceException>().WithMessage("Error initiating payment");
+                await act.Should().ThrowAsync<ServiceException>().WithMessage("Error occured while Initiating payment.");
+
                 handlerMock.Protected().Verify(
                     "SendAsync",
                     Times.Once(),
