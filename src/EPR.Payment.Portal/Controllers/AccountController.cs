@@ -27,12 +27,12 @@ public class AccountController : Controller
     {
         if (dashboardConfiguration?.Value?.RPDRootUrl?.Url == null)
         {
-            throw new ArgumentNullException(nameof(dashboardConfiguration.Value.RPDRootUrl), "RPDRootUrl cannot be null.");
+            throw new ArgumentNullException(nameof(dashboardConfiguration.Value.RPDRootUrl));
         }
 
         if (dashboardConfiguration?.Value?.SignOutUrl?.Url == null)
         {
-            throw new ArgumentNullException(nameof(dashboardConfiguration.Value.SignOutUrl), "SignOutUrl cannot be null.");
+            throw new ArgumentNullException(nameof(dashboardConfiguration.Value.SignOutUrl));
         }
 
         _rpdRootUrl = dashboardConfiguration.Value.RPDRootUrl.Url;

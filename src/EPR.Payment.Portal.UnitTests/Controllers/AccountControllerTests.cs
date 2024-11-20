@@ -28,8 +28,8 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             Action act = () => new AccountController(_dashboardConfigurationMock.Object, featureManager.Object);
 
             // Assert
-            act.Should().Throw<NullReferenceException>()
-                .WithMessage("Value cannot be null. 'RPDRootUrl'"); 
+            act.Should().Throw<ArgumentNullException>()
+                .WithMessage("Value cannot be null. (Parameter 'RPDRootUrl')"); 
         }
         [TestMethod, AutoMoqData]
         public void Constructor_ShouldThrowArgumentNullException_WhenSignoutUrlConfigurationIsNull(
@@ -44,8 +44,8 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             Action act = () => new AccountController(_dashboardConfigurationMock.Object, featureManager.Object);
 
             // Assert
-            act.Should().Throw<NullReferenceException>()
-                .WithMessage("Value cannot be null. 'SignOutUrl'");
+            act.Should().Throw<ArgumentNullException>()
+                .WithMessage("Value cannot be null. (Parameter 'SignOutUrl')");
         }
 
         [TestMethod, AutoMoqData]
