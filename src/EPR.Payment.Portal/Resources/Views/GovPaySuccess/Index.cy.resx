@@ -159,4 +159,13 @@
   <data name="submit_registration_application_descriptive_text" xml:space="preserve">
     <value>Cliciwch ar y ddolen yma os hoffech chi gyflwyno'ch cais am gofrestru i'r rheoleiddiwr</value>
   </data>
+  <data name="packaging_fee_paid" xml:space="preserve">
+    <value>Mae eich ffi am eich ailgyflwyniad data pecynwaith wedi'i thalu</value>
+  </data>
+  <data name="packaging_reference_number" xml:space="preserve">
+    <value>Cyfeirnod eich ailgyflwyniad data pecynwaith:</value>
+  </data>
+  <data name="packaging_last_step" xml:space="preserve">
+    <value>Cyflwyno'ch data pecynwaith fel y cam olaf cyn iddo gael ei adolygu gan y rheoleiddiwr.</value>
+  </data>
 </root>
