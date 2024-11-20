@@ -16,8 +16,8 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
     {
         [TestMethod, AutoMoqData]
         public void Constructor_ShouldThrowArgumentNullException_WhenDashboardConfigurationIsNull(
-            [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
-            [Frozen] Mock<IFeatureManager> featureManager)
+    [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
+    [Frozen] Mock<IFeatureManager> featureManager)
         {
             // Arrange
             _dashboardConfigurationMock.Setup(x => x.Value).Returns((DashboardConfiguration)null!);
@@ -28,7 +28,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
 
             // Assert
             act.Should().Throw<ArgumentException>()
-                .WithMessage("Value cannot be null. (Parameter 'dashboardConfiguration')");
+                .WithMessage("dashboardConfiguration.Value.RPDRootUrl (Parameter 'dashboardConfiguration')");
         }
 
         [TestMethod, AutoMoqData]
@@ -67,8 +67,8 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
 
         [TestMethod, AutoMoqData]
         public void Constructor_ShouldThrowArgumentNullException_WhenSignoutUrlConfigurationIsNull(
-    [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
-    [Frozen] Mock<IFeatureManager> featureManager)
+            [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
+            [Frozen] Mock<IFeatureManager> featureManager)
         {
             // Arrange
             _dashboardConfigurationMock.Setup(x => x.Value).Returns(new DashboardConfiguration { RPDRootUrl = new Service { Url = "http://www.google.com" }, SignOutUrl = null! });
@@ -97,6 +97,21 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             // Assert
             act.Should().Throw<ArgumentException>()
                 .WithMessage("dashboardConfiguration.Value.SignOutUrl (Parameter 'dashboardConfiguration')");
+        }
+
+        [TestMethod, AutoMoqData]
+        public void Constructor_ShouldThrowArgumentNullException_WhenFeatureManagerIsNull(
+            [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock)
+        {
+            // Arrange
+            _dashboardConfigurationMock.Setup(x => x.Value).Returns(new DashboardConfiguration { RPDRootUrl = new Service { Url = "http://www.google.com" }, SignOutUrl = new Service { Url = "" } });
+
+            // Act
+            Action act = () => new AccountController(_dashboardConfigurationMock.Object, null!);
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>()
+                .WithMessage("Value cannot be null. (Parameter 'featureManager')");
         }
 
         [TestMethod, AutoMoqData]
