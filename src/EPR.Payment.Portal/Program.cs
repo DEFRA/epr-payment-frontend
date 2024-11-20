@@ -1,10 +1,14 @@
 using EPR.Payment.Portal.AppStart;
 using EPR.Payment.Portal.Common.Configuration;
+using EPR.Payment.Portal.Common.Options;
 using EPR.Payment.Portal.Extension;
 using EPR.Payment.Portal.Helpers;
 using Microsoft.FeatureManagement;
 
 var builder = WebApplication.CreateBuilder(args);
+var builderConfig = builder.Configuration;
+var globalVariables = builderConfig.Get<GlobalVariables>();
+string basePath = globalVariables.BasePath;
 
 // Add services to the container.
 builder.Services.AddFeatureManagement();
@@ -31,6 +35,7 @@ builder.Services
 var app = builder.Build();
 app.UseSession();
 app.UseRequestLocalization();
+app.UsePathBase(basePath);
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -45,8 +50,14 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseHealthChecks();
-app.UseAuthentication();
-app.UseAuthorization();
+
+// Check if authentication is enabled using a feature flag
+var featureManager = app.Services.GetRequiredService<IFeatureManager>();
+if (await featureManager.IsEnabledAsync("EnableAuthenticationFeature"))
+{
+    app.UseAuthentication();
+    app.UseAuthorization();
+}
 
 app.MapControllerRoute(
     name: "default",
