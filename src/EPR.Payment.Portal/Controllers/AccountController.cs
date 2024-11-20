@@ -25,7 +25,7 @@ public class AccountController(IOptions<DashboardConfiguration> dashboardConfigu
     private readonly string _signOutUrl = dashboardConfiguration.Value.SignOutUrl?.Url 
         ?? throw new ArgumentException("dashboardConfiguration.Value.SignOutUrl", nameof(dashboardConfiguration));
 
-    private IFeatureManager _featureManager = featureManager ?? throw new ArgumentNullException(nameof(featureManager));
+    private readonly IFeatureManager _featureManager = featureManager ?? throw new ArgumentNullException(nameof(featureManager));
 
     /// <summary>
     /// Handles the user sign-out.
