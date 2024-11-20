@@ -22,7 +22,7 @@ public class AccountController(IOptions<DashboardConfiguration> dashboardConfigu
     private readonly string _rpdRootUrl = dashboardConfiguration.Value?.RPDRootUrl?.Url 
         ?? throw new ArgumentException("dashboardConfiguration.Value.RPDRootUrl", nameof(dashboardConfiguration));
 
-    private readonly string _signOutUrl = dashboardConfiguration.Value?.SignOutUrl?.Url 
+    private readonly string _signOutUrl = dashboardConfiguration.Value.SignOutUrl?.Url 
         ?? throw new ArgumentException("dashboardConfiguration.Value.SignOutUrl", nameof(dashboardConfiguration));
 
     private IFeatureManager _featureManager = featureManager ?? throw new ArgumentNullException(nameof(featureManager));
