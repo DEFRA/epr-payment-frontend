@@ -50,8 +50,14 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseHealthChecks();
-app.UseAuthentication();
-app.UseAuthorization();
+
+// Check if authentication is enabled using a feature flag
+var featureManager = app.Services.GetRequiredService<IFeatureManager>();
+if (await featureManager.IsEnabledAsync("EnableAuthenticationFeature"))
+{
+    app.UseAuthentication();
+    app.UseAuthorization();
+}
 
 app.MapControllerRoute(
     name: "default",
