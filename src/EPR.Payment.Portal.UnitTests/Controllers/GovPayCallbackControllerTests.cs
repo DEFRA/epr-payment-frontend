@@ -78,6 +78,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
                 redirectResult!.RouteValues!["Regulator"].Should().BeEquivalentTo(completePaymentViewModel.Regulator);
                 redirectResult!.RouteValues!["Amount"].Should().BeEquivalentTo(completePaymentViewModel.Amount);
                 redirectResult!.RouteValues!["Email"].Should().BeEquivalentTo(completePaymentViewModel.Email);
+                redirectResult!.RouteValues!["Description"].Should().BeEquivalentTo(completePaymentViewModel.Description);
                 _paymentsServiceMock.Verify(service => service.CompletePaymentAsync(id, It.IsAny<CancellationToken>()), Times.Once());
             }
         }
@@ -116,6 +117,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
                 redirectResult!.RouteValues!["Regulator"].Should().BeEquivalentTo(completePaymentViewModel.Regulator);
                 redirectResult!.RouteValues!["Amount"].Should().BeEquivalentTo(completePaymentViewModel.Amount);
                 redirectResult!.RouteValues!["Email"].Should().BeEquivalentTo(completePaymentViewModel.Email);
+                redirectResult!.RouteValues!["Description"].Should().BeEquivalentTo(completePaymentViewModel.Description);
                 _paymentsServiceMock.Verify(service => service.CompletePaymentAsync(id, It.IsAny<CancellationToken>()), Times.Once());
             }
         }
