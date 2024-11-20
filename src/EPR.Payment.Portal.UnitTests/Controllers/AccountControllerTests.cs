@@ -16,20 +16,36 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
     {
 
         [TestMethod, AutoMoqData]
-        public void Constructor_ShouldThrowArgumentNullException_WhenDashboardConfigurationIsNull(
+        public void Constructor_ShouldThrowArgumentNullException_WhenRPDRootUrlConfigurationIsNull(
             [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
             [Frozen] Mock<IFeatureManager> featureManager)
         {
             // Arrange
-            _dashboardConfigurationMock.Setup(x => x.Value).Returns((DashboardConfiguration)null!);
+            _dashboardConfigurationMock.Setup(x => x.Value).Returns(new DashboardConfiguration { SignOutUrl = new Service { Url = "signout" } });
             featureManager.Setup(x => x.IsEnabledAsync("EnableAuthenticationFeature")).Returns(Task.FromResult(true));
 
             // Act
             Action act = () => new AccountController(_dashboardConfigurationMock.Object, featureManager.Object);
 
             // Assert
-            act.Should().Throw<ArgumentNullException>()
-                .WithMessage("Value cannot be null. (Parameter 'dashboardConfiguration')"); 
+            act.Should().Throw<NullReferenceException>()
+                .WithMessage("Value cannot be null. 'RPDRootUrl'"); 
+        }
+        [TestMethod, AutoMoqData]
+        public void Constructor_ShouldThrowArgumentNullException_WhenSignoutUrlConfigurationIsNull(
+    [Frozen] Mock<IOptions<DashboardConfiguration>> _dashboardConfigurationMock,
+    [Frozen] Mock<IFeatureManager> featureManager)
+        {
+            // Arrange
+            _dashboardConfigurationMock.Setup(x => x.Value).Returns(new DashboardConfiguration { RPDRootUrl = new Service { Url = "http://www.google.com" } });
+            featureManager.Setup(x => x.IsEnabledAsync("EnableAuthenticationFeature")).Returns(Task.FromResult(true));
+
+            // Act
+            Action act = () => new AccountController(_dashboardConfigurationMock.Object, featureManager.Object);
+
+            // Assert
+            act.Should().Throw<NullReferenceException>()
+                .WithMessage("Value cannot be null. 'SignOutUrl'");
         }
 
         [TestMethod, AutoMoqData]

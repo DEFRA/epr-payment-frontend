@@ -19,14 +19,11 @@ using System.Web;
 [Route("[controller]/[action]")]
 public class AccountController(IOptions<DashboardConfiguration> dashboardConfiguration, IFeatureManager featureManager) : Controller
 {
-    private readonly DashboardConfiguration _dashboardConfiguration = dashboardConfiguration?.Value
-        ?? throw new ArgumentNullException(nameof(dashboardConfiguration));
+    private readonly string _rpdRootUrl = dashboardConfiguration.Value?.RPDRootUrl?.Url
+        ?? throw new NullReferenceException($"Value cannot be null. '{nameof(dashboardConfiguration.Value.RPDRootUrl)}'");
 
-    private readonly string _rpdRootUrl = dashboardConfiguration.Value?.RPDRootUrl?.Url 
-        ?? throw new ArgumentNullException(nameof(dashboardConfiguration.Value.RPDRootUrl));
-
-    private readonly string _signOutUrl = dashboardConfiguration.Value?.SignOutUrl?.Url 
-        ?? throw new ArgumentNullException(nameof(dashboardConfiguration.Value.SignOutUrl));
+    private readonly string _signOutUrl = dashboardConfiguration.Value?.SignOutUrl?.Url
+        ?? throw new NullReferenceException($"Value cannot be null. '{nameof(dashboardConfiguration.Value.SignOutUrl)}'" );
 
     public IFeatureManager FeatureManager { get; } = featureManager;
 
@@ -39,7 +36,7 @@ public class AccountController(IOptions<DashboardConfiguration> dashboardConfigu
     [HttpGet("{scheme?}")]
     public IActionResult SignOut([FromRoute] string? scheme)
     {
-        if (featureManager.IsEnabledAsync("EnableAuthenticationFeature").GetAwaiter().GetResult())
+        if (FeatureManager.IsEnabledAsync("EnableAuthenticationFeature").GetAwaiter().GetResult())
         {
             if (AppServicesAuthenticationInformation.IsAppServicesAadAuthenticationEnabled)
             {
