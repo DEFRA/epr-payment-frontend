@@ -17,29 +17,18 @@ using System.Web;
 /// Controller used in web apps to manage accounts.
 /// </summary>
 [Route("[controller]/[action]")]
-public class AccountController : Controller
+public class AccountController(IOptions<DashboardConfiguration> dashboardConfiguration, IFeatureManager featureManager) : Controller
 {
-    private readonly string _rpdRootUrl;
-    private readonly string _signOutUrl;
-    public IFeatureManager FeatureManager { get; }
+    private readonly DashboardConfiguration _dashboardConfiguration = dashboardConfiguration?.Value
+        ?? throw new ArgumentNullException(nameof(dashboardConfiguration));
 
-    public AccountController(IOptions<DashboardConfiguration> dashboardConfiguration, IFeatureManager featureManager)
-    {
-        if (dashboardConfiguration?.Value?.RPDRootUrl?.Url == null)
-        {
-            throw new ArgumentNullException(nameof(dashboardConfiguration.Value.RPDRootUrl));
-        }
+    private readonly string _rpdRootUrl = dashboardConfiguration.Value?.RPDRootUrl?.Url 
+        ?? throw new ArgumentException("dashboardConfiguration.Value.RPDRootUrl", nameof(dashboardConfiguration));
 
-        if (dashboardConfiguration?.Value?.SignOutUrl?.Url == null)
-        {
-            throw new ArgumentNullException(nameof(dashboardConfiguration.Value.SignOutUrl));
-        }
+    private readonly string _signOutUrl = dashboardConfiguration.Value?.SignOutUrl?.Url 
+        ?? throw new ArgumentException("dashboardConfiguration.Value.SignOutUrl", nameof(dashboardConfiguration));
 
-        _rpdRootUrl = dashboardConfiguration.Value.RPDRootUrl.Url;
-        _signOutUrl = dashboardConfiguration.Value.SignOutUrl.Url;
-        FeatureManager = featureManager;
-    }
-    
+    public IFeatureManager FeatureManager { get; } = featureManager;
 
     /// <summary>
     /// Handles the user sign-out.
@@ -50,7 +39,7 @@ public class AccountController : Controller
     [HttpGet("{scheme?}")]
     public IActionResult SignOut([FromRoute] string? scheme)
     {
-        if (FeatureManager.IsEnabledAsync("EnableAuthenticationFeature").GetAwaiter().GetResult())
+        if (featureManager.IsEnabledAsync("EnableAuthenticationFeature").GetAwaiter().GetResult())
         {
             if (AppServicesAuthenticationInformation.IsAppServicesAadAuthenticationEnabled)
             {
