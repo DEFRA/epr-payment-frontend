@@ -181,7 +181,7 @@
     <value>rhowch eich adborth (yn agor mewn tab newydd).</value>
   </data>
   <data name="private_beta" xml:space="preserve">
-    <value>BETA</value>
+    <value>Beta</value>
   </data>
   <data name="private_beta_1" xml:space="preserve">
     <value>Gwasanaeth newydd yw hwn. Helpwch ni i'w wella a </value>
@@ -212,10 +212,6 @@
   </data>
   <data name="accessibility_url" xml:space="preserve">
     <value>https://www.gov.uk/guidance/extended-producer-responsibility-for-packaging-accessibility-statement.cy</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="cookies_url" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
   </data>
   <data name="gov_uk" xml:space="preserve">
     <value>Cliciwch ar y ddolen yma os hoffech chi fynd i wefan Gov.UK</value>
