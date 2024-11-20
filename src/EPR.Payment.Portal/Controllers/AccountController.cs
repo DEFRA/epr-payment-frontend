@@ -17,15 +17,29 @@ using System.Web;
 /// Controller used in web apps to manage accounts.
 /// </summary>
 [Route("[controller]/[action]")]
-public class AccountController(IOptions<DashboardConfiguration> dashboardConfiguration, IFeatureManager featureManager) : Controller
+public class AccountController : Controller
 {
-    private readonly string _rpdRootUrl = dashboardConfiguration.Value?.RPDRootUrl?.Url
-        ?? throw new NullReferenceException($"Value cannot be null. '{nameof(dashboardConfiguration.Value.RPDRootUrl)}'");
+    private readonly string _rpdRootUrl;
+    private readonly string _signOutUrl;
+    public IFeatureManager FeatureManager { get; }
 
-    private readonly string _signOutUrl = dashboardConfiguration.Value?.SignOutUrl?.Url
-        ?? throw new NullReferenceException($"Value cannot be null. '{nameof(dashboardConfiguration.Value.SignOutUrl)}'" );
+    public AccountController(IOptions<DashboardConfiguration> dashboardConfiguration, IFeatureManager featureManager)
+    {
+        if (dashboardConfiguration?.Value?.RPDRootUrl?.Url == null)
+        {
+            throw new ArgumentNullException(nameof(dashboardConfiguration.Value.RPDRootUrl), "RPDRootUrl cannot be null.");
+        }
 
-    public IFeatureManager FeatureManager { get; } = featureManager;
+        if (dashboardConfiguration?.Value?.SignOutUrl?.Url == null)
+        {
+            throw new ArgumentNullException(nameof(dashboardConfiguration.Value.SignOutUrl), "SignOutUrl cannot be null.");
+        }
+
+        _rpdRootUrl = dashboardConfiguration.Value.RPDRootUrl.Url;
+        _signOutUrl = dashboardConfiguration.Value.SignOutUrl.Url;
+        FeatureManager = featureManager;
+    }
+    
 
     /// <summary>
     /// Handles the user sign-out.
