@@ -1,6 +1,5 @@
 ﻿using AutoFixture.MSTest;
 using EPR.Payment.Portal.Common.Configuration;
-using EPR.Payment.Portal.Common.RESTServices;
 using EPR.Payment.Portal.Common.RESTServices.Payments;
 using EPR.Payment.Portal.Common.RESTServices.Payments.Interfaces;
 using EPR.Payment.Portal.Common.UnitTests.TestHelpers;
@@ -8,9 +7,12 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using Microsoft.FeatureManagement;
+using Microsoft.Identity.Web;
 using Moq;
 using Moq.Protected;
 using System.Net;
+using System.Text;
 
 namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
 {
@@ -23,23 +25,27 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
         public void Setup()
         {
             // Configure the options with valid values
-            _config = Options.Create(new FacadeService
+            _config = Microsoft.Extensions.Options.Options.Create(new FacadeService
             {
                 Url = "https://example.com",
-                EndPointName = "health"
+                EndPointName = "health",
+                DownstreamScope = "scope"
             });
         }
 
         [TestMethod, AutoMoqData]
         public void Constructor_ShouldInitialize_Instance(
-            [Frozen] Mock<IHttpContextAccessor> _httpContextAccessorMock,
-            [Frozen] Mock<IHttpClientFactory> _httpClientFactoryMock)
+            [Frozen] Mock<IHttpContextAccessor> httpContextAccessorMock,
+            [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
+            [Frozen] Mock<Microsoft.FeatureManagement.IFeatureManager> featureManagerMock)
         {
             // Arrange
             var service = new HttpPaymentFacadeHealthCheckService(
-                _httpContextAccessorMock.Object,
-                _httpClientFactoryMock.Object,
-                _config);
+                httpContextAccessorMock.Object,
+                httpClientFactoryMock.Object,
+                Mock.Of<Microsoft.Identity.Web.ITokenAcquisition>(),
+                _config,
+                featureManagerMock.Object);
 
             // Act & Assert
             service.Should().NotBeNull();
@@ -48,52 +54,57 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
 
         [TestMethod, AutoMoqData]
         public void Constructor_WhenHttpContextAccessorIsNull_ShouldThrowArgumentNullException(
-            [Frozen] Mock<IHttpContextAccessor> _httpContextAccessorMock,
-            [Frozen] Mock<IHttpClientFactory> _httpClientFactoryMock)
+            [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
+            [Frozen] Mock<Microsoft.FeatureManagement.IFeatureManager> featureManagerMock)
         {
             // Arrange
             Action act = () => new HttpPaymentFacadeHealthCheckService(
                 null!,
-                _httpClientFactoryMock.Object,
-                _config);
+                httpClientFactoryMock.Object,
+                Mock.Of<Microsoft.Identity.Web.ITokenAcquisition>(),
+                _config,
+                featureManagerMock.Object);
 
             // Act & Assert
             act.Should().Throw<ArgumentNullException>()
                 .And.ParamName.Should().Be("httpContextAccessor");
         }
 
-        [TestMethod, AutoMoqData]
-        public void Constructor_WhenHttpClientFactoryIsNull_ShouldThrowArgumentNullException(
-            [Frozen] Mock<IHttpContextAccessor> _httpContextAccessorMock,
-            [Frozen] Mock<IHttpClientFactory> _httpClientFactoryMock)
+        [TestMethod]
+        public void Constructor_WhenHttpClientFactoryIsNull_ShouldThrowArgumentNullException()
         {
             // Arrange
-            Action act = () => new HttpPaymentFacadeHealthCheckService(
-                _httpContextAccessorMock.Object,
-                null!,
-                _config);
+            var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
+            var featureManagerMock = new Mock<IFeatureManager>();
 
-            // Act & Assert
-            act.Should().Throw<ArgumentNullException>()
-                .And.ParamName.Should().Be("httpClientFactory");
+            // Act
+            Action act = () => new HttpPaymentFacadeHealthCheckService(
+                httpContextAccessorMock.Object,
+                null!, // Passing null for httpClientFactory
+                Mock.Of<ITokenAcquisition>(),
+                Mock.Of<IOptions<FacadeService>>(),
+                featureManagerMock.Object);
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>().WithMessage("*factory*");
         }
+
 
         [TestMethod, AutoMoqData]
         public void Constructor_WhenConfigIsNull_ShouldThrowArgumentNullException(
-            [Frozen] Mock<IHttpContextAccessor> _httpContextAccessorMock,
-            [Frozen] Mock<IHttpClientFactory> _httpClientFactoryMock)
+            [Frozen] Mock<IHttpContextAccessor> httpContextAccessorMock,
+            [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
+            [Frozen] Mock<Microsoft.FeatureManagement.IFeatureManager> featureManagerMock)
         {
             // Arrange
-            _config = Options.Create(new FacadeService
-            {
-                Url = null,
-                EndPointName = null
-            });
+            _config = null!;
 
             Action act = () => new HttpPaymentFacadeHealthCheckService(
-                _httpContextAccessorMock.Object,
-                _httpClientFactoryMock.Object,
-                _config);
+                httpContextAccessorMock.Object,
+                httpClientFactoryMock.Object,
+                Mock.Of<Microsoft.Identity.Web.ITokenAcquisition>(),
+                _config,
+                featureManagerMock.Object);
 
             // Act & Assert
             act.Should().Throw<ArgumentNullException>()
@@ -102,11 +113,12 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
 
         [TestMethod, AutoMoqData]
         public void Constructor_WhenUrlInConfigIsNull_ShouldThrowArgumentNullException(
-            [Frozen] Mock<IHttpContextAccessor> _httpContextAccessorMock,
-            [Frozen] Mock<IHttpClientFactory> _httpClientFactoryMock)
+            [Frozen] Mock<IHttpContextAccessor> httpContextAccessorMock,
+            [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
+            [Frozen] Mock<Microsoft.FeatureManagement.IFeatureManager> featureManagerMock)
         {
             // Arrange
-            _config = Options.Create(new FacadeService
+            _config = Microsoft.Extensions.Options.Options.Create(new FacadeService
             {
                 Url = null,
                 EndPointName = "health"
@@ -114,9 +126,11 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
 
             // Act & Assert
             Action act = () => new HttpPaymentFacadeHealthCheckService(
-                _httpContextAccessorMock.Object,
-                _httpClientFactoryMock.Object,
-                _config);
+                httpContextAccessorMock.Object,
+                httpClientFactoryMock.Object,
+                Mock.Of<Microsoft.Identity.Web.ITokenAcquisition>(),
+                _config,
+                featureManagerMock.Object);
 
             act.Should().Throw<ArgumentNullException>()
                 .WithMessage("*PaymentFacadeHealthCheck BaseUrl configuration is missing*");
@@ -124,11 +138,12 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
 
         [TestMethod, AutoMoqData]
         public void Constructor_WhenEndPointNameInConfigIsNull_ShouldThrowArgumentNullException(
-            [Frozen] Mock<IHttpContextAccessor> _httpContextAccessorMock,
-            [Frozen] Mock<IHttpClientFactory> _httpClientFactoryMock)
+            [Frozen] Mock<IHttpContextAccessor> httpContextAccessorMock,
+            [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
+            [Frozen] Mock<Microsoft.FeatureManagement.IFeatureManager> featureManagerMock)
         {
             // Arrange
-            _config = Options.Create(new FacadeService
+            _config = Microsoft.Extensions.Options.Options.Create(new FacadeService
             {
                 Url = "https://example.com",
                 EndPointName = null
@@ -136,75 +151,83 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
 
             // Act & Assert
             Action act = () => new HttpPaymentFacadeHealthCheckService(
-                _httpContextAccessorMock.Object,
-                _httpClientFactoryMock.Object,
-                _config);
+                httpContextAccessorMock.Object,
+                httpClientFactoryMock.Object,
+                Mock.Of<Microsoft.Identity.Web.ITokenAcquisition>(),
+                _config,
+                featureManagerMock.Object);
 
             act.Should().Throw<ArgumentNullException>()
                 .WithMessage("*PaymentFacadeHealthCheck EndPointName configuration is missing*");
         }
 
-        [TestMethod, AutoMoqData]
-        public async Task GetHealthAsync_WithCorrectParameters_ShouldCallGet(
-            [Frozen] Mock<HttpMessageHandler> _handlerMock,
-            [Frozen] Mock<IHttpContextAccessor> _httpContextAccessorMock,
-            [Frozen] Mock<IHttpClientFactory> _httpClientFactoryMock)
+        [TestMethod]
+        public async Task GetHealthAsync_WithCorrectParameters_ShouldCallGet()
         {
             // Arrange
-            var cancellationToken = CancellationToken.None;
-            string healthCheckJson = @"
-                {
-                  ""status"": ""Healthy"",
-                  ""results"": {
-                    ""AppDbContext"": {
-                      ""status"": ""Healthy"",
-                      ""description"": null,
-                      ""data"": {}
-                    },
-                    ""Payment Status Health Check"": {
-                      ""status"": ""Healthy"",
-                      ""description"": ""Payment Status Health Check"",
-                      ""data"": {}
-                    }
-                  }
-                }";
+            var baseUrl = "https://example.com";
+            var endpointName = "health-check";
+            var fullUrl = $"{baseUrl}/{endpointName}/"; // Ensure trailing slash
 
-            var httpResponseMessage = new HttpResponseMessage
+            var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
+            var httpClientFactoryMock = new Mock<IHttpClientFactory>();
+            var featureManagerMock = new Mock<IFeatureManager>();
+            var tokenAcquisitionMock = new Mock<ITokenAcquisition>();
+            var configMock = new Mock<IOptions<FacadeService>>();
+
+            configMock.Setup(c => c.Value).Returns(new FacadeService
             {
-                StatusCode = HttpStatusCode.OK,
-                Content = new StringContent(healthCheckJson)
-            };
+                Url = baseUrl,
+                EndPointName = endpointName,
+                DownstreamScope = "scope"
+            });
 
-            var baseHttpServiceMock = new Mock<BaseHttpService>(
-                _httpContextAccessorMock.Object,
-                _httpClientFactoryMock.Object,
-                _config);
+            var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            handlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.Is<HttpRequestMessage>(req =>
+                        req.Method == HttpMethod.Get &&
+                        req.RequestUri!.ToString() == fullUrl),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = new StringContent("{\"message\": \"Health check successful\"}", Encoding.UTF8, "application/json")
+                });
 
-            _handlerMock.Protected()
-                       .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
-                       ItExpr.IsAny<CancellationToken>())
-                       .ReturnsAsync(httpResponseMessage)
-                       .Verifiable();
 
-            var httpClient = new HttpClient(_handlerMock.Object);
+            var httpClient = new HttpClient(handlerMock.Object);
+            httpClientFactoryMock.Setup(f => f.CreateClient(It.IsAny<string>())).Returns(httpClient);
+
+            featureManagerMock
+                .Setup(f => f.IsEnabledAsync("EnableAuthenticationFeature"))
+                .ReturnsAsync(false); // Authentication disabled
 
             var service = new HttpPaymentFacadeHealthCheckService(
-                _httpContextAccessorMock.Object,
-                new HttpClientFactoryMock(httpClient),
-                _config);
+                httpContextAccessorMock.Object,
+                httpClientFactoryMock.Object,
+                tokenAcquisitionMock.Object,
+                configMock.Object,
+                featureManagerMock.Object);
 
             // Act
-            var result = await service.GetHealthAsync(cancellationToken);
+            HttpResponseMessage? result = await service.GetHealthAsync(CancellationToken.None);
 
             // Assert
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                result.StatusCode.Should().Be(HttpStatusCode.OK);
-                baseHttpServiceMock.Verify();
+                result!.StatusCode.Should().Be(HttpStatusCode.OK);
+
+                handlerMock.Protected().Verify(
+                    "SendAsync",
+                    Times.Once(),
+                    ItExpr.Is<HttpRequestMessage>(req =>
+                        req.Method == HttpMethod.Get &&
+                        req.RequestUri!.ToString() == fullUrl),
+                    ItExpr.IsAny<CancellationToken>());
             }
-
         }
-
     }
 }

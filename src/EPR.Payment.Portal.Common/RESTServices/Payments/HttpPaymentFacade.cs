@@ -6,25 +6,28 @@ using EPR.Payment.Portal.Common.Exceptions;
 using EPR.Payment.Portal.Common.RESTServices.Payments.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using Microsoft.FeatureManagement;
+using Microsoft.Identity.Web;
 
 namespace EPR.Payment.Portal.Common.RESTServices.Payments
 {
     public class HttpPaymentFacade : BaseHttpService, IHttpPaymentFacade
     {
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly string _httpClientName;
-
         public HttpPaymentFacade(
             IHttpContextAccessor httpContextAccessor,
             IHttpClientFactory httpClientFactory,
-            IOptions<FacadeService> config)
-            : base(httpContextAccessor, httpClientFactory,
-                config.Value.Url ?? throw new ArgumentNullException(nameof(config), ExceptionMessages.PaymentFacadeBaseUrlMissing),
-                config.Value.EndPointName ?? throw new ArgumentNullException(nameof(config), ExceptionMessages.PaymentFacadeEndPointNameMissing))
+            ITokenAcquisition tokenAcquisition,
+            IOptions<FacadeService> config,
+            IFeatureManager featureManager)
+            : base(
+                httpContextAccessor,
+                httpClientFactory,
+                config.Value.Url ?? throw new ArgumentNullException(nameof(config), "Base URL is missing."),
+                config.Value.EndPointName ?? throw new ArgumentNullException(nameof(config), "Endpoint Name is missing."),
+                tokenAcquisition,
+                config.Value.DownstreamScope ?? throw new ArgumentNullException(nameof(config), "Downstream Scope is missing."),
+                featureManager)
         {
-            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-            _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
-            _httpClientName = config.Value.HttpClientName ?? throw new ArgumentNullException(nameof(config), ExceptionMessages.PaymentFacadeHttpClientNameMissing);
         }
 
         public async Task<CompletePaymentResponseDto> CompletePaymentAsync(Guid externalPaymentId, CancellationToken cancellationToken)
@@ -32,8 +35,7 @@ namespace EPR.Payment.Portal.Common.RESTServices.Payments
             try
             {
                 var url = UrlConstants.OnlinePaymentsComplete.Replace("{externalPaymentId}", externalPaymentId.ToString());
-                var response = await Post<CompletePaymentResponseDto>(url, externalPaymentId, cancellationToken);
-                return response;
+                return await Post<CompletePaymentResponseDto>(url, externalPaymentId, cancellationToken);
             }
             catch (Exception ex)
             {
@@ -45,9 +47,7 @@ namespace EPR.Payment.Portal.Common.RESTServices.Payments
         {
             try
             {
-                var url = UrlConstants.OnlinePaymentsInitiate;
-                var response = await Post<string>(url, request, cancellationToken);
-                return response;
+                return await Post<string>(UrlConstants.OnlinePaymentsInitiate, request, cancellationToken);
             }
             catch (Exception ex)
             {
