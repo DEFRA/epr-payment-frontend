@@ -858,7 +858,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             // Act
             Action act = () => new TestableBaseHttpService(
                 _httpContextAccessorMock.Object,
-                null!,
+                null!, // HttpClientFactory is null
                 baseUrl,
                 endPointName,
                 _tokenAcquisitionMock.Object,
@@ -867,7 +867,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
 
             // Assert
             act.Should().Throw<ArgumentNullException>()
-                .WithMessage("Value cannot be null. (Parameter 'factory')");
+                .WithMessage("Value cannot be null. (Parameter 'httpClientFactory')");
         }
 
         [TestMethod]
@@ -954,6 +954,160 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             _httpClient.DefaultRequestHeaders.Authorization.Should().NotBeNull();
             _httpClient.DefaultRequestHeaders.Authorization!.Scheme.Should().Be("Bearer");
             _httpClient.DefaultRequestHeaders.Authorization.Parameter.Should().Be("test-access-token");
+        }
+
+        [TestMethod]
+        public async Task PrepareAuthenticatedClient_WhenFeatureFlagDisabled_ShouldNotSetAuthorizationHeader()
+        {
+            // Arrange
+            _featureManagerMock
+                .Setup(f => f.IsEnabledAsync("EnableAuthenticationFeature"))
+                .ReturnsAsync(false); // Simulate feature flag being disabled
+
+            // Act
+            await _testableHttpService.PublicPrepareAuthenticatedClient();
+
+            // Assert
+            using (new AssertionScope())
+            {
+                _httpClient.DefaultRequestHeaders.Authorization.Should().BeNull();
+            }
+        }
+
+        [TestMethod]
+        public async Task PrepareAuthenticatedClient_WhenFeatureFlagThrowsException_ShouldNotSetAuthorizationHeader()
+        {
+            // Arrange
+            _featureManagerMock
+                .Setup(f => f.IsEnabledAsync("EnableAuthenticationFeature"))
+                .ThrowsAsync(new Exception("Feature flag error"));
+
+            // Act
+            Func<Task> act = async () => await _testableHttpService.PublicPrepareAuthenticatedClient();
+
+            // Assert
+            using (new AssertionScope())
+            {
+                await act.Should().ThrowAsync<Exception>()
+                    .WithMessage("Feature flag error");
+
+                _httpClient.DefaultRequestHeaders.Authorization.Should().BeNull();
+            }
+        }
+
+        [TestMethod]
+        public async Task PrepareAuthenticatedClient_WhenTokenAcquisitionFails_ShouldThrowInvalidOperationException()
+        {
+            // Arrange
+            _tokenAcquisitionMock
+                .Setup(t => t.GetAccessTokenForUserAsync(
+                    It.IsAny<IEnumerable<string>>(),
+                    null,  // Tenant ID
+                    null,  // ClaimsPrincipal
+                    null,  // User Flow
+                    null   // TokenAcquisitionOptions
+                ))
+                .ThrowsAsync(new Exception("Token acquisition failed"));
+
+            // Act
+            Func<Task> act = async () => await _testableHttpService.PublicPrepareAuthenticatedClient();
+
+            // Assert
+            using (new AssertionScope())
+            {
+                await act.Should().ThrowAsync<InvalidOperationException>()
+                    .WithMessage("Failed to prepare the authenticated client.");
+            }
+        }
+
+        [TestMethod]
+        public async Task PrepareAuthenticatedClient_WhenTokenAcquisitionReturnsNullOrEmpty_ShouldThrowInvalidOperationException()
+        {
+            // Arrange
+            _tokenAcquisitionMock
+                .Setup(t => t.GetAccessTokenForUserAsync(
+                    It.IsAny<IEnumerable<string>>(),
+                    null,  // Tenant ID
+                    null,  // ClaimsPrincipal
+                    null,  // User Flow
+                    null   // TokenAcquisitionOptions
+                ))
+                .ReturnsAsync(string.Empty); // Simulate token acquisition returning null or empty
+
+            // Act
+            Func<Task> act = async () => await _testableHttpService.PublicPrepareAuthenticatedClient();
+
+            // Assert
+            using (new AssertionScope())
+            {
+                await act.Should().ThrowAsync<InvalidOperationException>()
+                    .WithMessage("Failed to prepare the authenticated client."); // Match the actual exception message
+            }
+        }
+
+        [TestMethod]
+        public async Task PrepareAuthenticatedClient_WhenFeatureFlagEnabledAndTokenAcquired_ShouldSetAuthorizationHeader()
+        {
+            // Arrange
+            _featureManagerMock
+                .Setup(f => f.IsEnabledAsync("EnableAuthenticationFeature"))
+                .ReturnsAsync(true);
+
+            _tokenAcquisitionMock
+                .Setup(t => t.GetAccessTokenForUserAsync(
+                    It.IsAny<IEnumerable<string>>(),
+                    null,  // Tenant ID
+                    null,  // ClaimsPrincipal
+                    null,  // User Flow
+                    null   // TokenAcquisitionOptions
+                ))
+                .ReturnsAsync("test-token");
+
+            // Act
+            await _testableHttpService.PublicPrepareAuthenticatedClient();
+
+            // Assert
+            using (new AssertionScope())
+            {
+                _httpClient.DefaultRequestHeaders.Authorization.Should().NotBeNull();
+                _httpClient.DefaultRequestHeaders.Authorization!.Scheme.Should().Be("Bearer");
+                _httpClient.DefaultRequestHeaders.Authorization.Parameter.Should().Be("test-token");
+            }
+        }
+
+        [TestMethod]
+        public async Task Get_WhenFeatureFlagDisabled_ShouldNotSetAuthorizationHeader()
+        {
+            // Arrange
+            _featureManagerMock
+                .Setup(f => f.IsEnabledAsync("EnableAuthenticationFeature"))
+                .ReturnsAsync(false); // Simulate feature flag being disabled
+
+            var responseContent = "{\"result\": \"success\"}";
+            _handlerMock
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.Is<HttpRequestMessage>(req =>
+                        req.Method == HttpMethod.Get &&
+                        req.RequestUri!.ToString() == expectedUrl),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = new StringContent(responseContent),
+                })
+                .Verifiable();
+
+            // Act
+            var result = await _testableHttpService.PublicGet<object>(url, CancellationToken.None);
+
+            // Assert
+            using (new AssertionScope())
+            {
+                result.Should().NotBeNull();
+                _httpClient.DefaultRequestHeaders.Authorization.Should().BeNull(); // Verify no Authorization header
+            }
         }
     }
 }

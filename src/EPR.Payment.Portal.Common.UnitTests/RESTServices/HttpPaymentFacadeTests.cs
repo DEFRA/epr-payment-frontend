@@ -190,5 +190,121 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
                     ItExpr.IsAny<CancellationToken>());
             }
         }
+
+        [TestMethod]
+        public void Constructor_WhenHttpContextAccessorIsNull_ShouldThrowArgumentNullException()
+        {
+            // Act
+            Action act = () => new HttpPaymentFacade(
+                null!,
+                Mock.Of<IHttpClientFactory>(),
+                Mock.Of<ITokenAcquisition>(),
+                _configMock.Object,
+                Mock.Of<IFeatureManager>());
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>().WithMessage("*httpContextAccessor*");
+        }
+
+        [TestMethod]
+        public void Constructor_WhenConfigUrlIsNull_ShouldThrowArgumentNullException()
+        {
+            // Arrange
+            _configMock.Setup(x => x.Value).Returns(new FacadeService
+            {
+                Url = null, // Null URL
+                EndPointName = "payments",
+                DownstreamScope = "scope_value"
+            });
+
+            // Act
+            Action act = () => new HttpPaymentFacade(
+                _httpContextAccessorMock.Object,
+                Mock.Of<IHttpClientFactory>(),
+                Mock.Of<ITokenAcquisition>(),
+                _configMock.Object,
+                Mock.Of<IFeatureManager>());
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>().WithMessage("*Base URL is missing.*");
+        }
+
+        [TestMethod]
+        public void Constructor_WhenConfigEndPointNameIsNull_ShouldThrowArgumentNullException()
+        {
+            // Arrange
+            _configMock.Setup(x => x.Value).Returns(new FacadeService
+            {
+                Url = "https://example.com",
+                EndPointName = null, // Null Endpoint Name
+                DownstreamScope = "scope_value"
+            });
+
+            // Act
+            Action act = () => new HttpPaymentFacade(
+                _httpContextAccessorMock.Object,
+                Mock.Of<IHttpClientFactory>(),
+                Mock.Of<ITokenAcquisition>(),
+                _configMock.Object,
+                Mock.Of<IFeatureManager>());
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>().WithMessage("*Endpoint Name is missing.*");
+        }
+
+        [TestMethod]
+        public void Constructor_WhenConfigDownstreamScopeIsNull_ShouldThrowArgumentNullException()
+        {
+            // Arrange
+            _configMock.Setup(x => x.Value).Returns(new FacadeService
+            {
+                Url = "https://example.com",
+                EndPointName = "payments",
+                DownstreamScope = null // Null Downstream Scope
+            });
+
+            // Act
+            Action act = () => new HttpPaymentFacade(
+                _httpContextAccessorMock.Object,
+                Mock.Of<IHttpClientFactory>(),
+                Mock.Of<ITokenAcquisition>(),
+                _configMock.Object,
+                Mock.Of<IFeatureManager>());
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>().WithMessage("*Downstream Scope is missing.*");
+        }
+
+        [TestMethod]
+        public void Constructor_WhenTokenAcquisitionIsNull_ShouldThrowArgumentNullException()
+        {
+            // Act
+            Action act = () => new HttpPaymentFacade(
+                _httpContextAccessorMock.Object,
+                Mock.Of<IHttpClientFactory>(),
+                null!, // Token acquisition is null
+                _configMock.Object,
+                Mock.Of<IFeatureManager>());
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>().WithMessage("*tokenAcquisition*");
+        }
+
+        [TestMethod]
+        public void Constructor_WhenFeatureManagerIsNull_ShouldThrowArgumentNullException()
+        {
+            // Act
+            Action act = () => new HttpPaymentFacade(
+                _httpContextAccessorMock.Object,
+                Mock.Of<IHttpClientFactory>(),
+                Mock.Of<ITokenAcquisition>(),
+                _configMock.Object,
+                null!); // Feature manager is null
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>().WithMessage("*featureManager*");
+        }
+
+
     }
 }

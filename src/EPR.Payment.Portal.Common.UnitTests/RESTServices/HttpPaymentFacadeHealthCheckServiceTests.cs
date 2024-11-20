@@ -97,11 +97,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             [Frozen] Mock<Microsoft.FeatureManagement.IFeatureManager> featureManagerMock)
         {
             // Arrange
-            _config = Microsoft.Extensions.Options.Options.Create(new FacadeService
-            {
-                Url = null,
-                EndPointName = null
-            });
+            _config = null!;
 
             Action act = () => new HttpPaymentFacadeHealthCheckService(
                 httpContextAccessorMock.Object,
