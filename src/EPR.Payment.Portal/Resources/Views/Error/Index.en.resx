@@ -117,7 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="service_unavailable" xml:space="preserve">
-    <value>Sorry - the service is unavailable</value>
+	<data name="service_unavailable" xml:space="preserve">
+    <value>Sorry, the service is unavailable</value>
+  </data>
+  <data name="return_to_the_dashboard" xml:space="preserve">
+    <value>Return to the dashboard</value>
+  </data>
+  <data name="return_dashboard_descriptive_text" xml:space="preserve">
+    <value>Click on this link if you wish to return to the dashboard</value>
+  </data>
+  <data name="you_could_try_again" xml:space="preserve">
+    <value>You could try again later.</value>
+  </data>
+  <data name="you_could_pay_by_bank" xml:space="preserve">
+    <value>Alternatively - you could pay by bank transfer or by phone.</value>
   </data>
 </root>
