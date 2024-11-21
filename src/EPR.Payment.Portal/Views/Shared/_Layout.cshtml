@@ -10,7 +10,7 @@
     var manageAccountUrl = rpdRootUrl + @configuration.GetSection("Dashboard:ManageAccountUrl")["Url"];
     var signOutUrl = @configuration.GetSection("Dashboard:SignOutUrl")["Url"];
     var feedbackUrl = @configuration.GetSection("Dashboard:FeedbackUrl")["Url"];
-    var cookiesUrl = @configuration.GetSection("Dashboard:CookiesUrl")["Url"];
+    var cookiesUrl = rpdRootUrl + @configuration.GetSection("Dashboard:CookiesUrl")["Url"];
 
     var EnableAuthenticationFeature = await featureManager.IsEnabledAsync(nameof(FeatureFlags.EnableAuthenticationFeature));
 }
@@ -54,7 +54,7 @@
                 </a>
             </div>
             <div class="govuk-header__content">
-                <a href="@menuUrl" class="govuk-header__link govuk-header__service-name">
+                <a aria-label="@Localizer["home_descriptive_text"]" href="@menuUrl" class="govuk-header__link govuk-header__service-name">
                     @Localizer["report_packaging_data"]
                 </a>
                 <nav aria-label="Menu" class="govuk-header__navigation ">

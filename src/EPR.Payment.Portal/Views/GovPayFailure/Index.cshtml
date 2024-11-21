@@ -4,6 +4,8 @@
 @model CompositeViewModel;
 
 @{
+    var rpdRootUrl = @Model.dashboardConfiguration.RPDRootUrl.Url;
+    var backUrl = rpdRootUrl + @Model.dashboardConfiguration.BackUrl.Url;
     ViewData["Title"] = "GovPay Unsuccessful";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -52,7 +54,7 @@
                     <li><a href="https://www.gov.uk/call-charges" class="govuk-link" aria-label="@Localizer["call_charges_descriptive_text"]">@Localizer["call_charges"]</a></li>
                 </ul>
             </div>
-            <p><a href=@Model.dashboardConfiguration.BackUrl.Url aria-label="@Localizer["return_to_dashboard_descriptive_text"]">@Localizer["return_to_dashboard"]</a></p>            
+            <p><a href=@backUrl aria-label="@Localizer["return_to_dashboard_descriptive_text"]">@Localizer["return_to_dashboard"]</a></p>
         </div>
     </div>
 </main>

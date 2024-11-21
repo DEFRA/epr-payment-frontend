@@ -175,7 +175,7 @@
     <value>Policy</value>
   </data>
   <data name="feedback_descriptive_text" xml:space="preserve">
-    <value>Click on this link if you wish to go to the Feedback page</value>
+    <value>Click on this link if you wish to give your feedback for this page</value>
   </data>
   <data name="feedback" xml:space="preserve">
     <value>give your feedback (opens in new tab)</value>
@@ -184,7 +184,7 @@
     <value>Beta</value>
   </data>
   <data name="private_beta_1" xml:space="preserve">
-    <value>This is a new service. Help us Improve it and </value>
+    <value>This is a new service. Help us improve it and </value>
   </data>
   <data name="cookies_descriptive_text" xml:space="preserve">
     <value>Click on this link if you wish to go to the Cookies page</value>
