@@ -5,6 +5,9 @@
 @model CompositeViewModel;
 
 @{
+    var rpdRootUrl = @Model.dashboardConfiguration.RPDRootUrl.Url;
+    var backUrl = rpdRootUrl + @Model.dashboardConfiguration.BackUrl.Url;
+    var registrationTaskList = rpdRootUrl + @Model.dashboardConfiguration.RegistrationTaskList.Url;
     ViewData["Title"] = "GovPay Success";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -38,11 +41,11 @@
             <div class="govuk-button-group">
                 @if (Model.completePaymentViewModel.Description == PaymentDescription.RegistrationFee)
                 {
-                    <a href="@Model.dashboardConfiguration.RegistrationTaskList.Url" class="govuk-button" type="submit" aria-label="@Localizer["submit_registration_application_descriptive_text"]">@Localizer["submit_registration_application"]</a>
+                    <a href=@registrationTaskList class="govuk-button" type="submit" aria-label="@Localizer["submit_registration_application_descriptive_text"]">@Localizer["submit_registration_application"]</a>
                 }                
             </div>
             <p class="govuk-body">
-                <a href=@Model.dashboardConfiguration.BackUrl.Url aria-label="@Localizer["return_to_dashboard_descriptive_text"]">@Localizer["return_dashboard"]</a>
+                <a href=@backUrl aria-label="@Localizer["return_to_dashboard_descriptive_text"]">@Localizer["return_dashboard"]</a>
             </p>
             <p></p>
         </div>

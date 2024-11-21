@@ -4,21 +4,22 @@
 
 
 @{
+    var rpdRootUrl = @Model.RPDRootUrl.Url;
+    var backUrl = rpdRootUrl + @Model.BackUrl.Url;
     ViewData["Title"] = "Home";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<a href=@Model.BackUrl.Url class="govuk-back-link">Back</a>
-<main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content">
+<main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content" role="main">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
 
             <h1 class="govuk-heading-l">@Localizer["service_unavailable"]</h1>
-            <p class ="govuk-body">
-                Your payment has not been completed and will not be taken from your bank account.
-            </p><p class="govuk-body">You can return to the service later to pay online, or <a href=@Model.OfflinePaymentUrl.Url>make an offline payment</a></p>
-            <p></p>
 
+            <p class="govuk-body">@Localizer["you_could_try_again"]</p>
+            <p class="govuk-body">@Localizer["you_could_pay_by_bank"]</p>
+
+            <p class="govuk-body"><a href=@backUrl aria-label="@Localizer["return_dashboard_descriptive_text"]">@Localizer["return_to_the_dashboard"]</a></p>
         </div>
     </div>
 </main>
