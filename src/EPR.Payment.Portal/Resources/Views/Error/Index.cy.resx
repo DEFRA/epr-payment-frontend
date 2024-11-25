@@ -118,6 +118,18 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="service_unavailable" xml:space="preserve">
-    <value>Mae'n ddrwg gennym - nid yw'r gwasanaeth ar gael</value>
+    <value>Ymddiheuriadau. Nid yw'r gwasanaeth ar gael.</value>
+  </data>
+  <data name="return_to_the_dashboard" xml:space="preserve">
+    <value>Yn ôl i'r dangosfwrdd</value>
+  </data>
+  <data name="return_dashboard_descriptive_text" xml:space="preserve">
+    <value>Cliciwch ar y ddolen yma os hoffech chi fynd yn ôl i'r dangosfwrdd</value>
+  </data>
+  <data name="you_could_try_again" xml:space="preserve">
+    <value>Fe allech chi roi cynnig arall arni yn nes ymlaen.</value>
+  </data>
+  <data name="you_could_pay_by_bank" xml:space="preserve">
+    <value>Fel arall, gallech chi dalu drwy drosglwyddiad banc neu dros y ffôn.</value>
   </data>
 </root>

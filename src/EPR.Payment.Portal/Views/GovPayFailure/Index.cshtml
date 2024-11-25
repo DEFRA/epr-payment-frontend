@@ -4,6 +4,8 @@
 @model CompositeViewModel;
 
 @{
+    var rpdRootUrl = @Model.dashboardConfiguration.RPDRootUrl.Url;
+    var backUrl = rpdRootUrl + @Model.dashboardConfiguration.BackUrl.Url;
     ViewData["Title"] = "GovPay Unsuccessful";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -11,50 +13,49 @@
 <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
-
             <h1 class="govuk-heading-l">@Localizer["payment_unsuccessful"]</h1>
-            <p></p>
             <p class="govuk-body">@Localizer["payment_not_completed"]</p>
-            <p></p>
-            <p class="govuk-body">
-                <form method="post">
-                    <input type="hidden" value="@Model.completePaymentViewModel.UserId" />
-                    <input type="hidden" value="@Model.completePaymentViewModel.OrganisationId" />
-                    <input type="hidden" value="@Model.completePaymentViewModel.Reference" />
-                    <input type="hidden" value="@Model.completePaymentViewModel.Regulator" />
-                    <input type="hidden" value="@Model.completePaymentViewModel.Amount" />
+            <form method="post">
+                <input type="hidden" value="@Model.completePaymentViewModel.UserId" />
+                <input type="hidden" value="@Model.completePaymentViewModel.OrganisationId" />
+                <input type="hidden" value="@Model.completePaymentViewModel.Reference" />
+                <input type="hidden" value="@Model.completePaymentViewModel.Regulator" />
+                <input type="hidden" value="@Model.completePaymentViewModel.Amount" />
+                <input type="hidden" value="@Model.completePaymentViewModel.Description" />
+                <div class="govuk-button-group">
                     <button class="govuk-button" data-module="govuk-button" aria-label="@Localizer["try_online_payment_again_descriptive_text"]">
                         @Localizer["try_online_payment_again"]
                     </button>
-                </form>
-            </p>
+                </div>
+            </form>
+            <br />
             <p class="govuk-body">
                 @Localizer["reference_number_is"] <strong>@Model.completePaymentViewModel.Reference</strong>.
                 <br>@Localizer["note_reference"]
             </p>
             <p class="govuk-body">@Localizer["use_these_details"] £@(((decimal?)Model.completePaymentViewModel.Amount??0)/100):</p>
+            <h2 class="govuk-heading-m">@Localizer["pay_by_bank_transfer"]</h2>
             <p></p>
-            <h3 class="govuk-heading-s">@Localizer["pay_by_bank_transfer"]</h3>
-            <p></p>
-            <p class="govuk-body">
-                @Localizer["account_name"]: EA Receipts<br />
-                @Localizer["account_number"]: 10014411<br />
-                @Localizer["sort_code"]: 60-70-80<br />
-                @Localizer["bank_name"]: Royal Bank of Scotland, London Corporate Service Centre, CPB Services, 2nd floor, 280 Bishopsgate, London EC2M 4RB<br />
-            </p>
-            <h3 class="govuk-heading-s">@Localizer["pay_by_phone"]</h3>
-            <p></p>
-            <p class="govuk-body">
-                @Localizer["environment_agency"]<br />
-                @Localizer["telephone"]: 03708 506 506<br />
-                @Localizer["telephone_outside_uk"]: +44 (0) 114 282 5312<br />
-                @Localizer["monday_friday"]<br />
-            </p>
-            <p><a href="https://www.gov.uk/call-charges" class="govuk-link" aria-label="@Localizer["call_charges_descriptive_text"]">@Localizer["call_charges"]</a></p>
-            <p></p>
-            <p class="govuk-body"><a href=@Model.dashboardConfiguration.BackUrl.Url aria-label="@Localizer["return_to_dashboard_descriptive_text"]">@Localizer["return_to_dashboard"]</a></p>
-            <p></p>
-            
+            <div class="govuk-inset-text">
+                <ul class="govuk-list govuk-list">
+                    <li>@Localizer["account_name"]: EA Receipts</li>
+                    <li>@Localizer["account_number"]: 10014411</li>
+                    <li>@Localizer["sort_code"]: 60-70-80</li>
+                    <li>@Localizer["bank_name"]: Royal Bank of Scotland, London Corporate Service Centre, CPB Services, 2nd floor, 280 Bishopsgate, London EC2M 4RB</li>
+                </ul>
+            </div>
+            <h2 class="govuk-heading-m">@Localizer["pay_by_phone"]</h2>
+            <div class="govuk-inset-text">
+                <ul class="govuk-list govuk-list">
+                    <li>@Localizer["environment_agency"]</li>
+                    <li>@Localizer["telephone"]: 03708 506 506</li>
+                    <li>@Localizer["telephone_outside_uk"]: +44 (0) 114 282 5312</li>
+                    <li>@Localizer["monday_friday"]</li>
+                    <li><br /></li>
+                    <li><a href="https://www.gov.uk/call-charges" class="govuk-link" aria-label="@Localizer["call_charges_descriptive_text"]">@Localizer["call_charges"]</a></li>
+                </ul>
+            </div>
+            <p><a href=@backUrl aria-label="@Localizer["return_to_dashboard_descriptive_text"]">@Localizer["return_to_dashboard"]</a></p>
         </div>
     </div>
 </main>

@@ -1,10 +1,15 @@
 using EPR.Payment.Portal.AppStart;
 using EPR.Payment.Portal.Common.Configuration;
+using EPR.Payment.Portal.Common.Options;
 using EPR.Payment.Portal.Extension;
 using EPR.Payment.Portal.Helpers;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.FeatureManagement;
 
 var builder = WebApplication.CreateBuilder(args);
+var builderConfig = builder.Configuration;
+var globalVariables = builderConfig.Get<GlobalVariables>();
+string basePath = globalVariables.BasePath;
 
 // Add services to the container.
 builder.Services.AddFeatureManagement();
@@ -16,6 +21,17 @@ builder.Services.Configure<DashboardConfiguration>(builder.Configuration.GetSect
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddDataProtection();
 builder.Services.AddLogging();
+
+// Configure forwarded headers
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    var forwardedHeadersOptions = builderConfig.GetSection("ForwardedHeaders").Get<ForwardedHeadersOptions>();
+
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedHost | ForwardedHeaders.XForwardedProto;
+    options.ForwardedHostHeaderName = forwardedHeadersOptions.ForwardedHostHeaderName;
+    options.OriginalHostHeaderName = forwardedHeadersOptions.OriginalHostHeaderName;
+    options.AllowedHosts = forwardedHeadersOptions.AllowedHosts;
+});
 
 builder.Services.AddSession(options =>
 {
@@ -31,6 +47,8 @@ builder.Services
 var app = builder.Build();
 app.UseSession();
 app.UseRequestLocalization();
+app.UsePathBase(basePath);
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -39,14 +57,22 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseForwardedHeaders(); // Add forwarded headers middleware
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
 app.UseHealthChecks();
-app.UseAuthentication();
-app.UseAuthorization();
+
+// Check if authentication is enabled using a feature flag
+var featureManager = app.Services.GetRequiredService<IFeatureManager>();
+if (await featureManager.IsEnabledAsync("EnableAuthenticationFeature"))
+{
+    app.UseAuthentication();
+    app.UseAuthorization();
+}
 
 app.MapControllerRoute(
     name: "default",

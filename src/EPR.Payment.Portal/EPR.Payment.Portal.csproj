@@ -69,6 +69,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="EPR.Common.Authorization" Version="1.0.17" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="8.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Localization" Version="2.2.0" />
@@ -76,6 +77,7 @@
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.4" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="8.0.6" />
     <PackageReference Include="Microsoft.FeatureManagement" Version="4.0.0" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="3.3.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
   </ItemGroup>
 
@@ -87,6 +89,18 @@
 		<SonarQubeSetting Include="sonar.coverage.exclusions">
 			<value>Views/**/*.cshtml, Program.cs, gulpfile.js,Resources/**/*.resx</value>
 		</SonarQubeSetting>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Resources\Views\Shared\Components\LanguageSwitcher\Default.cy.resx">
+	    <SubType>Designer</SubType>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Views\Shared\Components\LanguageSwitcher\Default.en.resx">
+	    <SubType>Designer</SubType>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Views\Shared\Components\LanguageSwitcher\Default.resx">
+	    <SubType>Designer</SubType>
+	  </EmbeddedResource>
 	</ItemGroup>
 
 </Project>
