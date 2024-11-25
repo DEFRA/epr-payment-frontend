@@ -216,4 +216,7 @@
   <data name="gov_uk" xml:space="preserve">
     <value>Cliciwch ar y ddolen yma os hoffech chi fynd i wefan Gov.UK</value>
   </data>
+  <data name="skip_to_main_content" xml:space="preserve">
+    <value>Cliciwch ar y ddolen hon os ydych am hepgor i'r prif gynnwys</value>
+  </data>
 </root>

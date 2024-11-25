@@ -216,4 +216,7 @@
   <data name="gov_uk" xml:space="preserve">
     <value>Click on this link if you wish to go to Gov.UK site</value>
   </data>
+  <data name="skip_to_main_content" xml:space="preserve">
+    <value>Click on this link if you wish to skip to main content</value>
+  </data>
 </root>
