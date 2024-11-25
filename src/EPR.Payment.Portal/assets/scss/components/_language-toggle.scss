@@ -1,4 +1,4 @@
-﻿@import "node_modules/govuk-frontend/dist/govuk/settings/index";
+﻿@use "../../../node_modules/govuk-frontend/dist/govuk/settings/all" as *;
 
 .language-toggle {
     list-style: none;
