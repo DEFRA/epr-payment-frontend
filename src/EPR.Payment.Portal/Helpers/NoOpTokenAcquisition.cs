@@ -13,39 +13,30 @@ namespace EPR.Payment.Portal.Helpers
         public Task<string> GetAccessTokenForUserAsync(string[] scopes) => Task.FromResult(string.Empty);
 
         public Task<string> GetAccessTokenForUserAsync(
-            string[] scopes,
+            IEnumerable<string> scopes,
             string? authenticationScheme,
-            string? tenantId,
-            string? tokenAcquisitionOptionsName) // No default values
+            string? tenantId = null,
+            string? userFlow = null,
+            ClaimsPrincipal? user = null,
+            TokenAcquisitionOptions? tokenAcquisitionOptions = null)
         {
             return Task.FromResult(string.Empty);
         }
 
         public Task<string> GetAccessTokenForUserAsync(string[] scopes, TokenAcquisitionOptions? options) => Task.FromResult(string.Empty);
 
-        public void ReplyForbiddenWithWwwAuthenticateHeader(IEnumerable<string> scopes, string? tenantId)
+        public void ReplyForbiddenWithWwwAuthenticateHeader(IEnumerable<string> scopes, string? tenantId = null)
         {
             // No-op
-        }
-
-        public Task<string> GetAccessTokenForUserAsync(
-            IEnumerable<string> scopes,
-            string? authenticationScheme,
-            string? tenantId,
-            string? tokenAcquisitionOptionsName,
-            ClaimsPrincipal? user,
-            TokenAcquisitionOptions? tokenAcquisitionOptions)
-        {
-            return Task.FromResult(string.Empty);
         }
 
         public Task<AuthenticationResult> GetAuthenticationResultForUserAsync(
             IEnumerable<string> scopes,
             string? authenticationScheme,
-            string? tenantId,
-            string? userFlow,
-            ClaimsPrincipal? user,
-            TokenAcquisitionOptions? tokenAcquisitionOptions)
+            string? tenantId = null,
+            string? userFlow = null,
+            ClaimsPrincipal? user = null,
+            TokenAcquisitionOptions? tokenAcquisitionOptions = null)
         {
             throw new NotImplementedException();
         }
@@ -53,8 +44,8 @@ namespace EPR.Payment.Portal.Helpers
         public Task<string> GetAccessTokenForAppAsync(
             string scope,
             string? authenticationScheme,
-            string? tenantId,
-            TokenAcquisitionOptions? tokenAcquisitionOptions)
+            string? tenant = null,
+            TokenAcquisitionOptions? tokenAcquisitionOptions = null)
         {
             throw new NotImplementedException();
         }
@@ -62,8 +53,8 @@ namespace EPR.Payment.Portal.Helpers
         public Task<AuthenticationResult> GetAuthenticationResultForAppAsync(
             string scope,
             string? authenticationScheme,
-            string? tenantId,
-            TokenAcquisitionOptions? tokenAcquisitionOptions)
+            string? tenant = null,
+            TokenAcquisitionOptions? tokenAcquisitionOptions = null)
         {
             throw new NotImplementedException();
         }
@@ -72,7 +63,7 @@ namespace EPR.Payment.Portal.Helpers
             IEnumerable<string> scopes,
             MsalUiRequiredException msalServiceException,
             string? authenticationScheme,
-            HttpResponse? httpResponse)
+            HttpResponse? httpResponse = null)
         {
             throw new NotImplementedException();
         }
@@ -85,7 +76,7 @@ namespace EPR.Payment.Portal.Helpers
         public Task ReplyForbiddenWithWwwAuthenticateHeaderAsync(
             IEnumerable<string> scopes,
             MsalUiRequiredException msalServiceException,
-            HttpResponse? httpResponse)
+            HttpResponse? httpResponse = null)
         {
             throw new NotImplementedException();
         }
