@@ -51,7 +51,6 @@ gulp.task('compile-scss', function () {
         .pipe(gulp.dest(paths.output));
 });
 
-
 // Default task
 gulp.task('build-frontend', gulp.series('copy-govuk-styles', 'copy-govuk-scripts', 'copy-govuk-images',
     'copy-govuk-fonts', 'copy-govuk-manifest', 'compile-scss')); 
