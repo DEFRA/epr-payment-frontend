@@ -14,7 +14,7 @@ namespace EPR.Payment.Portal.Helpers
 
         public Task<string> GetAccessTokenForUserAsync(
             string[] scopes,
-            string? tenant,
+            string? authenticationScheme,
             string? userFlow,
             string? tokenAcquisitionOptionsName)
         {
@@ -30,7 +30,7 @@ namespace EPR.Payment.Portal.Helpers
 
         public Task<string> GetAccessTokenForUserAsync(
             IEnumerable<string> scopes,
-            string? tenantId,
+            string? authenticationScheme,
             string? userFlow,
             string? tokenAcquisitionOptionsName,
             ClaimsPrincipal? user,
@@ -53,7 +53,7 @@ namespace EPR.Payment.Portal.Helpers
         public Task<string> GetAccessTokenForAppAsync(
             string scope,
             string? authenticationScheme,
-            string? tenant, // Remove default value
+            string? tenantId,
             TokenAcquisitionOptions? tokenAcquisitionOptions)
         {
             throw new NotImplementedException();
@@ -62,7 +62,7 @@ namespace EPR.Payment.Portal.Helpers
         public Task<AuthenticationResult> GetAuthenticationResultForAppAsync(
             string scope,
             string? authenticationScheme,
-            string? tenant, // Remove default value
+            string? tenantId,
             TokenAcquisitionOptions? tokenAcquisitionOptions)
         {
             throw new NotImplementedException();
