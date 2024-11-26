@@ -15,5 +15,6 @@ namespace EPR.Payment.Portal.Common.Configuration
         public string? Url { get; set; }
         public string? EndPointName { get; set; }
         public string? HttpClientName { get; set; }
+        public string? DownstreamScope { get; set; }
     }
 }

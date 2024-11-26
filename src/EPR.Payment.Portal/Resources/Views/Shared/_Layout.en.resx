@@ -175,19 +175,16 @@
     <value>Policy</value>
   </data>
   <data name="feedback_descriptive_text" xml:space="preserve">
-    <value>Click on this link if you wish to go to the Feedback page</value>
+    <value>Click on this link if you wish to give your feedback for this page</value>
   </data>
   <data name="feedback" xml:space="preserve">
-    <value>feedback</value>
+    <value>give your feedback (opens in new tab)</value>
   </data>
   <data name="private_beta" xml:space="preserve">
-    <value>PRIVATE BETA</value>
+    <value>Beta</value>
   </data>
   <data name="private_beta_1" xml:space="preserve">
-    <value>This is a new service – your </value>
-  </data>
-  <data name="private_beta_2" xml:space="preserve">
-    <value>will help us to improve it.</value>
+    <value>This is a new service. Help us improve it and </value>
   </data>
   <data name="cookies_descriptive_text" xml:space="preserve">
     <value>Click on this link if you wish to go to the Cookies page</value>
@@ -209,5 +206,17 @@
   </data>
   <data name="email_descriptive_text" xml:space="preserve">
     <value>Click on this link if you wish to send an email to eprcustomerservice@defra.gov.uk</value>
+  </data>
+  <data name="privacy_url" xml:space="preserve">
+    <value>https://www.gov.uk/guidance/extended-producer-responsibility-for-packaging-privacy-policy</value>
+  </data>
+  <data name="accessibility_url" xml:space="preserve">
+    <value>https://www.gov.uk/guidance/extended-producer-responsibility-for-packaging-accessibility-statement</value>
+  </data>
+  <data name="gov_uk" xml:space="preserve">
+    <value>Click on this link if you wish to go to Gov.UK site</value>
+  </data>
+  <data name="skip_to_main_content" xml:space="preserve">
+    <value>Click on this link if you wish to skip to main content</value>
   </data>
 </root>
