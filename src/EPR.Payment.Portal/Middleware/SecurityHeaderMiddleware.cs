@@ -19,6 +19,10 @@ public class SecurityHeaderMiddleware
     {
         var scriptNonce = GenerateNonce();
         var whitelistedFormActionAddresses = configuration["AzureAdB2C:Instance"];
+        if (string.IsNullOrEmpty(whitelistedFormActionAddresses))
+        {
+            throw new InvalidOperationException("AzureAdB2C:Instance is not configured.");
+        }
 
         const string permissionsPolicy =
             "accelerometer=(),ambient-light-sensor=(),autoplay=(),battery=(),camera=(),display-capture=()," +
