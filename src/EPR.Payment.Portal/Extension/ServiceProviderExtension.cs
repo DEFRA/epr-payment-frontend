@@ -25,7 +25,7 @@ namespace EPR.Payment.Portal.Extension
             ConfigureLocalization(services);
             ConfigureAuthentication(services, configuration);
             ConfigureAuthorization(services, configuration);
-            ConfigureDataProtection(services, configuration); // Add DataProtection configuration here
+            ConfigureDataProtection(services);
             return services;
         }
 
@@ -106,7 +106,7 @@ namespace EPR.Payment.Portal.Extension
             services.RegisterPolicy<PaymentPortalSession>(configuration);
         }
 
-        private static void ConfigureDataProtection(IServiceCollection services, IConfiguration configuration)
+        private static void ConfigureDataProtection(IServiceCollection services)
         {
             var sp = services.BuildServiceProvider();
             var globalVariables = sp.GetRequiredService<IOptions<GlobalVariables>>().Value;
