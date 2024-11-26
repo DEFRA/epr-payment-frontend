@@ -6,12 +6,13 @@ using EPR.Payment.Portal.Options;
 using EPR.Payment.Portal.Sessions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Microsoft.Identity.Web;
+using StackExchange.Redis; // Required for Redis-based DataProtection
 using System.Diagnostics.CodeAnalysis;
-using CookieOptions = EPR.Payment.Portal.Common.Options.CookieOptions;
 
 namespace EPR.Payment.Portal.Extension
 {
@@ -24,6 +25,7 @@ namespace EPR.Payment.Portal.Extension
             ConfigureLocalization(services);
             ConfigureAuthentication(services, configuration);
             ConfigureAuthorization(services, configuration);
+            ConfigureDataProtection(services, configuration); // Add DataProtection configuration here
             return services;
         }
 
@@ -38,20 +40,21 @@ namespace EPR.Payment.Portal.Extension
                     options.AddSupportedUICultures(cultureList);
                     options.RequestCultureProviders = new IRequestCultureProvider[]
                     {
-                    new SessionRequestCultureProvider(),
+                        new SessionRequestCultureProvider(),
                     };
                 });
         }
 
         private static void ConfigureOptions(IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<CookieOptions>(configuration.GetSection(CookieOptions.ConfigSection));
+            services.Configure<EPR.Payment.Portal.Common.Options.CookieOptions>(configuration.GetSection(EPR.Payment.Portal.Common.Options.CookieOptions.ConfigSection));
+            services.Configure<RedisOptions>(configuration.GetSection(EPR.Payment.Portal.Common.Options.RedisOptions.ConfigSection));
         }
 
         private static void ConfigureAuthentication(IServiceCollection services, IConfiguration configuration)
         {
             var sp = services.BuildServiceProvider();
-            var cookieOptions = sp.GetRequiredService<IOptions<CookieOptions>>().Value;
+            var cookieOptions = sp.GetRequiredService<IOptions<EPR.Payment.Portal.Common.Options.CookieOptions>>().Value;
             var featureManager = sp.GetRequiredService<IFeatureManager>();
             var facadeApiOptions = sp.GetRequiredService<IOptions<AccountsFacadeApiOptions>>().Value;
 
@@ -102,5 +105,42 @@ namespace EPR.Payment.Portal.Extension
 
             services.RegisterPolicy<PaymentPortalSession>(configuration);
         }
+
+        private static void ConfigureDataProtection(IServiceCollection services, IConfiguration configuration)
+        {
+            var sp = services.BuildServiceProvider();
+            var globalVariables = sp.GetRequiredService<IOptions<GlobalVariables>>().Value;
+
+            if (!globalVariables.UseLocalSession)
+            {
+                // Retrieve Redis configuration with validation
+                var redisOptions = sp.GetRequiredService<IOptions<RedisOptions>>().Value;
+                var redisConnectionString = redisOptions.ConnectionString;
+                var redisInstanceName = redisOptions.InstanceName;
+
+                if (string.IsNullOrWhiteSpace(redisConnectionString))
+                {
+                    throw new InvalidOperationException("Redis connection string is not configured.");
+                }
+
+                if (string.IsNullOrWhiteSpace(redisInstanceName))
+                {
+                    throw new InvalidOperationException("Redis instance name is not configured.");
+                }
+
+                // Configure Data Protection with Redis persistence
+                services.AddDataProtection()
+                    .SetApplicationName("EprProducers") // Shared application name across all services
+                    .PersistKeysToStackExchangeRedis(
+                        ConnectionMultiplexer.Connect(redisConnectionString),
+                        $"{redisInstanceName}DataProtection-Keys"); // Key namespace
+            }
+            else
+            {
+                // Local development fallback
+                services.AddDataProtection();
+            }
+        }
+
     }
 }
