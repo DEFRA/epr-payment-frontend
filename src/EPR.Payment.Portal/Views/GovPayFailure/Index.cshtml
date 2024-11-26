@@ -33,7 +33,7 @@
                 @Localizer["reference_number_is"] <strong>@Model.completePaymentViewModel.Reference</strong>.
                 <br>@Localizer["note_reference"]
             </p>
-            <p class="govuk-body">@Localizer["use_these_details"] £@(((decimal?)Model.completePaymentViewModel.Amount??0)/100):</p>
+            <p class="govuk-body">@Localizer["use_these_details"] : £@(((decimal?)Model.completePaymentViewModel.Amount??0)/100)</p>
             <h2 class="govuk-heading-m">@Localizer["pay_by_bank_transfer"]</h2>
             <p></p>
             <div class="govuk-inset-text">
