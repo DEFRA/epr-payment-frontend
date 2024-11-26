@@ -130,10 +130,8 @@ namespace EPR.Payment.Portal.Extension
 
                 // Configure Data Protection with Redis persistence
                 services.AddDataProtection()
-                    .SetApplicationName("EprProducers") // Shared application name across all services
-                    .PersistKeysToStackExchangeRedis(
-                        ConnectionMultiplexer.Connect(redisConnectionString),
-                        $"{redisInstanceName}DataProtection-Keys"); // Key namespace
+                .SetApplicationName("EprProducers")
+                .PersistKeysToStackExchangeRedis(ConnectionMultiplexer.Connect(redisConnectionString), "DataProtection-Keys");
             }
             else
             {
