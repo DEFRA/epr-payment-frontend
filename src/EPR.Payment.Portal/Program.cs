@@ -9,10 +9,15 @@ using Microsoft.FeatureManagement;
 
 var builder = WebApplication.CreateBuilder(args);
 var builderConfig = builder.Configuration;
-var globalVariables = builderConfig.Get<GlobalVariables>();
-string basePath = globalVariables.BasePath;
 
-// Add services to the container.
+// Validate and retrieve GlobalVariables
+var globalVariables = builderConfig.Get<GlobalVariables>()
+                     ?? throw new InvalidOperationException("GlobalVariables configuration is missing.");
+
+string basePath = globalVariables.BasePath
+                 ?? throw new InvalidOperationException("BasePath is not configured in GlobalVariables.");
+
+// Add services to the container
 builder.Services.AddFeatureManagement();
 builder.Services.AddControllersWithViews().AddViewLocalization();
 builder.Services.AddPortalDependencies(builder.Configuration);
@@ -26,12 +31,16 @@ builder.Services.AddLogging();
 // Configure forwarded headers
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
-    var forwardedHeadersOptions = builderConfig.GetSection("ForwardedHeaders").Get<ForwardedHeadersOptions>();
+    var forwardedHeadersOptions = builderConfig.GetSection("ForwardedHeaders").Get<ForwardedHeadersOptions>()
+                                  ?? throw new InvalidOperationException("ForwardedHeaders configuration is missing.");
 
     options.ForwardedHeaders = ForwardedHeaders.XForwardedHost | ForwardedHeaders.XForwardedProto;
-    options.ForwardedHostHeaderName = forwardedHeadersOptions.ForwardedHostHeaderName;
-    options.OriginalHostHeaderName = forwardedHeadersOptions.OriginalHostHeaderName;
-    options.AllowedHosts = forwardedHeadersOptions.AllowedHosts;
+    options.ForwardedHostHeaderName = forwardedHeadersOptions.ForwardedHostHeaderName
+                                      ?? throw new InvalidOperationException("ForwardedHostHeaderName is not configured in ForwardedHeaders.");
+    options.OriginalHostHeaderName = forwardedHeadersOptions.OriginalHostHeaderName
+                                     ?? throw new InvalidOperationException("OriginalHostHeaderName is not configured in ForwardedHeaders.");
+    options.AllowedHosts = forwardedHeadersOptions.AllowedHosts
+                           ?? throw new InvalidOperationException("AllowedHosts is not configured in ForwardedHeaders.");
 });
 
 builder.Services.AddSession(options =>
@@ -50,7 +59,7 @@ app.UseSession();
 app.UseRequestLocalization();
 app.UsePathBase(basePath);
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error/Error");
