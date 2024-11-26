@@ -14,56 +14,56 @@ namespace EPR.Payment.Portal.Helpers
 
         public Task<string> GetAccessTokenForUserAsync(
             string[] scopes,
-            string? authenticationScheme = null, // Ensure this matches the interface
-            string? tenantId = null, // Correct name with default value
-            string? tokenAcquisitionOptionsName = null) // Ensure this matches the interface
+            string? authenticationScheme,
+            string? tenantId,
+            string? tokenAcquisitionOptionsName) // No default values
         {
             return Task.FromResult(string.Empty);
         }
 
         public Task<string> GetAccessTokenForUserAsync(string[] scopes, TokenAcquisitionOptions? options) => Task.FromResult(string.Empty);
 
-        public void ReplyForbiddenWithWwwAuthenticateHeader(IEnumerable<string> scopes, string? tenantId = null) // Correct parameter name and default value
+        public void ReplyForbiddenWithWwwAuthenticateHeader(IEnumerable<string> scopes, string? tenantId)
         {
             // No-op
         }
 
         public Task<string> GetAccessTokenForUserAsync(
             IEnumerable<string> scopes,
-            string? authenticationScheme = null, // Correct name with default value
-            string? tenantId = null, // Correct name with default value
-            string? tokenAcquisitionOptionsName = null, // Correct name with default value
-            ClaimsPrincipal? user = null, // Add default value
-            TokenAcquisitionOptions? tokenAcquisitionOptions = null) // Add default value
+            string? authenticationScheme,
+            string? tenantId,
+            string? tokenAcquisitionOptionsName,
+            ClaimsPrincipal? user,
+            TokenAcquisitionOptions? tokenAcquisitionOptions)
         {
             return Task.FromResult(string.Empty);
         }
 
         public Task<AuthenticationResult> GetAuthenticationResultForUserAsync(
             IEnumerable<string> scopes,
-            string? authenticationScheme = null, // Add default value
-            string? tenantId = null, // Correct name with default value
-            string? userFlow = null, // Add default value if required
-            ClaimsPrincipal? user = null, // Add default value
-            TokenAcquisitionOptions? tokenAcquisitionOptions = null) // Add default value
+            string? authenticationScheme,
+            string? tenantId,
+            string? userFlow,
+            ClaimsPrincipal? user,
+            TokenAcquisitionOptions? tokenAcquisitionOptions)
         {
             throw new NotImplementedException();
         }
 
         public Task<string> GetAccessTokenForAppAsync(
             string scope,
-            string? authenticationScheme = null, // Add default value
-            string? tenantId = null, // Correct name with default value
-            TokenAcquisitionOptions? tokenAcquisitionOptions = null) // Add default value
+            string? authenticationScheme,
+            string? tenantId,
+            TokenAcquisitionOptions? tokenAcquisitionOptions)
         {
             throw new NotImplementedException();
         }
 
         public Task<AuthenticationResult> GetAuthenticationResultForAppAsync(
             string scope,
-            string? authenticationScheme = null, // Add default value
-            string? tenantId = null, // Correct name with default value
-            TokenAcquisitionOptions? tokenAcquisitionOptions = null) // Add default value
+            string? authenticationScheme,
+            string? tenantId,
+            TokenAcquisitionOptions? tokenAcquisitionOptions)
         {
             throw new NotImplementedException();
         }
@@ -71,8 +71,8 @@ namespace EPR.Payment.Portal.Helpers
         public void ReplyForbiddenWithWwwAuthenticateHeader(
             IEnumerable<string> scopes,
             MsalUiRequiredException msalServiceException,
-            string? authenticationScheme = null, // Add default value
-            HttpResponse? httpResponse = null) // Add default value
+            string? authenticationScheme,
+            HttpResponse? httpResponse)
         {
             throw new NotImplementedException();
         }
@@ -85,7 +85,7 @@ namespace EPR.Payment.Portal.Helpers
         public Task ReplyForbiddenWithWwwAuthenticateHeaderAsync(
             IEnumerable<string> scopes,
             MsalUiRequiredException msalServiceException,
-            HttpResponse? httpResponse = null) // Add default value
+            HttpResponse? httpResponse)
         {
             throw new NotImplementedException();
         }
