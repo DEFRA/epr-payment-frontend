@@ -12,9 +12,9 @@ using Moq;
 [TestClass]
 public class SecurityHeaderMiddlewareTests
 {
-    private Mock<RequestDelegate> _mockRequestDelegate;
-    private SecurityHeaderMiddleware _middleware;
-    private Fixture _fixture;
+    private Mock<RequestDelegate> _mockRequestDelegate = null!;
+    private SecurityHeaderMiddleware _middleware = null!;
+    private Fixture _fixture = null!;
 
     [TestInitialize]
     public void SetUp()
