@@ -3,6 +3,7 @@ using EPR.Payment.Portal.Common.Configuration;
 using EPR.Payment.Portal.Common.Options;
 using EPR.Payment.Portal.Extension;
 using EPR.Payment.Portal.Helpers;
+using EPR.Payment.Portal.Middleware;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.FeatureManagement;
 
@@ -68,6 +69,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseForwardedHeaders(); // Add forwarded headers middleware
 
+app.UseMiddleware<SecurityHeaderMiddleware>();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
