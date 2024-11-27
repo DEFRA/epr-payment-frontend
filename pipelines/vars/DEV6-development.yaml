@@ -1,0 +1,6 @@
+variables:
+  azureSubscription: 'AZD-RWD-DEV6'
+  docker.imageName: 'eprpaymentfrontend'
+  acr.azureContainerRegistryName: 'devrwdinfac1401'
+  acr.repositoryName: 'eprpaymentfrontendrepository'
+  serviceName: 'DEVRWDWEBWA6423'
