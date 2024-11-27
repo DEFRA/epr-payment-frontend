@@ -35,8 +35,14 @@ namespace EPR.Payment.Portal.Helpers
             string? authenticationScheme,
             string? tenantId = null,
             string? userFlow = null,
+            string? tokenAcquisitionOptionsName = null,
             ClaimsPrincipal? user = null,
             TokenAcquisitionOptions? tokenAcquisitionOptions = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<AuthenticationResult> GetAuthenticationResultForUserAsync(IEnumerable<string> scopes, string? authenticationScheme, string? tenantId = null, string? userFlow = null, ClaimsPrincipal? user = null, TokenAcquisitionOptions? tokenAcquisitionOptions = null)
         {
             throw new NotImplementedException();
         }
