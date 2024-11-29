@@ -26,7 +26,7 @@ namespace EPR.Payment.Portal.Extension
             ConfigureLocalization(services);
             ConfigureAuthentication(services, configuration);
             ConfigureAuthorization(services, configuration);
-            ConfigureDataProtection(services);
+            ConfigureDataProtection(services, configuration);
             return services;
         }
 
@@ -107,10 +107,11 @@ namespace EPR.Payment.Portal.Extension
             services.RegisterPolicy<PaymentPortalSession>(configuration);
         }
 
-        private static void ConfigureDataProtection(IServiceCollection services)
+        private static void ConfigureDataProtection(IServiceCollection services, IConfiguration configuration)
         {
             var sp = services.BuildServiceProvider();
-            var globalVariables = sp.GetRequiredService<IOptions<GlobalVariables>>().Value;
+            var globalVariables = configuration.Get<GlobalVariables>()
+                     ?? throw new InvalidOperationException("GlobalVariables configuration is missing.");
 
             if (!globalVariables.UseLocalSession)
             {
