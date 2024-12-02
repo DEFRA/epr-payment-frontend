@@ -153,7 +153,7 @@ namespace EPR.Payment.Portal.UnitTests.ViewComponents
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                var model = result!.ViewData.Model as CookieBannerModel;
+                var model = result?.ViewData?.Model as CookieBannerModel;
                 model.Should().NotBeNull();
                 model!.ShowBanner.Should().BeFalse();
                 model.ShowAcknowledgement.Should().BeFalse();
