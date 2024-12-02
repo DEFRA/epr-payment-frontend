@@ -1,12 +1,10 @@
 ﻿using EPR.Payment.Portal.Common.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics.CodeAnalysis;
 
 namespace EPR.Payment.Portal.Controllers.Culture
 {
     [AllowAnonymous]
-    [ExcludeFromCodeCoverage]
     public class CultureController : Controller
     {
         [HttpGet]
