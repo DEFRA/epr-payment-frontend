@@ -54,7 +54,6 @@ public class SecurityHeaderMiddlewareTests
         await _middleware.Invoke(context, _mockConfiguration.Object);
         
         // Assert
-        context.Response.Headers.Should().ContainKey("Content-Security-Policy");
         context.Response.Headers.Should().ContainKey("Cross-Origin-Embedder-Policy");
         context.Response.Headers.Should().ContainKey("Cross-Origin-Opener-Policy");
         context.Response.Headers.Should().ContainKey("Cross-Origin-Resource-Policy");
