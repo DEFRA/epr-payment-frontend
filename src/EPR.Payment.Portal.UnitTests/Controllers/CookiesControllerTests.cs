@@ -67,7 +67,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             _httpContextMock.Setup(x => x.Response.Cookies).Returns(_responseCookiesMock.Object);
         }
 
-        private GoogleAnalyticsOptions CreateGoogleAnalyticsOptions()
+        private static GoogleAnalyticsOptions CreateGoogleAnalyticsOptions()
         {
             return new GoogleAnalyticsOptions
             {

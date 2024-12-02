@@ -137,7 +137,7 @@ namespace EPR.Payment.Portal.Controllers.Cookies
             return LocalRedirect(returnUrl);
         }
 
-        private bool IsValidReturnUrl(string returnUrl)
+        private static bool IsValidReturnUrl(string returnUrl)
         {
             return returnUrl.StartsWith('/');
         }

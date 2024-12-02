@@ -216,13 +216,14 @@ namespace EPR.Payment.Portal.UnitTests.Services
 
         private void VerifyLog(string expectedMessage, LogLevel expectedLogLevel)
         {
-            _mockLogger!.Verify(logger =>
+            _mockLogger?.Verify(logger =>
                 logger.Log(
                     expectedLogLevel,
                     It.IsAny<EventId>(),
                     It.Is<It.IsAnyType>((v, t) => v.ToString() == expectedMessage),
-                    It.IsAny<Exception>(),
-                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)), Times.Once);
+                    It.IsAny<Exception?>(),
+                    It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)),
+                Times.Once);
         }
     }
 }

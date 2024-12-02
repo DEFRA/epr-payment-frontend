@@ -35,7 +35,7 @@ namespace EPR.Payment.Portal.UnitTests.ViewComponents
             // Arrange
             mockOptions.Setup(x => x.Value).Returns(new CookieOptions
             {
-                CookiePolicyCookieName = null,
+                CookiePolicyCookieName = null!,
                 SessionCookieName = "",
                 CookiePolicyDurationInMonths = 0,
                 AntiForgeryCookieName = "",
@@ -85,7 +85,7 @@ namespace EPR.Payment.Portal.UnitTests.ViewComponents
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                var model = result!.ViewData.Model as CookieBannerModel;
+                var model = result?.ViewData?.Model as CookieBannerModel;
                 model.Should().NotBeNull();
                 model!.ShowAcknowledgement.Should().BeTrue();
                 model.AcceptAnalytics.Should().BeTrue();
@@ -189,7 +189,7 @@ namespace EPR.Payment.Portal.UnitTests.ViewComponents
             mockRequestCookies.Setup(c => c["CookiePolicy"]).Returns("True");
             mockHttpContext.Setup(ctx => ctx.Request.Cookies).Returns(mockRequestCookies.Object);
             mockHttpContext.Setup(ctx => ctx.Request.Path).Returns("/another-page");
-            mockTempData.Setup(temp => temp[CookieAcceptance.CookieAcknowledgement]).Returns((string)null);
+            mockTempData.Setup(temp => temp[CookieAcceptance.CookieAcknowledgement]).Returns((string?)null);
 
             routeData.Values["controller"] = "Home";
 
@@ -220,7 +220,7 @@ namespace EPR.Payment.Portal.UnitTests.ViewComponents
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                var model = result!.ViewData.Model as CookieBannerModel;
+                var model = result?.ViewData?.Model as CookieBannerModel;
                 model.Should().NotBeNull();
                 model!.ShowBanner.Should().BeFalse();
                 model.ShowAcknowledgement.Should().BeFalse();
