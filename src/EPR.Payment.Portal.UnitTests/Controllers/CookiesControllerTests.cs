@@ -155,6 +155,31 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod]
+        public void Detail_GetRequestWithInvalidModelState_ShouldReturnBadRequest()
+        {
+            // Arrange
+            const string returnUrl = "/report-data";
+            _controller!.ModelState.AddModelError("returnUrl", "Invalid return URL");
+
+            // Act
+            var result = _controller.Detail(returnUrl) as BadRequestObjectResult;
+
+            // Assert
+            using (new AssertionScope())
+            {
+                result.Should().NotBeNull();
+                result!.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
+
+                // Validate that the ModelState contains the expected error
+                var modelStateErrors = result.Value as SerializableError;
+                modelStateErrors.Should().NotBeNull();
+                modelStateErrors!.ContainsKey("returnUrl").Should().BeTrue();
+                modelStateErrors["returnUrl"].Should().BeOfType<string[]>();
+                ((string[])modelStateErrors["returnUrl"]).Should().Contain("Invalid return URL");
+            }
+        }
+
+        [TestMethod]
         public void Detail_PostRequestWithAcceptedCookies_ShouldSetCookiesAndReturnViewResult()
         {
             const string returnUrl = "/report-data";
