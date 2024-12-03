@@ -18,6 +18,7 @@ namespace EPR.Payment.Portal.Extension
             services.AddScoped<IPaymentsService, PaymentsService>();
             services.AddScoped<IPaymentFacadeHealthService, PaymentFacadeHealthService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<ICookieService, CookieService>();
             services.AddHttpClient();
 
             return services;
