@@ -7,8 +7,9 @@
 @{
     //var currentUrl = Url.ActionContext.HttpContext.Request.Path + Url.ActionContext.HttpContext.Request.QueryString;
     //var encodedReturnUrl = System.Net.WebUtility.UrlEncode("/GovPaySuccess");
-    var returnUrlQuery = $"{"/report-data"}{Context.Request.PathBase.Value}{Context.Request.Path.Value}{Context.Request.QueryString}";
-
+    //var returnUrlQuery = $"{"/report-data"}{Context.Request.PathBase.Value}{Context.Request.Path.Value}{Context.Request.QueryString}";
+    var returnUrlQuery = $"{Context.Request.PathBase.Value}{Context.Request.Path.Value}{Context.Request.QueryString}";
+    
     var rpdRootUrl = @configuration.GetSection("Dashboard:RPDRootUrl")["Url"];
     var menuUrl = rpdRootUrl + @configuration.GetSection("Dashboard:MenuUrl")["Url"];
     var manageAccountUrl = rpdRootUrl + @configuration.GetSection("Dashboard:ManageAccountUrl")["Url"];
@@ -120,9 +121,9 @@
                     <h2 class="govuk-visually-hidden">Support links</h2>
                     <ul class="govuk-footer__inline-list govuk-!-margin-top-7">
                         <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link" href="@cookiesUrl" aria-label="@Localizer["cookies_descriptive_text"]">
-                                @Localizer["cookies"]
-                            </a>
+                        <a class="govuk-footer__link" asp-controller="Cookies" asp-action="Detail" asp-route-returnurl="@returnUrlQuery">
+                            @Localizer["cookies"]
+                        </a>
                         </li>
                         <li class="govuk-footer__inline-list-item">
                             <a class="govuk-footer__link" href="@Localizer["privacy_url"]" aria-label="@Localizer["privacy_descriptive_text"]">
