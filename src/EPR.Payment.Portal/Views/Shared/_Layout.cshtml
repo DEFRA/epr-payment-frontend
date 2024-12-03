@@ -5,9 +5,6 @@
 @inject IFeatureManager featureManager
 
 @{
-    //var currentUrl = Url.ActionContext.HttpContext.Request.Path + Url.ActionContext.HttpContext.Request.QueryString;
-    //var encodedReturnUrl = System.Net.WebUtility.UrlEncode("/GovPaySuccess");
-    //var returnUrlQuery = $"{"/report-data"}{Context.Request.PathBase.Value}{Context.Request.Path.Value}{Context.Request.QueryString}";
     var returnUrlQuery = $"{Context.Request.PathBase.Value}{Context.Request.Path.Value}{Context.Request.QueryString}";
     
     var rpdRootUrl = @configuration.GetSection("Dashboard:RPDRootUrl")["Url"];
@@ -15,7 +12,6 @@
     var manageAccountUrl = rpdRootUrl + @configuration.GetSection("Dashboard:ManageAccountUrl")["Url"];
     var signOutUrl = rpdRootUrl + @configuration.GetSection("Dashboard:SignOutUrl")["Url"];
     var feedbackUrl = @configuration.GetSection("Dashboard:FeedbackUrl")["Url"];
-    var cookiesUrl = rpdRootUrl + @configuration.GetSection("Dashboard:CookiesUrl")["Url"] + $"?returnurl={returnUrlQuery}";
 
     var EnableAuthenticationFeature = await featureManager.IsEnabledAsync(nameof(FeatureFlags.EnableAuthenticationFeature));
 }
