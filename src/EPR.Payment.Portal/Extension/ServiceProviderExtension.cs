@@ -13,7 +13,6 @@ using Microsoft.FeatureManagement;
 using Microsoft.Identity.Web;
 using StackExchange.Redis; // Required for Redis-based DataProtection
 using System.Diagnostics.CodeAnalysis;
-using CookieOptions = EPR.Payment.Portal.Common.Options.CookieOptions;
 
 namespace EPR.Payment.Portal.Extension
 {
@@ -50,6 +49,7 @@ namespace EPR.Payment.Portal.Extension
         {
             services.Configure<EPR.Payment.Portal.Common.Options.CookieOptions>(configuration.GetSection(EPR.Payment.Portal.Common.Options.CookieOptions.ConfigSection));
             services.Configure<RedisOptions>(configuration.GetSection(EPR.Payment.Portal.Common.Options.RedisOptions.ConfigSection));
+            services.Configure<GoogleAnalyticsOptions>(configuration.GetSection(GoogleAnalyticsOptions.ConfigSection));
         }
 
         private static void ConfigureAuthentication(IServiceCollection services, IConfiguration configuration)
