@@ -5,12 +5,13 @@
 @inject IFeatureManager featureManager
 
 @{
+    var returnUrlQuery = $"{Context.Request.PathBase.Value}{Context.Request.Path.Value}{Context.Request.QueryString}";
+    
     var rpdRootUrl = @configuration.GetSection("Dashboard:RPDRootUrl")["Url"];
     var menuUrl = rpdRootUrl + @configuration.GetSection("Dashboard:MenuUrl")["Url"];
     var manageAccountUrl = rpdRootUrl + @configuration.GetSection("Dashboard:ManageAccountUrl")["Url"];
     var signOutUrl = rpdRootUrl + @configuration.GetSection("Dashboard:SignOutUrl")["Url"];
     var feedbackUrl = @configuration.GetSection("Dashboard:FeedbackUrl")["Url"];
-    var cookiesUrl = rpdRootUrl + @configuration.GetSection("Dashboard:CookiesUrl")["Url"];
 
     var EnableAuthenticationFeature = await featureManager.IsEnabledAsync(nameof(FeatureFlags.EnableAuthenticationFeature));
 }
@@ -36,6 +37,7 @@
     <script>
         document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
     </script>
+    @await Component.InvokeAsync("CookieBanner")
     <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link" aria-label="@Localizer["skip_to_main_content"]">Skip to main content</a>
     <header class="govuk-header" data-module="govuk-header">
         <div class="govuk-header__container govuk-width-container">
@@ -96,6 +98,14 @@
     <div class="govuk-width-container">
         <div class="govuk-grid-column-full">
             @await Component.InvokeAsync("LanguageSwitcher")
+            @if (!string.IsNullOrWhiteSpace(ViewBag.HomeLinkToDisplay))
+            {
+                @await Html.PartialAsync("Partials/Govuk/_HomeLink", (string)ViewBag.HomeLinkToDisplay)
+            }
+            else if (!string.IsNullOrWhiteSpace(ViewBag.BackLinkToDisplay))
+            {
+                @await Html.PartialAsync("Partials/Govuk/_BackLink", (string)ViewBag.BackLinkToDisplay)
+            }
         </div>
         
         @RenderBody()
@@ -116,9 +126,9 @@
                     <h2 class="govuk-visually-hidden">Support links</h2>
                     <ul class="govuk-footer__inline-list govuk-!-margin-top-7">
                         <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link" href="@cookiesUrl" aria-label="@Localizer["cookies_descriptive_text"]">
-                                @Localizer["cookies"]
-                            </a>
+                        <a class="govuk-footer__link" asp-controller="Cookies" asp-action="Detail" asp-route-returnurl="@returnUrlQuery">
+                            @Localizer["cookies"]
+                        </a>
                         </li>
                         <li class="govuk-footer__inline-list-item">
                             <a class="govuk-footer__link" href="@Localizer["privacy_url"]" aria-label="@Localizer["privacy_descriptive_text"]">
