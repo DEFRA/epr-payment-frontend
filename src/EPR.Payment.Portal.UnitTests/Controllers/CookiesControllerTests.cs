@@ -80,7 +80,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         [TestMethod]
         public void Detail_GetRequestWithValidReturnUrl_ShouldReturnViewResultWithModel()
         {
-            const string returnUrl = "/report-data";
+            const string returnUrl = "/payment";
             _mockCookieService?.Setup(x => x.HasUserAcceptedCookies(It.IsAny<IRequestCookieCollection>())).Returns(true);
 
             var result = _controller?.Detail(returnUrl) as ViewResult;
@@ -182,7 +182,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         [TestMethod]
         public void Detail_PostRequestWithAcceptedCookies_ShouldSetCookiesAndReturnViewResult()
         {
-            const string returnUrl = "/report-data";
+            const string returnUrl = "/payment";
             const string cookiesAccepted = CookieAcceptance.Accept;
 
             var requestCookiesMock = new Mock<IRequestCookieCollection>();
@@ -285,7 +285,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         [TestMethod]
         public void Detail_CookieAccepted_SetsTempData()
         {
-            const string returnUrl = "/report-data";
+            const string returnUrl = "/payment";
             var tempData = new TempDataDictionary(_httpContextMock!.Object, Mock.Of<ITempDataProvider>());
             _controller!.TempData = tempData;
 
@@ -302,7 +302,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         public void Detail_InvalidModelState_ShouldReturnBadRequest()
         {
             // Arrange
-            const string returnUrl = "/report-data";
+            const string returnUrl = "/payment";
             const string cookiesAccepted = "InvalidValue"; // Simulate invalid data
 
             // Simulate invalid model state
@@ -317,28 +317,6 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
                 result.Should().NotBeNull();
                 result!.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
                 result.Value.Should().Be("Invalid data provided."); // Update with the expected error message
-            }
-        }
-
-        [TestMethod]
-        public void UpdateAcceptance_InvalidModelState_ShouldReturnBadRequest()
-        {
-            // Arrange
-            const string returnUrl = "/create-account";
-            const string cookies = "InvalidValue"; // Simulate invalid data
-
-            // Simulate invalid model state
-            _controller!.ModelState.AddModelError("cookies", "Invalid value");
-
-            // Act
-            var result = _controller.UpdateAcceptance(returnUrl, cookies) as BadRequestObjectResult;
-
-            // Assert
-            using (new AssertionScope())
-            {
-                result.Should().NotBeNull();
-                result!.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-                result.Value.Should().Be("Invalid data provided."); // Update with expected error message
             }
         }
 

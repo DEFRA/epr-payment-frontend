@@ -47,9 +47,7 @@ namespace EPR.Payment.Portal.Controllers.Cookies
             // Allowed return URLs
             var allowedBackValues = new List<string>
             {
-                "/report-data",
-                "/create-account",
-                "/manage-account"
+                "/payment"
             };
 
             // Validate the return URL
