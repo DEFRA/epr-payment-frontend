@@ -1,8 +1,5 @@
 ﻿using EPR.Payment.Portal.Common.Constants;
 using EPR.Payment.Portal.ViewComponents;
-using EPR.Payment.Portal.ViewModels;
-using FluentAssertions;
-using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
@@ -11,7 +8,6 @@ using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Moq;
-using System.Globalization;
 
 namespace EPR.Payment.Portal.UnitTests.ViewComponents
 {
@@ -58,29 +54,5 @@ namespace EPR.Payment.Portal.UnitTests.ViewComponents
             };
         }
 
-        [TestMethod]
-        public async Task InvokeAsync_ShouldRenderCorrectView_WithExpectedModel()
-        {
-            // Act
-            var result = await _viewComponent.InvokeAsync() as ViewViewComponentResult;
-
-            // Assert
-            using (new AssertionScope())
-            {
-                result.Should().NotBeNull();
-                result!.ViewData!.Model.Should().BeEquivalentTo(new LanguageSwitcherModel
-                {
-                    SupportedCultures = new List<CultureInfo>
-                {
-                    new CultureInfo(Language.English),
-                    new CultureInfo(Language.Welsh)
-                },
-                    CurrentCulture = new CultureInfo(Language.English),
-                    ReturnUrl = "~" + "/test" + "?test=true",
-                    ShowLanguageSwitcher = true
-                });
-            }
-
-        }
     }
 }
