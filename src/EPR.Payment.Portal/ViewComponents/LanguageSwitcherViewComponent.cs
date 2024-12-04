@@ -21,11 +21,16 @@ namespace EPR.Payment.Portal.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var cultureFeature = HttpContext.Features.Get<IRequestCultureFeature>();
+
+            // Use Url.Content to construct a local URL
+            var rawReturnUrl = $"{Request.Path}{Request.QueryString}";
+            var sanitizedReturnUrl = Url.Content(rawReturnUrl) ?? "/";
+
             var languageSwitcherModel = new LanguageSwitcherModel
             {
                 SupportedCultures = _localizationOptions.Value.SupportedCultures!.ToList(),
                 CurrentCulture = cultureFeature!.RequestCulture.Culture,
-                ReturnUrl = $"~{Request.Path}{Request.QueryString}",
+                ReturnUrl = sanitizedReturnUrl,
                 ShowLanguageSwitcher = await _featureManager.IsEnabledAsync(nameof(FeatureFlags.ShowLanguageSwitcher))
             };
 

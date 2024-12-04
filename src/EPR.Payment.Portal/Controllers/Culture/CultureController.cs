@@ -9,10 +9,18 @@ namespace EPR.Payment.Portal.Controllers.Culture
     {
         [HttpGet]
         [Route("culture")]
-        public LocalRedirectResult UpdateCulture(string culture, string returnUrl)
+        public IActionResult UpdateCulture(string culture, string returnUrl)
         {
             HttpContext.Session.SetString(Language.SessionLanguageKey, culture);
+
+            // Validate and sanitize the returnUrl
+            if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
+            {
+                returnUrl = "/"; // Default to root if invalid
+            }
+
             return LocalRedirect(returnUrl);
         }
+
     }
 }
