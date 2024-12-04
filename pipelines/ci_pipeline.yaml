@@ -23,7 +23,10 @@ parameters:
   values:
   - 'SonarQube'
   - 'SonarQubeLatest'
-
+- name: gulpInstall
+  displayName: 'Select if gulp is to be installed'
+  type: boolean
+  default: false
 
 
 pool: DEFRA-COMMON-ubuntu2004-SSV3
@@ -70,14 +73,5 @@ extends:
     serviceName: $(serviceName)
     sonarqubeInstance: ${{ parameters.sonarqubeInstance }}
     dotnetVersion: ${{ variables.dotnetVersion }}
+    gulpInstall: ${{ parameters.gulpInstall }}
   
-  steps:
-    - task: UseNode@1
-      inputs:
-        version: '14.x'  # Specify the Node.js version you need
-    - script: |
-        npm install -g gulp-cli
-        npm install
-      displayName: 'Install Node.js and dependencies'
-    - script: gulp build-frontend
-      displayName: 'Run Gulp build-frontend task'
