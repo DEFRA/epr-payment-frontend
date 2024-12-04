@@ -23,8 +23,9 @@ namespace EPR.Payment.Portal.ViewComponents
             var cultureFeature = HttpContext.Features.Get<IRequestCultureFeature>();
 
             // Construct the return URL, ensuring it includes the base path
-            var rawReturnUrl = $"{Request.Path}{Request.QueryString}";
-            var sanitizedReturnUrl = Url.Content(rawReturnUrl) ?? "/payment/"; // Default to base path
+            var basePath = HttpContext.Request.PathBase.HasValue ? HttpContext.Request.PathBase.Value : string.Empty;
+            var rawReturnUrl = $"{basePath}{Request.Path}{Request.QueryString}";
+            var sanitizedReturnUrl = Url.Content(rawReturnUrl) ?? "/payment/";
 
             var languageSwitcherModel = new LanguageSwitcherModel
             {
@@ -36,5 +37,6 @@ namespace EPR.Payment.Portal.ViewComponents
 
             return View(languageSwitcherModel);
         }
+
     }
 }

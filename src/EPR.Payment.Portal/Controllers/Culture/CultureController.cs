@@ -8,6 +8,7 @@ namespace EPR.Payment.Portal.Controllers.Culture
     public class CultureController : Controller
     {
         [HttpGet]
+        [Route("culture")]
         public IActionResult UpdateCulture(string culture, string returnUrl)
         {
             HttpContext.Session.SetString(Language.SessionLanguageKey, culture);
@@ -20,5 +21,6 @@ namespace EPR.Payment.Portal.Controllers.Culture
 
             return LocalRedirect(returnUrl);
         }
+
     }
 }
