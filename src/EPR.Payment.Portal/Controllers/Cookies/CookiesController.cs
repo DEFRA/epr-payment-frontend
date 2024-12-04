@@ -51,7 +51,7 @@ namespace EPR.Payment.Portal.Controllers.Cookies
             };
 
             // Validate the return URL
-            var validBackLink = !string.IsNullOrWhiteSpace(returnUrl) && allowedBackValues.Exists(a => returnUrl.StartsWith(a));
+            var validBackLink = !string.IsNullOrWhiteSpace(returnUrl) && allowedBackValues.Exists(a => returnUrl.ToLower().StartsWith(a));
             string returnUrlAddress = validBackLink ? returnUrl : Url.Content("~/");
 
             // Check if cookies have been accepted
