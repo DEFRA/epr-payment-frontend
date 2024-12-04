@@ -22,9 +22,9 @@ namespace EPR.Payment.Portal.ViewComponents
         {
             var cultureFeature = HttpContext.Features.Get<IRequestCultureFeature>();
 
-            // Use Url.Content to construct a local URL
+            // Construct the return URL, ensuring it includes the base path
             var rawReturnUrl = $"{Request.Path}{Request.QueryString}";
-            var sanitizedReturnUrl = Url.Content(rawReturnUrl) ?? "/";
+            var sanitizedReturnUrl = Url.Content(rawReturnUrl) ?? "/payment/"; // Default to base path
 
             var languageSwitcherModel = new LanguageSwitcherModel
             {

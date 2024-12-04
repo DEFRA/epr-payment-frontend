@@ -8,19 +8,17 @@ namespace EPR.Payment.Portal.Controllers.Culture
     public class CultureController : Controller
     {
         [HttpGet]
-        [Route("culture")]
         public IActionResult UpdateCulture(string culture, string returnUrl)
         {
             HttpContext.Session.SetString(Language.SessionLanguageKey, culture);
 
-            // Validate and sanitize the returnUrl
+            // Sanitize the returnUrl to ensure it includes the base path
             if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
             {
-                returnUrl = "/"; // Default to root if invalid
+                returnUrl = "/payment/"; // Default to base path
             }
 
             return LocalRedirect(returnUrl);
         }
-
     }
 }
