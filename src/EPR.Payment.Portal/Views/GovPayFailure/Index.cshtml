@@ -6,7 +6,7 @@
 @{
     var rpdRootUrl = @Model.dashboardConfiguration.RPDRootUrl.Url;
     var backUrl = rpdRootUrl + @Model.dashboardConfiguration.BackUrl.Url;
-    ViewData["Title"] = "GovPay Unsuccessful";
+    ViewData["Title"] = Localizer["payment_unsuccessful"];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
