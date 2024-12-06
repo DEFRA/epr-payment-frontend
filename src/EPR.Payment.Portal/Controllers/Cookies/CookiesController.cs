@@ -51,7 +51,7 @@ namespace EPR.Payment.Portal.Controllers.Cookies
             };
 
             // Resolve the return URL or fallback to the default
-            var returnUrlAddress = allowedBackValues.Contains(returnUrl, StringComparer.OrdinalIgnoreCase)
+            var returnUrlAddress = allowedBackValues.Exists(a => returnUrl.StartsWith(a,StringComparison.OrdinalIgnoreCase))
                 ? returnUrl
                 : Url.Content("~/");
 
