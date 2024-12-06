@@ -13,5 +13,11 @@ namespace EPR.Payment.Portal.Infrastructure
             public const string GovPayCallback = nameof(GovPayCallback);
         }
 
+        public static class Cookies
+        {
+            public const string Detail = nameof(Detail);
+            public const string UpdateAcceptance = nameof(UpdateAcceptance);
+            public const string AcknowledgeAcceptance = nameof(AcknowledgeAcceptance);
+        }
     }
 }

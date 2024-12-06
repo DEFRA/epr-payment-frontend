@@ -18,7 +18,6 @@ namespace EPR.Payment.Portal.UnitTests.ViewComponents
     [TestClass]
     public class LanguageSwitcherViewComponentTests
     {
-
         private Mock<HttpContext> _httpContextMock = null!;
         private Mock<HttpRequest> _httpRequestMock = null!;
         private IOptions<RequestLocalizationOptions> _localizationOptions = null!;
@@ -28,7 +27,6 @@ namespace EPR.Payment.Portal.UnitTests.ViewComponents
         [TestInitialize]
         public void TestInitialize()
         {
-
             // Set up Localization options
             var options = new RequestLocalizationOptions();
             options.AddSupportedCultures(Language.English, Language.Welsh);
@@ -45,8 +43,6 @@ namespace EPR.Payment.Portal.UnitTests.ViewComponents
             // Set up Mock for HttpContext and HttpRequest
             _httpContextMock = new Mock<HttpContext>();
             _httpRequestMock = new Mock<HttpRequest>();
-            _httpRequestMock.Setup(x => x.Path).Returns("/test");
-            _httpRequestMock.Setup(x => x.QueryString).Returns(new QueryString("?test=true"));
 
             _httpContextMock.Setup(x => x.Request).Returns(_httpRequestMock.Object);
             _httpContextMock.Setup(x => x.Features.Get<IRequestCultureFeature>())
@@ -59,8 +55,12 @@ namespace EPR.Payment.Portal.UnitTests.ViewComponents
         }
 
         [TestMethod]
-        public async Task InvokeAsync_ShouldRenderCorrectView_WithExpectedModel()
+        public async Task InvokeAsync_WithExpectedModel_ShouldRenderCorrectView()
         {
+            // Arrange
+            _httpRequestMock.Setup(x => x.Path).Returns("/test");
+            _httpRequestMock.Setup(x => x.QueryString).Returns(new QueryString("?test=true"));
+
             // Act
             var result = await _viewComponent.InvokeAsync() as ViewViewComponentResult;
 
@@ -80,7 +80,28 @@ namespace EPR.Payment.Portal.UnitTests.ViewComponents
                     ShowLanguageSwitcher = true
                 });
             }
+        }
 
+        [TestMethod]
+        public async Task InvokeAsync_WhenRequestPathIsNull_ShouldUseDefaultPath()
+        {
+            // Arrange: Simulate null path
+            _httpRequestMock.Setup(x => x.Path).Returns((PathString)default);
+            _httpRequestMock.Setup(x => x.QueryString).Returns(new QueryString());
+
+            // Act
+            var result = await _viewComponent.InvokeAsync() as ViewViewComponentResult;
+
+            // Assert
+            using (new AssertionScope())
+            {
+                result.Should().NotBeNull();
+                var model = result!.ViewData!.Model as LanguageSwitcherModel;
+
+                model.Should().NotBeNull();
+                model!.ReturnUrl.Should().Be("~/"); // Expecting the default path "/"
+            }
         }
     }
+
 }
