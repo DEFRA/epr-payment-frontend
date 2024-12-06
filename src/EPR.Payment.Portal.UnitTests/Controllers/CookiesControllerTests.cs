@@ -213,6 +213,23 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         }
 
         [TestMethod]
+        public void Detail_GetRequest_ShouldSetBackLinkToDisplayToReturnUrl()
+        {
+            // Arrange
+            const string returnUrl = "/payment/govpaysuccess";
+
+            // Act
+            _controller?.Detail(returnUrl);
+
+            // Assert
+            using (new AssertionScope())
+            {
+                ((string?)_controller?.ViewBag.BackLinkToDisplay).Should().Be(returnUrl);
+            }
+        }
+
+
+        [TestMethod]
         public void UpdateAcceptance_ValidCookies_ShouldSetCookieAcceptanceAndRedirectToReturnUrl()
         {
             const string returnUrl = "/create-account";
