@@ -27,14 +27,8 @@
                     <button value="@CookieAcceptance.Reject" type="submit" name="cookies" class="govuk-button" data-module="govuk-button">
                         @Localizer["CookieBanner.RejectAnalyticsCookies"]
                     </button>
-                    <a class="govuk-link"
-                       asp-controller="Cookies"
-                       asp-action="Detail"
-                       asp-route-returnUrl="@returnUrlQuery"
-                       aria-label="@Localizer["CookieBanner.CookiesDescriptiveText"]">
-                        @Localizer["CookieBanner.ViewCookies"]
-                    </a>
-
+                    <a class="govuk-link" asp-controller="Cookies" asp-action="Detail"
+                       asp-route-returnUrl="@returnUrlQuery">@Localizer["CookieBanner.ViewCookies"]</a>
                 </div>
             </div>
         </div>
