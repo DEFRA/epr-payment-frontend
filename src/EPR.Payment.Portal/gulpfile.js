@@ -30,6 +30,12 @@ gulp.task('copy-govuk-images', function () {
         .pipe(gulp.dest('wwwroot/assets/images', { overwrite: true }));
 });
 
+// Task to copy images to /payment base folder
+gulp.task('copy-govuk-crown-images', function () {
+    return gulp.src('wwwroot/assets/images/*') // Source folder
+        .pipe(gulp.dest('wwwroot/payment/assets/images', { overwrite: true })); // Destination folder
+});
+
 // Task to copy fonts
 gulp.task('copy-govuk-fonts', function () {
     return gulp.src('node_modules/govuk-frontend/dist/govuk/assets/fonts/*')
@@ -52,6 +58,6 @@ gulp.task('compile-scss', function () {
 });
 
 // Default task
-gulp.task('build-frontend', gulp.series('copy-govuk-styles', 'copy-govuk-scripts', 'copy-govuk-images',
+gulp.task('build-frontend', gulp.series('copy-govuk-styles', 'copy-govuk-scripts', 'copy-govuk-images', 'copy-govuk-crown-images',
     'copy-govuk-fonts', 'copy-govuk-manifest', 'compile-scss')); 
 
