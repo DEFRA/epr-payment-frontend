@@ -5,7 +5,8 @@ const sass = require('gulp-sass')(require('sass'))
 // Define paths to the SCSS files
 const paths = {
     scss: [
-        'assets/scss/components/_language-toggle.scss'
+        'assets/scss/components/_language-toggle.scss',
+        'assets/scss/components/_crown-footer.scss'
     ],
     output: 'wwwroot/css'
 };
