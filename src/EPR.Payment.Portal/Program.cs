@@ -26,7 +26,6 @@ builder.Services.AddDependencies();
 builder.Services.Configure<DashboardConfiguration>(builder.Configuration.GetSection(DashboardConfiguration.SectionName));
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddDataProtection();
-builder.Services.AddLogging();
 
 // Configure forwarded headers
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
