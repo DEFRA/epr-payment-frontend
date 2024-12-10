@@ -70,6 +70,8 @@ if (!app.Environment.IsDevelopment())
 app.UseForwardedHeaders(); // Add forwarded headers middleware
 
 app.UseMiddleware<SecurityHeaderMiddleware>();
+app.UseCookiePolicy();
+app.UseMiddleware<AnalyticsCookieMiddleware>();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

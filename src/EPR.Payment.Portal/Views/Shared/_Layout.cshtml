@@ -1,4 +1,5 @@
 ﻿@using EPR.Payment.Portal.Common.Constants
+@using EPR.Payment.Portal.Constants
 @using Microsoft.Extensions.Configuration;
 @using Microsoft.FeatureManagement
 @inject IConfiguration configuration;
@@ -14,6 +15,10 @@
     var feedbackUrl = @configuration.GetSection("Dashboard:FeedbackUrl")["Url"];
 
     var EnableAuthenticationFeature = await featureManager.IsEnabledAsync(nameof(FeatureFlags.EnableAuthenticationFeature));
+
+    var useGoogleAnalyticsCookie = (bool?)Context.Items[ContextKeys.UseGoogleAnalyticsCookieKey];
+    var googleTagManagerContainerId = (string?)Context.Items[ContextKeys.TagManagerContainerIdKey];
+    var scriptNonce = (string?)Context.Items[ContextKeys.ScriptNonceKey];
 }
 <!DOCTYPE html>
 <!DOCTYPE html>
@@ -31,9 +36,39 @@
     <link rel="manifest" href="~/assets/manifest.json">
     <link rel="stylesheet" href="~/css/govuk-frontend.min.css">
     <link rel="stylesheet" href="~/css/application.css">
+
+    @if (useGoogleAnalyticsCookie == true)
+    {
+        <!-- Google Tag Manager -->
+        <script nonce="@scriptNonce">
+            (function (w, d, s, l, i) {
+                var f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                        'https://www.googletagmanager.com/gtag/js?id=' + i; var n = d.querySelector('[nonce]');
+                n && j.setAttribute('nonce', n.nonce || n.getAttribute('nonce')); f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', '@googleTagManagerContainerId');
+
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', '@googleTagManagerContainerId');
+        </script>
+        <!-- End Google Tag Manager -->
+    }
 </head>
 
 <body class="govuk-template__body">
+
+    @if (useGoogleAnalyticsCookie == true)
+        {
+            <!-- Google Tag Manager (noscript) -->
+            <noscript>
+                <iframe src="@("https://www.googletagmanager.com/ns.html?id="+googleTagManagerContainerId)"
+                        height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe>
+            </noscript>
+            <!-- End Google Tag Manager (noscript) -->
+        }
+
     <script>
         document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
     </script>
@@ -91,7 +126,7 @@
                 @Localizer["private_beta"]
             </strong>
             <span class="govuk-phase-banner__text">
-                @Localizer["private_beta_1"]<a class="govuk-link" href="@feedbackUrl" target="_blank" aria-label="@Localizer["feedback_descriptive_text"]">@Localizer["feedback"]</a>.
+                @Localizer["private_beta_1"]<a class="govuk-link" href="@feedbackUrl" target="_blank" rel="noopener" aria-label="@Localizer["feedback_descriptive_text"]">@Localizer["feedback"]</a>.
             </span>
         </p>
     </div>
@@ -131,12 +166,12 @@
                         </a>
                         </li>
                         <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link" href="@Localizer["privacy_url"]" aria-label="@Localizer["privacy_descriptive_text"]">
+                            <a class="govuk-footer__link" href="@Localizer["privacy_url"]" aria-label="@Localizer["privacy_descriptive_text"]" target="_blank" rel="noopener">
                                 @Localizer["privacy"]
                             </a>
                         </li>
                         <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link" href="@Localizer["accessibility_url"]" aria-label="@Localizer["accessibility_descriptive_text"]">
+                            <a class="govuk-footer__link" href="@Localizer["accessibility_url"]" aria-label="@Localizer["accessibility_descriptive_text"]" target="_blank" rel="noopener">
                                 @Localizer["accessibility"]
                             </a>
                         </li>
@@ -149,7 +184,7 @@
                     </span>
                 </div>
                 <div class="govuk-footer__meta-item">
-                    <a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/" aria-label="@Localizer["crown_copyright_descriptive_text"]">© @Localizer["crown_copyright"]</a>
+                    <a class="govuk-footer__link govuk-footer__copyright-logo custom-footer__copyright-logo" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/" aria-label="@Localizer["crown_copyright_descriptive_text"]">© @Localizer["crown_copyright"]</a>
                 </div>
             </div>
         </div>
