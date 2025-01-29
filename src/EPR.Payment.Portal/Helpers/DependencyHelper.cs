@@ -38,12 +38,24 @@ namespace EPR.Payment.Portal.Helpers
             {
                 Trace.TraceInformation($"Registering service {typeof(TImplementation).Name} for {configName}");
 
-                var instance = Activator.CreateInstance(typeof(TImplementation),
-                    s.GetRequiredService<IHttpContextAccessor>(),
-                    s.GetRequiredService<IHttpClientFactory>(),
-                    s.GetRequiredService<Microsoft.Identity.Web.ITokenAcquisition>(),
-                    serviceOptions,
-                    s.GetRequiredService<IFeatureManager>());
+                object? instance;
+                if (typeof(TImplementation) == typeof(HttpPaymentFacadeHealthCheckService))
+                {
+                    // Special case: Health check service does not require authentication or context accessor
+                    instance = Activator.CreateInstance(typeof(TImplementation),
+                        s.GetRequiredService<IHttpClientFactory>(),
+                        serviceOptions);
+                }
+                else
+                {
+                    // Default case: Use full constructor for services extending BaseHttpService
+                    instance = Activator.CreateInstance(typeof(TImplementation),
+                        s.GetRequiredService<IHttpContextAccessor>(),
+                        s.GetRequiredService<IHttpClientFactory>(),
+                        s.GetRequiredService<Microsoft.Identity.Web.ITokenAcquisition>(),
+                        serviceOptions,
+                        s.GetRequiredService<IFeatureManager>());
+                }
 
                 Trace.TraceError(instance == null ? $"Failed to create instance of {typeof(TImplementation).Name}" : $"Successfully created instance of {typeof(TImplementation).Name}");
 
