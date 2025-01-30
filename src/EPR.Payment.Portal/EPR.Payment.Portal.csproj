@@ -21,6 +21,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="HealthCheck\HealthCheckResponseWriter.cs" />
+    <Compile Remove="HealthCheck\PaymentsPortalHealthCheck.cs" />
+    <Compile Remove="Services\Interfaces\IPaymentFacadeHealthService.cs" />
+    <Compile Remove="Services\PaymentFacadeHealthService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
     <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css.map" />
     <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.css.map" />
