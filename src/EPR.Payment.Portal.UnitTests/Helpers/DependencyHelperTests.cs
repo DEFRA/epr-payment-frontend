@@ -68,34 +68,6 @@ namespace EPR.Payment.Portal.UnitTests.Helpers
         }
 
         [TestMethod]
-        public void AddPortalDependencies_PaymentFacadeHealthCheckService_RegistersServicesCorrectly()
-        {
-            // Arrange
-            var configurationData = new Dictionary<string, string>
-            {
-                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.Url)}", "https://healthcheck" },
-                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.EndPointName)}", "payment" },
-                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.DownstreamScope)}", "scope_value" } // Add DownstreamScope here
-            };
-
-            var configurationBuilder = new ConfigurationBuilder()
-                .AddInMemoryCollection(configurationData!)
-                .Build();
-
-            // Act
-            _services?.AddPortalDependencies(configurationBuilder);
-            var serviceProvider = _services?.BuildServiceProvider();
-
-            // Assert
-            using (new FluentAssertions.Execution.AssertionScope())
-            {
-                var httpPaymentFacade = serviceProvider?.GetService<IHttpPaymentFacadeHealthCheckService>();
-                httpPaymentFacade.Should().NotBeNull();
-                httpPaymentFacade.Should().BeOfType<HttpPaymentFacadeHealthCheckService>();
-            }
-        }
-
-        [TestMethod]
         public void AddPortalDependencies_WithMissingUrlConfiguration_ThrowsInvalidOperationException()
         {
             // Arrange

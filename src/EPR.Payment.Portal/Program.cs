@@ -1,4 +1,3 @@
-using EPR.Payment.Portal.AppStart;
 using EPR.Payment.Portal.Common.Configuration;
 using EPR.Payment.Portal.Common.Options;
 using EPR.Payment.Portal.Extension;
@@ -22,10 +21,9 @@ string basePath = globalVariables.BasePath
 builder.Services.AddFeatureManagement();
 builder.Services.AddControllersWithViews().AddViewLocalization();
 builder.Services.AddPortalDependencies(builder.Configuration);
-builder.Services.AddServiceHealthChecks();
 builder.Services.AddDependencies();
 builder.Services.Configure<DashboardConfiguration>(builder.Configuration.GetSection(DashboardConfiguration.SectionName));
-builder.Services.AddApplicationInsightsTelemetry();
+builder.Services.AddApplicationInsightsTelemetry().AddHealthChecks();
 builder.Services.AddDataProtection();
 
 // Configure forwarded headers
@@ -76,8 +74,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
-app.UseHealthChecks();
 
 // Check if authentication is enabled using a feature flag
 var featureManager = app.Services.GetRequiredService<IFeatureManager>();
