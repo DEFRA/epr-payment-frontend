@@ -24,6 +24,11 @@ builder.Services.AddPortalDependencies(builder.Configuration);
 builder.Services.AddDependencies();
 builder.Services.Configure<DashboardConfiguration>(builder.Configuration.GetSection(DashboardConfiguration.SectionName));
 builder.Services.AddApplicationInsightsTelemetry().AddHealthChecks();
+builder.Services.AddHsts(options =>
+{
+    options.IncludeSubDomains = true;
+    options.MaxAge = TimeSpan.FromDays(365);
+});
 builder.Services.AddDataProtection();
 
 // Configure forwarded headers
