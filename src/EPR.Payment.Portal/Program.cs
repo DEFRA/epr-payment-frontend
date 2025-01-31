@@ -24,11 +24,6 @@ builder.Services.AddPortalDependencies(builder.Configuration);
 builder.Services.AddDependencies();
 builder.Services.Configure<DashboardConfiguration>(builder.Configuration.GetSection(DashboardConfiguration.SectionName));
 builder.Services.AddApplicationInsightsTelemetry().AddHealthChecks();
-builder.Services.AddHsts(options =>
-{
-    options.IncludeSubDomains = true;
-    options.MaxAge = TimeSpan.FromDays(365);
-});
 builder.Services.AddDataProtection();
 
 // Configure forwarded headers
@@ -75,10 +70,9 @@ app.UseForwardedHeaders(); // Add forwarded headers middleware
 app.UseMiddleware<SecurityHeaderMiddleware>();
 app.UseCookiePolicy();
 app.UseMiddleware<AnalyticsCookieMiddleware>();
-app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
+app.UseHttpsRedirection();
 
 // Check if authentication is enabled using a feature flag
 var featureManager = app.Services.GetRequiredService<IFeatureManager>();
