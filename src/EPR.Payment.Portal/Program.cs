@@ -1,7 +1,6 @@
 using EPR.Payment.Portal.Common.Configuration;
 using EPR.Payment.Portal.Common.Options;
 using EPR.Payment.Portal.Extension;
-using EPR.Payment.Portal.HealthCheck;
 using EPR.Payment.Portal.Helpers;
 using EPR.Payment.Portal.Middleware;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -70,10 +69,20 @@ app.UseForwardedHeaders(); // Add forwarded headers middleware
 app.UseMiddleware<SecurityHeaderMiddleware>();
 app.UseCookiePolicy();
 app.UseMiddleware<AnalyticsCookieMiddleware>();
-app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/admin/health")
+    {
+        await next(); // Do not apply redirections
+    }
+    else
+    {
+        app.UseHttpsRedirection(); // Apply redirection to other requests
+        await next();
+    }
+});
 
 // Check if authentication is enabled using a feature flag
 var featureManager = app.Services.GetRequiredService<IFeatureManager>();
@@ -87,5 +96,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Error}/{action=Index}/{id?}");
 
-app.MapHealthChecks("/admin/health", HealthCheckOptionsBuilder.Build()).AllowAnonymous();
+app.MapHealthChecks("/admin/health").AllowAnonymous();
 await app.RunAsync();
