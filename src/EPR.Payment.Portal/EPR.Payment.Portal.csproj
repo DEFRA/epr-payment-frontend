@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="HealthCheck\HealthCheckOptionsBuilder.cs" />
     <Compile Remove="HealthCheck\HealthCheckResponseWriter.cs" />
     <Compile Remove="HealthCheck\PaymentsPortalHealthCheck.cs" />
     <Compile Remove="Services\Interfaces\IPaymentFacadeHealthService.cs" />
@@ -111,6 +112,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="HealthCheck\" />
 	  <Folder Include="Resources\Views\Shared\Components\CookieBanner\" />
 	</ItemGroup>
 

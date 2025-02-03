@@ -1,5 +1,4 @@
-﻿using EPR.Payment.Portal.HealthCheck;
-using EPR.Payment.Portal.Services;
+﻿using EPR.Payment.Portal.Services;
 using EPR.Payment.Portal.Services.Interfaces;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Diagnostics.CodeAnalysis;

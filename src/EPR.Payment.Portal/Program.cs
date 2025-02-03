@@ -1,13 +1,10 @@
 using EPR.Payment.Portal.Common.Configuration;
 using EPR.Payment.Portal.Common.Options;
 using EPR.Payment.Portal.Extension;
-using EPR.Payment.Portal.HealthCheck;
 using EPR.Payment.Portal.Helpers;
 using EPR.Payment.Portal.Middleware;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.FeatureManagement;
-using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 var builderConfig = builder.Configuration;
@@ -88,19 +85,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Error}/{action=Index}/{id?}");
 
-app.MapHealthChecks("/admin/health", new HealthCheckOptions
-{
-    ResponseWriter = async (context, report) =>
-    {
-        context.Response.ContentType = "application/json";
-        var result = JsonSerializer.Serialize(new
-        {
-            status = report.Status.ToString(),
-            checks = report.Entries.Select(e => new { key = e.Key, value = e.Value.Status.ToString() }),
-            duration = report.TotalDuration.TotalMilliseconds
-        });
-
-        await context.Response.WriteAsync(result);
-    }
-}).AllowAnonymous();
+app.MapHealthChecks("/admin/health").AllowAnonymous();
 await app.RunAsync();
