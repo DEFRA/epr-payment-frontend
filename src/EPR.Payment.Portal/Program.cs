@@ -86,5 +86,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Error}/{action=Index}/{id?}");
 
-app.MapHealthChecks("/admin/health", HealthCheckOptionsBuilder.Build()).AllowAnonymous();
+app.MapHealthChecks("/admin/health").AllowAnonymous();
 await app.RunAsync();
