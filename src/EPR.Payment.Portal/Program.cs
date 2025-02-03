@@ -71,7 +71,18 @@ app.UseCookiePolicy();
 app.UseMiddleware<AnalyticsCookieMiddleware>();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseHttpsRedirection();
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/admin/health")
+    {
+        await next(); // Do not apply redirections
+    }
+    else
+    {
+        app.UseHttpsRedirection(); // Apply redirection to other requests
+        await next();
+    }
+});
 
 // Check if authentication is enabled using a feature flag
 var featureManager = app.Services.GetRequiredService<IFeatureManager>();
