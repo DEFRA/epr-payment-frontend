@@ -18,11 +18,6 @@ public class SecurityHeaderMiddleware
     public async Task Invoke(HttpContext httpContext, IConfiguration configuration)
     {
         var scriptNonce = GenerateNonce();
-        var whitelistedFormActionAddresses = configuration["AzureAdB2C:Instance"];
-        if (string.IsNullOrEmpty(whitelistedFormActionAddresses))
-        {
-            throw new InvalidOperationException("AzureAdB2C:Instance is not configured.");
-        }
 
         const string permissionsPolicy =
             "accelerometer=(),ambient-light-sensor=(),autoplay=(),battery=(),camera=(),display-capture=()," +
@@ -31,7 +26,7 @@ public class SecurityHeaderMiddleware
             "oversized-images=(self),payment=(),picture-in-picture=(),publickey-credentials-get=(),speaker-selection=()," +
             "sync-xhr=(self),unoptimized-images=(self),unsized-media=(self),usb=(),screen-wake-lock=(),web-share=(),xr-spatial-tracking=()";
 
-        httpContext.Response.Headers.ContentSecurityPolicy = GetContentSecurityPolicyHeader(scriptNonce, whitelistedFormActionAddresses);
+        httpContext.Response.Headers.ContentSecurityPolicy = GetContentSecurityPolicyHeader(scriptNonce);
         
         httpContext.Response.Headers.Append("Cross-Origin-Embedder-Policy", "require-corp");
         httpContext.Response.Headers.Append("Cross-Origin-Opener-Policy", "same-origin");
@@ -48,7 +43,7 @@ public class SecurityHeaderMiddleware
         await _next(httpContext);
     }
 
-    private static string GetContentSecurityPolicyHeader(string scriptNonce, string whitelistedFormActionAddresses)
+    private static string GetContentSecurityPolicyHeader(string scriptNonce)
     {
         const string baseUri = "base-uri 'none'";
         const string requireTrustedTypes = "require-trusted-types-for 'script'";
