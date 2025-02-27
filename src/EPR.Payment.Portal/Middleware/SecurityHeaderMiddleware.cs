@@ -53,22 +53,7 @@ public class SecurityHeaderMiddleware
         const string baseUri = "base-uri 'none'";
         const string requireTrustedTypes = "require-trusted-types-for 'script'";
 
-        const string defaultSrc = "default-src 'self'";
-        const string objectSrc = "object-src 'none'";
-        const string frameAncestors = "frame-ancestors 'none'";
-        const string upgradeInsecureRequests = "upgrade-insecure-requests";
-        const string blockAllMixedContent = "block-all-mixed-content";
-        const string imgSrc = "img-src 'self' www.googletagmanager.com https://ssl.gstatic.com https://www.gstatic.com " +
-                        "https://*.google-analytics.com https://*.googletagmanager.com";
-        string scriptSrc = $"script-src 'self' 'nonce-{scriptNonce}' https://tagmanager.google.com https://*.googletagmanager.com";
-        string formAction = $"form-action 'self' {whitelistedFormActionAddresses}";
-        const string styleSrc = "style-src 'self' https://tagmanager.google.com https://fonts.googleapis.com";
-        const string fontSrc = "font-src 'self' https://fonts.gstatic.com data:";
-        const string connectSrc = "connect-src 'self' https://*.google-analytics.com " +
-            "https://*.analytics.google.com https://*.googletagmanager.com";
-
-        return string.Join(";", baseUri, requireTrustedTypes, defaultSrc, objectSrc, frameAncestors, upgradeInsecureRequests,
-            blockAllMixedContent, scriptSrc, imgSrc, formAction, styleSrc, fontSrc, connectSrc);
+        return string.Join(";", baseUri, requireTrustedTypes);
     }
 
     private string GenerateNonce()
