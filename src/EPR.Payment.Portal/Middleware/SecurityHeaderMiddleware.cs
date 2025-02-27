@@ -31,6 +31,8 @@ public class SecurityHeaderMiddleware
             "oversized-images=(self),payment=(),picture-in-picture=(),publickey-credentials-get=(),speaker-selection=()," +
             "sync-xhr=(self),unoptimized-images=(self),unsized-media=(self),usb=(),screen-wake-lock=(),web-share=(),xr-spatial-tracking=()";
 
+        httpContext.Response.Headers.ContentSecurityPolicy = GetContentSecurityPolicyHeader(scriptNonce, whitelistedFormActionAddresses);
+        
         httpContext.Response.Headers.Append("Cross-Origin-Embedder-Policy", "require-corp");
         httpContext.Response.Headers.Append("Cross-Origin-Opener-Policy", "same-origin");
         httpContext.Response.Headers.Append("Cross-Origin-Resource-Policy", "same-origin");
@@ -44,6 +46,29 @@ public class SecurityHeaderMiddleware
         httpContext.Items[ContextKeys.ScriptNonceKey] = scriptNonce;
 
         await _next(httpContext);
+    }
+
+    private static string GetContentSecurityPolicyHeader(string scriptNonce, string whitelistedFormActionAddresses)
+    {
+        const string baseUri = "base-uri 'none'";
+        const string requireTrustedTypes = "require-trusted-types-for 'script'";
+
+        const string defaultSrc = "default-src 'self'";
+        const string objectSrc = "object-src 'none'";
+        const string frameAncestors = "frame-ancestors 'none'";
+        const string upgradeInsecureRequests = "upgrade-insecure-requests";
+        const string blockAllMixedContent = "block-all-mixed-content";
+        const string imgSrc = "img-src 'self' www.googletagmanager.com https://ssl.gstatic.com https://www.gstatic.com " +
+                        "https://*.google-analytics.com https://*.googletagmanager.com";
+        string scriptSrc = $"script-src 'self' 'nonce-{scriptNonce}' https://tagmanager.google.com https://*.googletagmanager.com";
+        string formAction = $"form-action 'self' {whitelistedFormActionAddresses}";
+        const string styleSrc = "style-src 'self' https://tagmanager.google.com https://fonts.googleapis.com";
+        const string fontSrc = "font-src 'self' https://fonts.gstatic.com data:";
+        const string connectSrc = "connect-src 'self' https://*.google-analytics.com " +
+            "https://*.analytics.google.com https://*.googletagmanager.com";
+
+        return string.Join(";", baseUri, requireTrustedTypes, defaultSrc, objectSrc, frameAncestors, upgradeInsecureRequests,
+            blockAllMixedContent, scriptSrc, imgSrc, formAction, styleSrc, fontSrc, connectSrc);
     }
 
     private string GenerateNonce()
