@@ -1,0 +1,23 @@
+﻿@media (min-width: 40.0625em) {
+        table.cookies-table {
+            table-layout: auto;
+        }
+    }
+
+@media (max-width: 40.0625em) {
+    table.cookies-table {
+        table-layout: fixed;
+
+        th, td {
+            word-wrap: break-word;
+        }
+
+        th:first-child {
+            width: 60%;
+        }
+
+        th:last-child {
+            width: 15%;
+        }
+    }
+}

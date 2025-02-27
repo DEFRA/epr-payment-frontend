@@ -6,7 +6,8 @@ const sass = require('gulp-sass')(require('sass'))
 const paths = {
     scss: [
         'assets/scss/components/_language-toggle.scss',
-        'assets/scss/components/_crown-footer.scss'
+        'assets/scss/components/_crown-footer.scss',
+        'assets/scss/components/_cookies-media.scss'
     ],
     output: 'wwwroot/css'
 };

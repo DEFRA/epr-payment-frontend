@@ -2,6 +2,7 @@ using EPR.Payment.Portal.AppStart;
 using EPR.Payment.Portal.Common.Configuration;
 using EPR.Payment.Portal.Common.Options;
 using EPR.Payment.Portal.Extension;
+using EPR.Payment.Portal.HealthCheck;
 using EPR.Payment.Portal.Helpers;
 using EPR.Payment.Portal.Middleware;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -90,4 +91,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Error}/{action=Index}/{id?}");
 
+app.MapHealthChecks("/admin/health", HealthCheckOptionsBuilder.Build()).AllowAnonymous();
 await app.RunAsync();
