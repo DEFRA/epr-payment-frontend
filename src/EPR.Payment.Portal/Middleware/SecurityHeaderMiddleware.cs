@@ -26,7 +26,7 @@ public class SecurityHeaderMiddleware
             "oversized-images=(self),payment=(),picture-in-picture=(),publickey-credentials-get=(),speaker-selection=()," +
             "sync-xhr=(self),unoptimized-images=(self),unsized-media=(self),usb=(),screen-wake-lock=(),web-share=(),xr-spatial-tracking=()";
 
-        httpContext.Response.Headers.ContentSecurityPolicy = GetContentSecurityPolicyHeader(scriptNonce);
+        httpContext.Response.Headers.ContentSecurityPolicy = GetContentSecurityPolicyHeader();
         
         httpContext.Response.Headers.Append("Cross-Origin-Embedder-Policy", "require-corp");
         httpContext.Response.Headers.Append("Cross-Origin-Opener-Policy", "same-origin");
@@ -43,7 +43,7 @@ public class SecurityHeaderMiddleware
         await _next(httpContext);
     }
 
-    private static string GetContentSecurityPolicyHeader(string scriptNonce)
+    private static string GetContentSecurityPolicyHeader()
     {
         const string baseUri = "base-uri 'none'";
         const string requireTrustedTypes = "require-trusted-types-for 'script'";
