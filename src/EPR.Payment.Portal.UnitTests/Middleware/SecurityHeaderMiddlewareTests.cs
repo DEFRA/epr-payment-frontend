@@ -66,6 +66,21 @@ public class SecurityHeaderMiddlewareTests
     }
 
     [TestMethod]
+    public async Task Invoke_ShouldContainContentSecurityPolicy()
+    {
+        // Arrange
+        var context = new DefaultHttpContext();
+        _mockConfiguration.Setup(config => config["AzureAdB2C:Instance"])
+                 .Returns("https://mocked-instance.b2clogin.com/");
+
+        // Act
+        await _middleware.Invoke(context, _mockConfiguration.Object);
+
+        // Assert
+        context.Response.Headers.ContentSecurityPolicy.Should().Contain("base-uri 'none';require-trusted-types-for 'script'");
+    }
+
+    [TestMethod]
     public async Task Invoke_ShouldAddScriptNonceToItems()
     {
         // Arrange
