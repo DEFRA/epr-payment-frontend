@@ -83,6 +83,8 @@ namespace EPR.Payment.Portal.Extension
                             options.ExpireTimeSpan = TimeSpan.FromMinutes(cookieOptions.AuthenticationExpiryInMinutes);
                             options.SlidingExpiration = true;
                             options.Cookie.Path = "/";
+                            options.Cookie.HttpOnly = true;
+                            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                         })
                     .EnableTokenAcquisitionToCallDownstreamApi(new[] { facadeApiOptions.DownstreamScope })
                     .AddDistributedTokenCaches();
@@ -100,6 +102,7 @@ namespace EPR.Payment.Portal.Extension
             services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 
                 var azureB2COptions = services.BuildServiceProvider().GetRequiredService<IOptions<AzureAdB2COptions>>().Value;
 
@@ -147,6 +150,7 @@ namespace EPR.Payment.Portal.Extension
                 options.Cookie.IsEssential = true;
                 options.Cookie.HttpOnly = true;
                 options.Cookie.Path = "/";
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });
 
         }
