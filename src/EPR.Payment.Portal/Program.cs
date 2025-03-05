@@ -55,6 +55,12 @@ builder.Services
     .AddHttpContextAccessor()
     .RegisterWebComponents(builder.Configuration);
 
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.Always;
+    options.Secure = CookieSecurePolicy.Always;
+});
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
