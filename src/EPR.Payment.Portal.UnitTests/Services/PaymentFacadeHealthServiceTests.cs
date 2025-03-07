@@ -45,5 +45,21 @@ namespace EPR.Payment.Portal.UnitTests.Services
             //Assert
             actual.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
         }
+
+        [TestMethod, AutoMoqData]
+        public async Task GetHealthAsync_ValidQueryResult_ThrowsException(
+            [Frozen] Mock<IHttpPaymentFacadeHealthCheckService> httpPaymentFacadeHealthCheckService,
+            PaymentFacadeHealthService paymentFacadeHealthService)
+        {
+            // Arrange
+            httpPaymentFacadeHealthCheckService.Setup(x => x.GetHealthAsync(It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new Exception("Health check failed"));
+
+            // Act & Assert
+            await Assert.ThrowsExceptionAsync<Exception>(async () =>
+            {
+                await paymentFacadeHealthService.GetHealthAsync(CancellationToken.None);
+            });
+        }
     }
 }
