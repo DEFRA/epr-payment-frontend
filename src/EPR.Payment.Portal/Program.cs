@@ -9,6 +9,12 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.FeatureManagement;
 
 var builder = WebApplication.CreateBuilder(args);
+// Add User Secrets in Development
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddUserSecrets<Program>();
+}
+
 var builderConfig = builder.Configuration;
 
 // Validate and retrieve GlobalVariables
