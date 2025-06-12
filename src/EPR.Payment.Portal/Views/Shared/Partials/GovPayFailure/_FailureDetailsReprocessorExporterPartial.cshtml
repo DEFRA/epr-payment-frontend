@@ -1,0 +1,37 @@
+﻿@using EPR.Payment.Portal.Common.Configuration
+@using EPR.Payment.Portal.Common.Models
+@using Microsoft.AspNetCore.Mvc.Routing;
+
+@model CompositeViewModel;
+
+@{
+    var rpdRootUrl = @Model.dashboardConfiguration.RPDRootUrl.Url;
+    var backUrl = rpdRootUrl + @Model.dashboardConfiguration.BackUrl.Url;
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+        <h1 class="govuk-heading-l">@Localizer["payment_unsuccessful"]</h1>
+        <p class="govuk-body">@Localizer["payment_not_completed"]</p>
+        <form method="post">
+            <input type="hidden" value="@Model.completePaymentViewModel.UserId" />
+            <input type="hidden" value="@Model.completePaymentViewModel.OrganisationId" />
+            <input type="hidden" value="@Model.completePaymentViewModel.Reference" />
+            <input type="hidden" value="@Model.completePaymentViewModel.Regulator" />
+            <input type="hidden" value="@Model.completePaymentViewModel.Amount" />
+            <input type="hidden" value="@Model.completePaymentViewModel.Description" />
+            <input type="hidden" value="@Model.completePaymentViewModel.RequestorType" />
+            <p class="govuk-body">
+                @Localizer["reference_number_is"] <strong>@Model.completePaymentViewModel.Reference</strong>.                
+            </p>
+            <div class="govuk-button-group">
+                <button class="govuk-button" data-module="govuk-button" aria-label="@Localizer["try_online_payment_again_descriptive_text"]">
+                    @Localizer["try_online_payment_again"]
+                </button>
+                <a href="@backUrl" class="govuk-button govuk-button--secondary" aria-label="@Localizer["go_to_homepage_descriptive_text"]">
+                    @Localizer["go_to_homepage"]
+                </a>
+            </div>            
+        </form>
+    </div>
+</div>
