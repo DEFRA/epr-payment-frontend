@@ -47,7 +47,11 @@ namespace EPR.Payment.Portal.UnitTests.Helpers
                 { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.Url)}", "https://payment.facade" },
                 { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.EndPointName)}", "payment" },
                 { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.HttpClientName)}", "HttpClient" },
-                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.DownstreamScope)}", "scope_value" } // Add DownstreamScope here
+                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.DownstreamScope)}", "scope_value" }, // Add DownstreamScope here
+                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeServiceV2)}:{nameof(FacadeServiceV2.Url)}", "https://payment.facadev2" },
+                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeServiceV2)}:{nameof(FacadeServiceV2.EndPointName)}", "payment" },
+                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeServiceV2)}:{nameof(FacadeServiceV2.HttpClientName)}", "HttpClient" },
+                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeServiceV2)}:{nameof(FacadeServiceV2.DownstreamScope)}", "scope_value" } // Add DownstreamScope here
             };
 
             var configurationBuilder = new ConfigurationBuilder()
@@ -64,6 +68,10 @@ namespace EPR.Payment.Portal.UnitTests.Helpers
                 var httpPaymentFacade = serviceProvider?.GetService<IHttpPaymentFacade>();
                 httpPaymentFacade.Should().NotBeNull();
                 httpPaymentFacade.Should().BeOfType<HttpPaymentFacade>();
+
+                var httpPaymentFacadeV2 = serviceProvider?.GetService<IHttpPaymentFacadeV2>();
+                httpPaymentFacadeV2.Should().NotBeNull();
+                httpPaymentFacadeV2.Should().BeOfType<HttpPaymentFacadeV2>();
             }
         }
 
@@ -75,7 +83,11 @@ namespace EPR.Payment.Portal.UnitTests.Helpers
             {
                 { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.Url)}", "https://healthcheck" },
                 { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.EndPointName)}", "payment" },
-                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.DownstreamScope)}", "scope_value" } // Add DownstreamScope here
+                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.DownstreamScope)}", "scope_value" },
+                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeServiceV2)}:{nameof(FacadeServiceV2.Url)}", "https://payment.facadev2" },
+                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeServiceV2)}:{nameof(FacadeServiceV2.EndPointName)}", "payment" },
+                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeServiceV2)}:{nameof(FacadeServiceV2.HttpClientName)}", "HttpClient" },
+                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeServiceV2)}:{nameof(FacadeServiceV2.DownstreamScope)}", "scope_value" }
             };
 
             var configurationBuilder = new ConfigurationBuilder()
