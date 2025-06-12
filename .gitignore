@@ -23,4 +23,3 @@ appsettings.Test.json
 /bin/Debug
 /obj
 /src/EPR.Payment.Portal/appsettings.development.json
-/src/EPR.Payment.Portal.sln.DotSettings.user

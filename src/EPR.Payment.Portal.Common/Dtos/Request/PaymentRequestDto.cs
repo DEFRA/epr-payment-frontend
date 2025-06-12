@@ -21,7 +21,7 @@ namespace EPR.Payment.Portal.Common.Dtos.Request
 
         [Required(ErrorMessage = "Description is required")]
         public string? Description { get; set; }
-        
-        public string? RequestorType { get; set; }
+
+        public string RequestorType { get; set; } = default!;
     }
 }

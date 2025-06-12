@@ -32,7 +32,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
         public void Initialize()
         {
             // Mock configuration
-            var config = new FacadeServiceV2
+            FacadeServiceV2 config = new FacadeServiceV2
             {
                 Url = "https://example.com",
                 EndPointName = "payments",
@@ -75,11 +75,11 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
                            Content = new StringContent(JsonConvert.SerializeObject(completePaymentResponseDto), Encoding.UTF8, "application/json")
                        });
 
-            var httpClient = new HttpClient(handlerMock.Object);
+            HttpClient httpClient = new HttpClient(handlerMock.Object);
             httpPaymentsFacade = CreateHttpPaymentsService(httpClient);
 
             // Act
-            var result = await httpPaymentsFacade.CompletePaymentAsync(externalPaymentId, cancellationToken);
+            CompletePaymentResponseDto result = await httpPaymentsFacade.CompletePaymentAsync(externalPaymentId, cancellationToken);
 
             // Assert
             using (new AssertionScope())
@@ -105,7 +105,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
                        .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                        .ThrowsAsync(new HttpRequestException(ExceptionMessages.ErrorCompletePayment));
 
-            var httpClient = new HttpClient(handlerMock.Object);
+            HttpClient httpClient = new HttpClient(handlerMock.Object);
             httpPaymentsFacade = CreateHttpPaymentsService(httpClient);
 
             // Act
@@ -141,11 +141,11 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
                            Content = new StringContent(JsonConvert.SerializeObject(response), Encoding.UTF8, "application/json")
                        });
 
-            var httpClient = new HttpClient(handlerMock.Object);
+            HttpClient httpClient = new HttpClient(handlerMock.Object);
             httpPaymentsFacade = CreateHttpPaymentsService(httpClient);
 
             // Act
-            var result = await httpPaymentsFacade.InitiatePaymentAsync(request, cancellationToken);
+            string result = await httpPaymentsFacade.InitiatePaymentAsync(request, cancellationToken);
 
             // Assert
             using (new AssertionScope())
@@ -171,7 +171,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
                        .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                        .ThrowsAsync(new HttpRequestException(ExceptionMessages.ErrorInitiatePayment));
 
-            var httpClient = new HttpClient(handlerMock.Object);
+            HttpClient httpClient = new HttpClient(handlerMock.Object);
             httpPaymentsFacade = CreateHttpPaymentsService(httpClient);
 
             // Act
