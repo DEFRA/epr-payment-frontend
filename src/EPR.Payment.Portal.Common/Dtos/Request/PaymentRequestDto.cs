@@ -15,12 +15,13 @@ namespace EPR.Payment.Portal.Common.Dtos.Request
 
         [Required(ErrorMessage = "Regulator is required")]
         public string? Regulator { get; set; }
-
         [Required(ErrorMessage = "Amount is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Amount must be greater than zero")]
         public int? Amount { get; set; }
 
         [Required(ErrorMessage = "Description is required")]
         public string? Description { get; set; }
+        
+        public string? RequestorType { get; set; }
     }
 }
