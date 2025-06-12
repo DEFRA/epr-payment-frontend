@@ -304,7 +304,5 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             // Assert
             act.Should().Throw<ArgumentNullException>().WithMessage("*featureManager*");
         }
-
-
     }
 }
