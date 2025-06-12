@@ -8,18 +8,18 @@ using EPR.Payment.Portal.Services.Interfaces;
 
 namespace EPR.Payment.Portal.Services
 {
-    public class PaymentsService : IPaymentsService
+    public class PaymentsService(
+        IMapper mapper,
+        IHttpPaymentFacade httpPaymentFacade,
+        IHttpPaymentFacadeV2 httpPaymentFacadeV2,
+        ILogger<PaymentsService> logger)
+        : IPaymentsService
     {
-        private readonly IHttpPaymentFacade _httpPaymentFacade;
-        private readonly ILogger<PaymentsService> _logger;
-        private readonly IMapper _mapper;
+        private readonly IHttpPaymentFacade _httpPaymentFacade = httpPaymentFacade ?? throw new ArgumentNullException(nameof(httpPaymentFacade));
+        private readonly IHttpPaymentFacadeV2 _httpPaymentFacadeV2 = httpPaymentFacadeV2 ?? throw new ArgumentNullException(nameof(httpPaymentFacadeV2));
+        private readonly ILogger<PaymentsService> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
-        public PaymentsService(IMapper mapper, IHttpPaymentFacade httpPaymentFacade, ILogger<PaymentsService> logger)
-        {
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _httpPaymentFacade = httpPaymentFacade ?? throw new ArgumentNullException(nameof(httpPaymentFacade));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        }
         public async Task<CompletePaymentViewModel> CompletePaymentAsync(Guid externalPaymentId, CancellationToken cancellationToken)
         {
             try
@@ -48,7 +48,12 @@ namespace EPR.Payment.Portal.Services
         {
             try
             {
-                return await _httpPaymentFacade.InitiatePaymentAsync(request, cancellationToken);
+                if (request?.RequestorType == null)
+                {
+                    return await _httpPaymentFacade.InitiatePaymentAsync(request, cancellationToken);
+                }
+
+                return await _httpPaymentFacadeV2.InitiatePaymentAsync(request, cancellationToken);
             }
             catch (Exception ex)
             {

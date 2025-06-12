@@ -7,7 +7,9 @@ namespace EPR.Payment.Portal.Common.Configuration
     {
         public static string SectionName => "PaymentFacade";
 
-        public FacadeService FacadeService { get; set; } = new FacadeService();
+        public FacadeService FacadeService { get; set; } = new ();
+
+        public FacadeServiceV2 FacadeServiceV2 { get; set; } = new ();
     }
 
     public class FacadeService
@@ -16,5 +18,9 @@ namespace EPR.Payment.Portal.Common.Configuration
         public string? EndPointName { get; set; }
         public string? HttpClientName { get; set; }
         public string? DownstreamScope { get; set; }
+    }
+
+    public class FacadeServiceV2: FacadeService
+    {
     }
 }
