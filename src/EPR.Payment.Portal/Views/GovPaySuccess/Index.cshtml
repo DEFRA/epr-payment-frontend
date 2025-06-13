@@ -1,13 +1,26 @@
 ﻿@using EPR.Payment.Portal.Common.Configuration
 @using EPR.Payment.Portal.Common.Constants
+@using EPR.Payment.Portal.Common.Enums
 @using EPR.Payment.Portal.Common.Models
 @using Microsoft.AspNetCore.Mvc.Routing;
 @model CompositeViewModel;
 
 @{
-    var rpdRootUrl = @Model.dashboardConfiguration.RPDRootUrl.Url;
-    var backUrl = rpdRootUrl + @Model.dashboardConfiguration.BackUrl.Url;
-    var registrationTaskList = rpdRootUrl + @Model.dashboardConfiguration.RegistrationTaskList.Url;
+    var backUrl = "";
+    var registrationTaskList = "";
+    if (@Model.completePaymentViewModel.RequestorType == RequestorType.Reprocessors.ToString() || @Model.completePaymentViewModel.RequestorType == RequestorType.Exporters.ToString())
+    {
+        var repExpRootUrl = @Model.dashboardConfiguration.RepExpRootUrl.Url;
+        backUrl = repExpRootUrl + @Model.dashboardConfiguration.RepExpBackUrl.Url;
+        registrationTaskList = repExpRootUrl + @Model.dashboardConfiguration.RegistrationTaskList.Url;
+    }
+    else
+    {
+
+        var rpdRootUrl = @Model.dashboardConfiguration.RPDRootUrl.Url;
+        backUrl = rpdRootUrl + @Model.dashboardConfiguration.BackUrl.Url;
+        registrationTaskList = rpdRootUrl + @Model.dashboardConfiguration.RegistrationTaskList.Url;
+    }
     ViewData["Title"] = Localizer["payment_successful"];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
