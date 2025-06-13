@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System.Diagnostics;
+using Microsoft.FeatureManagement;
+using Microsoft.Identity.Web;
 
 namespace EPR.Payment.Portal.UnitTests.Helpers
 {
@@ -26,11 +28,11 @@ namespace EPR.Payment.Portal.UnitTests.Helpers
             _services.AddHttpClient(); // Register the default HttpClientFactory
 
             // Mock ITokenAcquisition and register it
-            var tokenAcquisitionMock = new Mock<Microsoft.Identity.Web.ITokenAcquisition>();
+            Mock<ITokenAcquisition> tokenAcquisitionMock = new Mock<Microsoft.Identity.Web.ITokenAcquisition>();
             _services.AddSingleton(tokenAcquisitionMock.Object);
 
             // Mock IFeatureManager and register it
-            var featureManagerMock = new Mock<Microsoft.FeatureManagement.IFeatureManager>();
+            Mock<IFeatureManager> featureManagerMock = new Mock<Microsoft.FeatureManagement.IFeatureManager>();
             _services.AddSingleton(featureManagerMock.Object);
 
             Trace.Listeners.Clear();
@@ -42,28 +44,38 @@ namespace EPR.Payment.Portal.UnitTests.Helpers
         public void AddPortalDependencies_PaymentFacade_RegistersServicesCorrectly()
         {
             // Arrange
-            var configurationData = new Dictionary<string, string>
+            Dictionary<string, string> configurationData = new Dictionary<string, string>
             {
                 { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.Url)}", "https://payment.facade" },
                 { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.EndPointName)}", "payment" },
                 { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.HttpClientName)}", "HttpClient" },
-                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.DownstreamScope)}", "scope_value" } // Add DownstreamScope here
+                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.DownstreamScope)}", "scope_value" }, // Add DownstreamScope here
+                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeServiceV2)}:{nameof(FacadeServiceV2.Url)}", "https://payment.facadev2" },
+                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeServiceV2)}:{nameof(FacadeServiceV2.EndPointName)}", "payment" },
+                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeServiceV2)}:{nameof(FacadeServiceV2.HttpClientName)}", "HttpClient" },
+                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeServiceV2)}:{nameof(FacadeServiceV2.DownstreamScope)}", "scope_value" } // Add DownstreamScope here
             };
 
-            var configurationBuilder = new ConfigurationBuilder()
+            IConfigurationRoot configurationBuilder = new ConfigurationBuilder()
                 .AddInMemoryCollection(configurationData!)
                 .Build();
 
             // Act
             _services?.AddPortalDependencies(configurationBuilder);
-            var serviceProvider = _services?.BuildServiceProvider();
+            ServiceProvider? serviceProvider = _services?.BuildServiceProvider();
+            IHttpPaymentFacade? httpPaymentFacade = serviceProvider?.GetService<IHttpPaymentFacade>();
+            IHttpPaymentFacadeV2? httpPaymentFacadeV2 = serviceProvider?.GetService<IHttpPaymentFacadeV2>();
 
             // Assert
             using (new FluentAssertions.Execution.AssertionScope())
             {
-                var httpPaymentFacade = serviceProvider?.GetService<IHttpPaymentFacade>();
                 httpPaymentFacade.Should().NotBeNull();
                 httpPaymentFacade.Should().BeOfType<HttpPaymentFacade>();
+            }
+            using (new FluentAssertions.Execution.AssertionScope())
+            {
+                httpPaymentFacadeV2.Should().NotBeNull();
+                httpPaymentFacadeV2.Should().BeOfType<HttpPaymentFacadeV2>();
             }
         }
 
@@ -71,25 +83,29 @@ namespace EPR.Payment.Portal.UnitTests.Helpers
         public void AddPortalDependencies_PaymentFacadeHealthCheckService_RegistersServicesCorrectly()
         {
             // Arrange
-            var configurationData = new Dictionary<string, string>
+            Dictionary<string, string> configurationData = new Dictionary<string, string>
             {
                 { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.Url)}", "https://healthcheck" },
                 { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.EndPointName)}", "payment" },
-                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.DownstreamScope)}", "scope_value" } // Add DownstreamScope here
+                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.DownstreamScope)}", "scope_value" },
+                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeServiceV2)}:{nameof(FacadeServiceV2.Url)}", "https://payment.facadev2" },
+                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeServiceV2)}:{nameof(FacadeServiceV2.EndPointName)}", "payment" },
+                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeServiceV2)}:{nameof(FacadeServiceV2.HttpClientName)}", "HttpClient" },
+                { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeServiceV2)}:{nameof(FacadeServiceV2.DownstreamScope)}", "scope_value" }
             };
 
-            var configurationBuilder = new ConfigurationBuilder()
+            IConfigurationRoot configurationBuilder = new ConfigurationBuilder()
                 .AddInMemoryCollection(configurationData!)
                 .Build();
 
             // Act
             _services?.AddPortalDependencies(configurationBuilder);
-            var serviceProvider = _services?.BuildServiceProvider();
+            ServiceProvider? serviceProvider = _services?.BuildServiceProvider();
+            IHttpPaymentFacadeHealthCheckService? httpPaymentFacade = serviceProvider?.GetService<IHttpPaymentFacadeHealthCheckService>();
 
             // Assert
             using (new FluentAssertions.Execution.AssertionScope())
             {
-                var httpPaymentFacade = serviceProvider?.GetService<IHttpPaymentFacadeHealthCheckService>();
                 httpPaymentFacade.Should().NotBeNull();
                 httpPaymentFacade.Should().BeOfType<HttpPaymentFacadeHealthCheckService>();
             }
@@ -99,7 +115,7 @@ namespace EPR.Payment.Portal.UnitTests.Helpers
         public void AddPortalDependencies_WithMissingUrlConfiguration_ThrowsInvalidOperationException()
         {
             // Arrange
-            var configurationData = new Dictionary<string, string>
+            Dictionary<string, string> configurationData = new Dictionary<string, string>
             {
                 { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.Url)}", null! },
                 { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.EndPointName)}", "payment" },
@@ -107,7 +123,7 @@ namespace EPR.Payment.Portal.UnitTests.Helpers
                 { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.DownstreamScope)}", "scope_value" } // Add DownstreamScope here
             };
 
-            var configurationBuilder = new ConfigurationBuilder()
+            IConfigurationRoot configurationBuilder = new ConfigurationBuilder()
                 .AddInMemoryCollection(configurationData!)
                 .Build();
 
@@ -122,7 +138,7 @@ namespace EPR.Payment.Portal.UnitTests.Helpers
         public void AddPortalDependencies_WithMissingEndPointNameConfiguration_ThrowsInvalidOperationException()
         {
             // Arrange
-            var configurationData = new Dictionary<string, string>
+            Dictionary<string, string> configurationData = new Dictionary<string, string>
             {
                 { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.Url)}", "https://payment.facade" },
                 { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.EndPointName)}", null! },
@@ -130,7 +146,7 @@ namespace EPR.Payment.Portal.UnitTests.Helpers
                 { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.DownstreamScope)}", "scope_value" } // Add DownstreamScope here
             };
 
-            var configurationBuilder = new ConfigurationBuilder()
+            IConfigurationRoot configurationBuilder = new ConfigurationBuilder()
                 .AddInMemoryCollection(configurationData!)
                 .Build();
 
@@ -145,7 +161,7 @@ namespace EPR.Payment.Portal.UnitTests.Helpers
         public void AddPortalDependencies_WithMissingDownstreamScopeConfiguration_ThrowsInvalidOperationException()
         {
             // Arrange
-            var configurationData = new Dictionary<string, string>
+            Dictionary<string, string> configurationData = new Dictionary<string, string>
             {
                 { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.Url)}", "https://payment.facade" },
                 { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.EndPointName)}", "payment" },
@@ -153,7 +169,7 @@ namespace EPR.Payment.Portal.UnitTests.Helpers
                 { $"{FacadeConfiguration.SectionName}:{nameof(FacadeConfiguration.FacadeService)}:{nameof(FacadeService.DownstreamScope)}", null! } // DownstreamScope missing
             };
 
-            var configurationBuilder = new ConfigurationBuilder()
+            IConfigurationRoot configurationBuilder = new ConfigurationBuilder()
                 .AddInMemoryCollection(configurationData!)
                 .Build();
 
