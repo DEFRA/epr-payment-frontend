@@ -13,5 +13,6 @@ namespace EPR.Payment.Portal.Common.Models
         public int? Amount { get; set; }
         public string? Email { get; set; }
         public string? Description { get; set; }
+        public string RequestorType { get; set; } = default!;
     }
 }
