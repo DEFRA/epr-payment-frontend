@@ -8,17 +8,23 @@ using EPR.Payment.Portal.Services.Interfaces;
 
 namespace EPR.Payment.Portal.Services
 {
-    public class PaymentsService(
-        IMapper mapper,
-        IHttpPaymentFacade httpPaymentFacade,
-        IHttpPaymentFacadeV2 httpPaymentFacadeV2,
-        ILogger<PaymentsService> logger)
-        : IPaymentsService
+    public class PaymentsService : IPaymentsService
     {
-        private readonly IHttpPaymentFacade _httpPaymentFacade = httpPaymentFacade ?? throw new ArgumentNullException(nameof(httpPaymentFacade));
-        private readonly IHttpPaymentFacadeV2 _httpPaymentFacadeV2 = httpPaymentFacadeV2 ?? throw new ArgumentNullException(nameof(httpPaymentFacadeV2));
-        private readonly ILogger<PaymentsService> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        private readonly IHttpPaymentFacade _httpPaymentFacade;
+        private readonly IHttpPaymentFacadeV2 _httpPaymentFacadeV2;
+        private readonly ILogger<PaymentsService> _logger;
+        private readonly IMapper _mapper;
+
+        public PaymentsService(IMapper mapper,
+            IHttpPaymentFacade httpPaymentFacade,
+            IHttpPaymentFacadeV2 httpPaymentFacadeV2,
+            ILogger<PaymentsService> logger)
+        {
+            _httpPaymentFacade = httpPaymentFacade ?? throw new ArgumentNullException(nameof(httpPaymentFacade));
+            _httpPaymentFacadeV2 = httpPaymentFacadeV2 ?? throw new ArgumentNullException(nameof(httpPaymentFacadeV2));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        }
 
         public async Task<CompletePaymentViewModel> CompletePaymentAsync(Guid externalPaymentId, CancellationToken cancellationToken)
         {
@@ -48,7 +54,7 @@ namespace EPR.Payment.Portal.Services
         {
             try
             {
-                if (request?.RequestorType == null)
+                if (string.IsNullOrWhiteSpace(request?.RequestorType) || string.Equals(request.RequestorType, "NA", StringComparison.OrdinalIgnoreCase))
                 {
                     return await _httpPaymentFacade.InitiatePaymentAsync(request, cancellationToken);
                 }

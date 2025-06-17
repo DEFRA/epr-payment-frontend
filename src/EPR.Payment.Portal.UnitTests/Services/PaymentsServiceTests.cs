@@ -19,6 +19,62 @@ namespace EPR.Payment.Portal.UnitTests.Services
     public class PaymentsServiceTests
     {
         [TestMethod, AutoMoqData]
+        public void Constructor_WithoutMapper_ShouldThrowArgumentNullException(
+            IHttpPaymentFacade httpPaymentFacade,
+            IHttpPaymentFacadeV2 httpPaymentFacadeV2,
+            ILogger<PaymentsService> logger)
+        {
+            // Arrange & Act
+            var act = () => new PaymentsService(null, httpPaymentFacade, httpPaymentFacadeV2, logger);
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>()
+                .WithMessage("Value cannot be null. (Parameter 'mapper')");
+        }
+
+        [TestMethod, AutoMoqData]
+        public void Constructor_WithoutHttpPaymentFacade_ShouldThrowArgumentNullException(
+            IMapper mapper,
+            IHttpPaymentFacadeV2 httpPaymentFacadeV2,
+            ILogger<PaymentsService> logger)
+        {
+            // Arrange & Act
+            var act = () => new PaymentsService(mapper, null, httpPaymentFacadeV2, logger);
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>()
+                .WithMessage("Value cannot be null. (Parameter 'httpPaymentFacade')");
+        }
+
+        [TestMethod, AutoMoqData]
+        public void Constructor_WithoutHttpPaymentFacadeV2_ShouldThrowArgumentNullException(
+            IMapper mapper,
+            IHttpPaymentFacade httpPaymentFacade,
+            ILogger<PaymentsService> logger)
+        {
+            // Arrange & Act
+            var act = () => new PaymentsService(mapper, httpPaymentFacade, null, logger);
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>()
+                .WithMessage("Value cannot be null. (Parameter 'httpPaymentFacadeV2')");
+        }
+
+        [TestMethod, AutoMoqData]
+        public void Constructor_WithoutLogger_ShouldThrowArgumentNullException(
+            IMapper mapper,
+            IHttpPaymentFacade httpPaymentFacade,
+            IHttpPaymentFacadeV2 httpPaymentFacadeV2)
+        {
+            // Arrange & Act
+            var act = () => new PaymentsService(mapper, httpPaymentFacade, httpPaymentFacadeV2, null);
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>()
+                .WithMessage("Value cannot be null. (Parameter 'logger')");
+        }
+
+        [TestMethod, AutoMoqData]
         public async Task CompletePaymentAsync_WhenResponseIsValid_ShouldReturnMappedViewModel(
             [Frozen] Mock<IMapper> mapperMock,
             [Frozen] Mock<IHttpPaymentFacade> httpPaymentFacadeMock,
@@ -140,7 +196,44 @@ namespace EPR.Payment.Portal.UnitTests.Services
         }
 
         [TestMethod, AutoMoqData]
-        public async Task InitiatePaymentAsync_WhenRequestIsValidWithRequestorType_ShouldReturnResponseContentFromV2Facade(
+        public async Task InitiatePaymentAsync_WhenRequestIsValidWithNARequestorType_ShouldReturnResponseContentFromV1Facade(
+            [Frozen] Mock<IMapper> mapperMock,
+            [Frozen] Mock<IHttpPaymentFacade> httpPaymentFacadeMock,
+            [Frozen] Mock<IHttpPaymentFacadeV2> httpPaymentFacadeV2Mock,
+            [Frozen] TestLogger<PaymentsService> testLogger,
+            [Greedy] PaymentsService paymentsService,
+            PaymentRequestDto paymentRequestDto,
+            string responseContent)
+        {
+            // Arrange
+            paymentRequestDto.RequestorType = "NA";
+
+            httpPaymentFacadeMock
+                .Setup(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(responseContent);
+
+            httpPaymentFacadeV2Mock
+                .Setup(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()));
+
+            // Act
+            var result = await paymentsService.InitiatePaymentAsync(paymentRequestDto, CancellationToken.None);
+
+            // Assert
+            using (new AssertionScope())
+            {
+                result.Should().Be(responseContent);
+
+                httpPaymentFacadeMock
+                    .Verify(facade => facade.InitiatePaymentAsync(It.Is<PaymentRequestDto>(x => x == paymentRequestDto), It.IsAny<CancellationToken>()), Times.Once);
+
+                httpPaymentFacadeV2Mock
+                    .Verify(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()), Times.Never);
+
+            }
+        }
+
+        [TestMethod, AutoMoqData]
+        public async Task InitiatePaymentAsync_WhenRequestIsValidWithValidRequestorType_ShouldReturnResponseContentFromV2Facade(
                 [Frozen] Mock<IMapper> mapperMock,
                 [Frozen] Mock<IHttpPaymentFacade> httpPaymentFacadeMock,
                 [Frozen] Mock<IHttpPaymentFacadeV2> httpPaymentFacadeV2Mock,
