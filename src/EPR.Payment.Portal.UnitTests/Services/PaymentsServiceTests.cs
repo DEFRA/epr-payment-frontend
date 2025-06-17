@@ -19,52 +19,105 @@ namespace EPR.Payment.Portal.UnitTests.Services
     public class PaymentsServiceTests
     {
         [TestMethod, AutoMoqData]
-        public async Task CompletePaymentAsync_WhenResponseIsValid_ShouldReturnMappedViewModel(
-            [Frozen] Mock<IMapper> _mapperMock,
-            [Frozen] Mock<IHttpPaymentFacade> _httpPaymentFacadeMock,
-            [Frozen] Mock<ILogger<PaymentsService>> _loggerMock,
-            [Frozen] PaymentsService _paymentsService,
-            [Frozen] Guid _externalPaymentId,
-            [Frozen] CompletePaymentResponseDto _completePaymentResponseDto,
-            [Frozen] CompletePaymentViewModel _completePaymentViewModel)
+        public void Constructor_WithoutMapper_ShouldThrowArgumentNullException(
+            IHttpPaymentFacade httpPaymentFacade,
+            IHttpPaymentFacadeV2 httpPaymentFacadeV2,
+            ILogger<PaymentsService> logger)
         {
-            // Arrange
-            _paymentsService = new PaymentsService(_mapperMock.Object, _httpPaymentFacadeMock.Object, _loggerMock.Object);
-
-            _httpPaymentFacadeMock
-                .Setup(facade => facade.CompletePaymentAsync(_externalPaymentId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_completePaymentResponseDto);
-
-            _mapperMock
-                .Setup(mapper => mapper.Map<CompletePaymentViewModel>(_completePaymentResponseDto))
-                .Returns(_completePaymentViewModel);
-
-            // Act
-            var result = await _paymentsService.CompletePaymentAsync(_externalPaymentId, CancellationToken.None);
+            // Arrange & Act
+            var act = () => new PaymentsService(null, httpPaymentFacade, httpPaymentFacadeV2, logger);
 
             // Assert
-            result.Should().BeEquivalentTo(_completePaymentViewModel);
+            act.Should().Throw<ArgumentNullException>()
+                .WithMessage("Value cannot be null. (Parameter 'mapper')");
+        }
+
+        [TestMethod, AutoMoqData]
+        public void Constructor_WithoutHttpPaymentFacade_ShouldThrowArgumentNullException(
+            IMapper mapper,
+            IHttpPaymentFacadeV2 httpPaymentFacadeV2,
+            ILogger<PaymentsService> logger)
+        {
+            // Arrange & Act
+            var act = () => new PaymentsService(mapper, null, httpPaymentFacadeV2, logger);
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>()
+                .WithMessage("Value cannot be null. (Parameter 'httpPaymentFacade')");
+        }
+
+        [TestMethod, AutoMoqData]
+        public void Constructor_WithoutHttpPaymentFacadeV2_ShouldThrowArgumentNullException(
+            IMapper mapper,
+            IHttpPaymentFacade httpPaymentFacade,
+            ILogger<PaymentsService> logger)
+        {
+            // Arrange & Act
+            var act = () => new PaymentsService(mapper, httpPaymentFacade, null, logger);
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>()
+                .WithMessage("Value cannot be null. (Parameter 'httpPaymentFacadeV2')");
+        }
+
+        [TestMethod, AutoMoqData]
+        public void Constructor_WithoutLogger_ShouldThrowArgumentNullException(
+            IMapper mapper,
+            IHttpPaymentFacade httpPaymentFacade,
+            IHttpPaymentFacadeV2 httpPaymentFacadeV2)
+        {
+            // Arrange & Act
+            var act = () => new PaymentsService(mapper, httpPaymentFacade, httpPaymentFacadeV2, null);
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>()
+                .WithMessage("Value cannot be null. (Parameter 'logger')");
+        }
+
+        [TestMethod, AutoMoqData]
+        public async Task CompletePaymentAsync_WhenResponseIsValid_ShouldReturnMappedViewModel(
+            [Frozen] Mock<IMapper> mapperMock,
+            [Frozen] Mock<IHttpPaymentFacade> httpPaymentFacadeMock,
+            [Frozen] CompletePaymentResponseDto completePaymentResponseDto,
+            [Frozen] CompletePaymentViewModel completePaymentViewModel,
+            [Greedy] PaymentsService paymentsService,
+            Guid externalPaymentId)
+        {
+            // Arrange
+
+            httpPaymentFacadeMock
+                .Setup(facade => facade.CompletePaymentAsync(externalPaymentId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(completePaymentResponseDto);
+
+            mapperMock
+                .Setup(mapper => mapper.Map<CompletePaymentViewModel>(completePaymentResponseDto))
+                .Returns(completePaymentViewModel);
+
+            // Act
+            var result = await paymentsService.CompletePaymentAsync(externalPaymentId, CancellationToken.None);
+
+            // Assert
+            result.Should().BeEquivalentTo(completePaymentViewModel);
         }
 
         [TestMethod, AutoMoqData]
         public async Task CompletePaymentAsync_WhenReferenceIsNull_ShouldThrowServiceException(
-            [Frozen] Mock<IMapper> _mapperMock,
-            [Frozen] Mock<IHttpPaymentFacade> _httpPaymentFacadeMock,
-            [Frozen] PaymentsService _paymentsService,
-            [Frozen] Guid _externalPaymentId,
-            [Frozen] CompletePaymentResponseDto _completePaymentResponseDto,
-            [Frozen] TestLogger<PaymentsService> _testLogger)
+            [Frozen] Mock<IMapper> mapperMock,
+            [Frozen] Mock<IHttpPaymentFacade> httpPaymentFacadeMock,
+            [Frozen] CompletePaymentResponseDto completePaymentResponseDto,
+            [Frozen(Matching.ImplementedInterfaces)] TestLogger<PaymentsService> testLogger,
+            [Frozen] PaymentsService paymentsService,
+            Guid externalPaymentId)
         {
             // Arrange
-            _paymentsService = new PaymentsService(_mapperMock.Object, _httpPaymentFacadeMock.Object, _testLogger);
-            _completePaymentResponseDto.Reference = null;
+            completePaymentResponseDto.Reference = null;
 
-            _httpPaymentFacadeMock
-                .Setup(facade => facade.CompletePaymentAsync(_externalPaymentId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_completePaymentResponseDto);
+            httpPaymentFacadeMock
+                .Setup(facade => facade.CompletePaymentAsync(externalPaymentId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(completePaymentResponseDto);
 
             // Act
-            Func<Task> action = async () => await _paymentsService.CompletePaymentAsync(_externalPaymentId, CancellationToken.None);
+            Func<Task> action = async () => await paymentsService.CompletePaymentAsync(externalPaymentId, CancellationToken.None);
 
             // Assert
             using (new AssertionScope())
@@ -72,27 +125,26 @@ namespace EPR.Payment.Portal.UnitTests.Services
                 await action.Should().ThrowAsync<ServiceException>()
                 .WithMessage(ExceptionMessages.PaymentDataNotFound);
 
-                _testLogger.LogEntries.Should().ContainSingle()
+                testLogger.LogEntries.Should().ContainSingle()
                                 .Which.Should().BeEquivalentTo((LogLevel.Error, ExceptionMessages.PaymentDataNotFound));
             }
         }
 
         [TestMethod, AutoMoqData]
         public async Task CompletePaymentAsync_WhenExceptionThrown_ShouldLogErrorAndThrowServiceException(
-            [Frozen] Mock<IMapper> _mapperMock,
-            [Frozen] Mock<IHttpPaymentFacade> _httpPaymentFacadeMock,
-            [Frozen] PaymentsService _paymentsService,
-            [Frozen] Guid _externalPaymentId,
-            [Frozen] TestLogger<PaymentsService> _testLogger)
+            [Frozen] Mock<IMapper> mapperMock,
+            [Frozen] Mock<IHttpPaymentFacade> httpPaymentFacadeMock,
+            [Frozen(Matching.ImplementedInterfaces)] TestLogger<PaymentsService> testLogger,
+            [Greedy] PaymentsService paymentsService,
+            Guid externalPaymentId)
         {
             // Arrange
-            _paymentsService = new PaymentsService(_mapperMock.Object, _httpPaymentFacadeMock.Object, _testLogger);
-            _httpPaymentFacadeMock
-                .Setup(facade => facade.CompletePaymentAsync(_externalPaymentId, It.IsAny<CancellationToken>()))
+            httpPaymentFacadeMock
+                .Setup(facade => facade.CompletePaymentAsync(externalPaymentId, It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new Exception("Test Exception"));
 
             // Act
-            Func<Task> action = async () => await _paymentsService.CompletePaymentAsync(_externalPaymentId, CancellationToken.None);
+            Func<Task> action = async () => await paymentsService.CompletePaymentAsync(externalPaymentId, CancellationToken.None);
 
             // Assert
             using(new AssertionScope())
@@ -100,52 +152,144 @@ namespace EPR.Payment.Portal.UnitTests.Services
                 await action.Should().ThrowAsync<ServiceException>()
                     .WithMessage(ExceptionMessages.ErrorRetrievingCompletePayment);
 
-                _testLogger.LogEntries.Should().ContainSingle()
+                testLogger.LogEntries.Should().ContainSingle()
                                 .Which.Should().BeEquivalentTo((LogLevel.Error, ExceptionMessages.ErrorRetrievingCompletePayment));
             }
 
         }
 
         [TestMethod,AutoMoqData]
-        public async Task InitiatePaymentAsync_WhenRequestIsValid_ShouldReturnResponseContent(
-            [Frozen] Mock<IMapper> _mapperMock,
-            [Frozen] Mock<IHttpPaymentFacade> _httpPaymentFacadeMock,
-            [Frozen] PaymentsService _paymentsService,
-            [Frozen] TestLogger<PaymentsService> _testLogger,
-            [Frozen] PaymentRequestDto _paymentRequestDto,
-            [Frozen] string _responseContent)
+        public async Task InitiatePaymentAsync_WhenRequestIsValidWithoutRequestorType_ShouldReturnResponseContentFromV1Facade(
+            [Frozen] Mock<IMapper> mapperMock,
+            [Frozen] Mock<IHttpPaymentFacade> httpPaymentFacadeMock,
+            [Frozen] Mock<IHttpPaymentFacadeV2> httpPaymentFacadeV2Mock,
+            [Frozen] TestLogger<PaymentsService> testLogger,
+            [Greedy] PaymentsService paymentsService,
+            PaymentRequestDto paymentRequestDto,
+            string responseContent)
         {
             // Arrange
-            _paymentsService = new PaymentsService(_mapperMock.Object, _httpPaymentFacadeMock.Object, _testLogger);
+            paymentRequestDto.RequestorType = null; 
 
-            _httpPaymentFacadeMock
-                .Setup(facade => facade.InitiatePaymentAsync(_paymentRequestDto, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_responseContent);
+            httpPaymentFacadeMock
+                .Setup(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(responseContent);
+
+            httpPaymentFacadeV2Mock
+                .Setup(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()));
 
             // Act
-            var result = await _paymentsService.InitiatePaymentAsync(_paymentRequestDto, CancellationToken.None);
+            var result = await paymentsService.InitiatePaymentAsync(paymentRequestDto, CancellationToken.None);
 
             // Assert
-            result.Should().Be(_responseContent);
+            using (new AssertionScope())
+            {
+                result.Should().Be(responseContent);
+
+                httpPaymentFacadeMock
+                    .Verify(facade => facade.InitiatePaymentAsync(It.Is<PaymentRequestDto>(x => x == paymentRequestDto), It.IsAny<CancellationToken>()), Times.Once);
+
+                httpPaymentFacadeV2Mock
+                    .Verify(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()), Times.Never);
+
+            }
         }
 
         [TestMethod, AutoMoqData]
-        public async Task InitiatePaymentAsync_WhenExceptionThrown_ShouldLogErrorAndThrowServiceException(
-            [Frozen] Mock<IMapper> _mapperMock,
-            [Frozen] Mock<IHttpPaymentFacade> _httpPaymentFacadeMock,
-            [Frozen] PaymentsService _paymentsService,
-            [Frozen] TestLogger<PaymentsService> _testLogger,
-            [Frozen] PaymentRequestDto _paymentRequestDto,
-            [Frozen] string _responseContent)
+        public async Task InitiatePaymentAsync_WhenRequestIsValidWithNARequestorType_ShouldReturnResponseContentFromV1Facade(
+            [Frozen] Mock<IMapper> mapperMock,
+            [Frozen] Mock<IHttpPaymentFacade> httpPaymentFacadeMock,
+            [Frozen] Mock<IHttpPaymentFacadeV2> httpPaymentFacadeV2Mock,
+            [Frozen] TestLogger<PaymentsService> testLogger,
+            [Greedy] PaymentsService paymentsService,
+            PaymentRequestDto paymentRequestDto,
+            string responseContent)
         {
             // Arrange
-            _paymentsService = new PaymentsService(_mapperMock.Object, _httpPaymentFacadeMock.Object, _testLogger);
-            _httpPaymentFacadeMock
-                .Setup(facade => facade.InitiatePaymentAsync(_paymentRequestDto, It.IsAny<CancellationToken>()))
-                .ThrowsAsync(new Exception("Test Exception"));
+            paymentRequestDto.RequestorType = "NA";
+
+            httpPaymentFacadeMock
+                .Setup(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(responseContent);
+
+            httpPaymentFacadeV2Mock
+                .Setup(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()));
 
             // Act
-            Func<Task> action = async () => await _paymentsService.InitiatePaymentAsync(_paymentRequestDto, CancellationToken.None);
+            var result = await paymentsService.InitiatePaymentAsync(paymentRequestDto, CancellationToken.None);
+
+            // Assert
+            using (new AssertionScope())
+            {
+                result.Should().Be(responseContent);
+
+                httpPaymentFacadeMock
+                    .Verify(facade => facade.InitiatePaymentAsync(It.Is<PaymentRequestDto>(x => x == paymentRequestDto), It.IsAny<CancellationToken>()), Times.Once);
+
+                httpPaymentFacadeV2Mock
+                    .Verify(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()), Times.Never);
+
+            }
+        }
+
+        [TestMethod, AutoMoqData]
+        public async Task InitiatePaymentAsync_WhenRequestIsValidWithValidRequestorType_ShouldReturnResponseContentFromV2Facade(
+                [Frozen] Mock<IMapper> mapperMock,
+                [Frozen] Mock<IHttpPaymentFacade> httpPaymentFacadeMock,
+                [Frozen] Mock<IHttpPaymentFacadeV2> httpPaymentFacadeV2Mock,
+                [Frozen] TestLogger<PaymentsService> testLogger,
+                [Greedy] PaymentsService paymentsService,
+                PaymentRequestDto paymentRequestDto,
+                string responseContent)
+        {
+            // Arrange
+            paymentRequestDto.RequestorType = "Producers";
+
+            httpPaymentFacadeMock
+                .Setup(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()));
+
+            httpPaymentFacadeV2Mock
+                .Setup(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(responseContent);
+
+            // Act
+            var result = await paymentsService.InitiatePaymentAsync(paymentRequestDto, CancellationToken.None);
+
+            // Assert
+            using (new AssertionScope())
+            {
+                result.Should().Be(responseContent);
+
+                httpPaymentFacadeMock
+                    .Verify(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()), Times.Never);
+
+                httpPaymentFacadeV2Mock
+                    .Verify(facade => facade.InitiatePaymentAsync(It.Is<PaymentRequestDto>(x => x == paymentRequestDto), It.IsAny<CancellationToken>()), Times.Once);
+            }
+        }
+
+        [TestMethod, AutoMoqData]
+        public async Task InitiatePaymentAsync_WhenExceptionThrownFromV1Facade_ShouldLogErrorAndThrowServiceException(
+            [Frozen] Mock<IMapper> mapperMock,
+            [Frozen] Mock<IHttpPaymentFacade> httpPaymentFacadeMock,
+            [Frozen] Mock<IHttpPaymentFacadeV2> httpPaymentFacadeV2Mock,
+            [Frozen(Matching.ImplementedInterfaces)] TestLogger<PaymentsService> testLogger,
+            [Greedy] PaymentsService paymentsService,
+            PaymentRequestDto paymentRequestDto,
+            string responseContent)
+        {
+            // Arrange
+            paymentRequestDto.RequestorType = null;
+
+            httpPaymentFacadeMock
+                .Setup(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new Exception("Test Exception"));
+
+            httpPaymentFacadeV2Mock
+                .Setup(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()));
+
+            // Act
+            Func<Task> action = async () => await paymentsService.InitiatePaymentAsync(paymentRequestDto, CancellationToken.None);
 
             // Assert
             using (new AssertionScope())
@@ -153,8 +297,55 @@ namespace EPR.Payment.Portal.UnitTests.Services
                 await action.Should().ThrowAsync<ServiceException>()
                 .WithMessage(ExceptionMessages.ErrorInitiatePayment);
 
-                _testLogger.LogEntries.Should().ContainSingle()
-                                .Which.Should().BeEquivalentTo((LogLevel.Error, ExceptionMessages.ErrorInitiatePayment));
+                testLogger.LogEntries.Should().ContainSingle()
+                    .Which.Should().BeEquivalentTo((LogLevel.Error, ExceptionMessages.ErrorInitiatePayment));
+
+                httpPaymentFacadeMock
+                    .Verify(facade => facade.InitiatePaymentAsync(It.Is<PaymentRequestDto>(x => x == paymentRequestDto), It.IsAny<CancellationToken>()), Times.Once);
+
+                httpPaymentFacadeV2Mock
+                    .Verify(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()), Times.Never);
+            }
+
+        }
+
+        [TestMethod, AutoMoqData]
+        public async Task InitiatePaymentAsync_WhenExceptionThrownFromV2Facade_ShouldLogErrorAndThrowServiceException(
+            [Frozen] Mock<IMapper> mapperMock,
+            [Frozen] Mock<IHttpPaymentFacade> httpPaymentFacadeMock,
+            [Frozen] Mock<IHttpPaymentFacadeV2> httpPaymentFacadeV2Mock,
+            [Frozen(Matching.ImplementedInterfaces)] TestLogger<PaymentsService> testLogger,
+            [Greedy] PaymentsService paymentsService,
+            PaymentRequestDto paymentRequestDto,
+            string responseContent)
+        {
+            // Arrange
+            paymentRequestDto.RequestorType = "Exporters";
+
+            httpPaymentFacadeMock
+                .Setup(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()));
+
+            httpPaymentFacadeV2Mock
+                .Setup(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new Exception("Test Exception"));
+
+            // Act
+            Func<Task> action = async () => await paymentsService.InitiatePaymentAsync(paymentRequestDto, CancellationToken.None);
+
+            // Assert
+            using (new AssertionScope())
+            {
+                await action.Should().ThrowAsync<ServiceException>()
+                .WithMessage(ExceptionMessages.ErrorInitiatePayment);
+
+                testLogger.LogEntries.Should().ContainSingle()
+                    .Which.Should().BeEquivalentTo((LogLevel.Error, ExceptionMessages.ErrorInitiatePayment));
+
+                httpPaymentFacadeMock
+                    .Verify(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()), Times.Never);
+
+                httpPaymentFacadeV2Mock
+                    .Verify(facade => facade.InitiatePaymentAsync(It.Is<PaymentRequestDto>(x => x == paymentRequestDto), It.IsAny<CancellationToken>()), Times.Once);
             }
         }
     }

@@ -13,5 +13,6 @@ namespace EPR.Payment.Portal.Common.Dtos.Response
         public decimal? Amount { get; set; }
         public string? Email { get; set; }
         public string? Description { get; set; }
+        public string RequestorType { get; set; } = default!;
     }
 }

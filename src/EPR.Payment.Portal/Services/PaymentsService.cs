@@ -11,15 +11,21 @@ namespace EPR.Payment.Portal.Services
     public class PaymentsService : IPaymentsService
     {
         private readonly IHttpPaymentFacade _httpPaymentFacade;
+        private readonly IHttpPaymentFacadeV2 _httpPaymentFacadeV2;
         private readonly ILogger<PaymentsService> _logger;
         private readonly IMapper _mapper;
 
-        public PaymentsService(IMapper mapper, IHttpPaymentFacade httpPaymentFacade, ILogger<PaymentsService> logger)
+        public PaymentsService(IMapper mapper,
+            IHttpPaymentFacade httpPaymentFacade,
+            IHttpPaymentFacadeV2 httpPaymentFacadeV2,
+            ILogger<PaymentsService> logger)
         {
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _httpPaymentFacade = httpPaymentFacade ?? throw new ArgumentNullException(nameof(httpPaymentFacade));
+            _httpPaymentFacadeV2 = httpPaymentFacadeV2 ?? throw new ArgumentNullException(nameof(httpPaymentFacadeV2));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
+
         public async Task<CompletePaymentViewModel> CompletePaymentAsync(Guid externalPaymentId, CancellationToken cancellationToken)
         {
             try
@@ -48,7 +54,12 @@ namespace EPR.Payment.Portal.Services
         {
             try
             {
-                return await _httpPaymentFacade.InitiatePaymentAsync(request, cancellationToken);
+                if (string.IsNullOrWhiteSpace(request?.RequestorType) || string.Equals(request.RequestorType, "NA", StringComparison.OrdinalIgnoreCase))
+                {
+                    return await _httpPaymentFacade.InitiatePaymentAsync(request, cancellationToken);
+                }
+
+                return await _httpPaymentFacadeV2.InitiatePaymentAsync(request, cancellationToken);
             }
             catch (Exception ex)
             {
