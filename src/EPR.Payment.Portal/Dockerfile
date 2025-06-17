@@ -1,5 +1,5 @@
 # Base stage with .NET dependencies
-FROM defradigital/dotnetcore-development:dotnet8.0 AS base
+FROM defradigital/dotnetcore-development:1.9.6-dotnet8.0 AS base
  
 USER root
 ARG PORT=8080
@@ -10,7 +10,7 @@ RUN apk update && apk --no-cache add icu-libs
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=0
  
 # Build stage with .NET and Node.js/Gulp installation
-FROM defradigital/dotnetcore-development:dotnet8.0 AS build
+FROM defradigital/dotnetcore-development:1.9.6-dotnet8.0 AS build
 USER root
 WORKDIR /src
 COPY ["EPR.Payment.Portal/EPR.Payment.Portal.csproj", "EPR.Payment.Portal/"]
