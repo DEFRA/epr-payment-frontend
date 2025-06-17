@@ -48,7 +48,7 @@ namespace EPR.Payment.Portal.Services
         {
             try
             {
-                if (request?.RequestorType == null)
+                if (string.IsNullOrWhiteSpace(request?.RequestorType) || string.Equals(request.RequestorType, "NA", StringComparison.OrdinalIgnoreCase))
                 {
                     return await _httpPaymentFacade.InitiatePaymentAsync(request, cancellationToken);
                 }

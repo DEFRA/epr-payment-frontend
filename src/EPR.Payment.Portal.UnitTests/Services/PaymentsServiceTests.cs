@@ -140,7 +140,44 @@ namespace EPR.Payment.Portal.UnitTests.Services
         }
 
         [TestMethod, AutoMoqData]
-        public async Task InitiatePaymentAsync_WhenRequestIsValidWithRequestorType_ShouldReturnResponseContentFromV2Facade(
+        public async Task InitiatePaymentAsync_WhenRequestIsValidWithNARequestorType_ShouldReturnResponseContentFromV1Facade(
+            [Frozen] Mock<IMapper> mapperMock,
+            [Frozen] Mock<IHttpPaymentFacade> httpPaymentFacadeMock,
+            [Frozen] Mock<IHttpPaymentFacadeV2> httpPaymentFacadeV2Mock,
+            [Frozen] TestLogger<PaymentsService> testLogger,
+            [Greedy] PaymentsService paymentsService,
+            PaymentRequestDto paymentRequestDto,
+            string responseContent)
+        {
+            // Arrange
+            paymentRequestDto.RequestorType = "NA";
+
+            httpPaymentFacadeMock
+                .Setup(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(responseContent);
+
+            httpPaymentFacadeV2Mock
+                .Setup(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()));
+
+            // Act
+            var result = await paymentsService.InitiatePaymentAsync(paymentRequestDto, CancellationToken.None);
+
+            // Assert
+            using (new AssertionScope())
+            {
+                result.Should().Be(responseContent);
+
+                httpPaymentFacadeMock
+                    .Verify(facade => facade.InitiatePaymentAsync(It.Is<PaymentRequestDto>(x => x == paymentRequestDto), It.IsAny<CancellationToken>()), Times.Once);
+
+                httpPaymentFacadeV2Mock
+                    .Verify(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()), Times.Never);
+
+            }
+        }
+
+        [TestMethod, AutoMoqData]
+        public async Task InitiatePaymentAsync_WhenRequestIsValidWithValidRequestorType_ShouldReturnResponseContentFromV2Facade(
                 [Frozen] Mock<IMapper> mapperMock,
                 [Frozen] Mock<IHttpPaymentFacade> httpPaymentFacadeMock,
                 [Frozen] Mock<IHttpPaymentFacadeV2> httpPaymentFacadeV2Mock,
