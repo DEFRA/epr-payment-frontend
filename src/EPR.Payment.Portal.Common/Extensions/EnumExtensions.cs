@@ -9,6 +9,7 @@ namespace EPR.Payment.Portal.Common.Extensions
         {
             var enumFieldName = enumValue.ToString();
             var field = typeof(T).GetField(enumFieldName);
+
             if (field is null)
             {
                 return "No description";
