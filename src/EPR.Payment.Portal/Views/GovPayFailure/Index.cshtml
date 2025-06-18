@@ -2,30 +2,17 @@
 @using EPR.Payment.Portal.Common.Enums
 @using EPR.Payment.Portal.Common.Models
 @using Microsoft.AspNetCore.Mvc.Routing;
-@using EPR.Payment.Portal.Common.Enums;
-@using EPR.Payment.Portal.Common.Extensions;
 
 @model CompositeViewModel;
 
-@{
-    var backUrl = "";
-    if (@Model.completePaymentViewModel.RequestorType == RequestorType.Reprocessors.ToString() || @Model.completePaymentViewModel.RequestorType == RequestorType.Exporters.ToString())
-    {
-        var repExpRootUrl = @Model.dashboardConfiguration.RepExpRootUrl.Url;
-        backUrl = repExpRootUrl + @Model.dashboardConfiguration.RepExpBackUrl.Url;
-    }
-    else
-    {
-        var rpdRootUrl = @Model.dashboardConfiguration.RPDRootUrl.Url;
-        backUrl = rpdRootUrl + @Model.dashboardConfiguration.BackUrl.Url;
-    }
+@{   
     ViewData["Title"] = Localizer["payment_unsuccessful"];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <main class="govuk-main-wrapper govuk-!-padding-top-4" id="main-content">
 
-    @if (Model.completePaymentViewModel.RequestorType == PaymentsRequestorTypes.Exporters.GetEnumDescription() || Model.completePaymentViewModel.RequestorType == PaymentsRequestorTypes.Reprocessors.GetEnumDescription())
+    @if (Model.completePaymentViewModel.RequestorType == RequestorType.Exporters.ToString() || Model.completePaymentViewModel.RequestorType == RequestorType.Reprocessors.ToString())
     {
         @await Html.PartialAsync("~/Views/Shared/Partials/GovPayFailure/_FailureDetailsReprocessorExporterPartial.cshtml", Model);
     }
