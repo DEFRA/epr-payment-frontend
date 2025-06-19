@@ -2,7 +2,7 @@
 {
     public enum RequestorType
     {
-        Producers,        
+        Producers,
         ComplianceSchemes,
         Reprocessors,
         Exporters
