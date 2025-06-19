@@ -121,13 +121,13 @@
     <value>Y taliad yn aflwyddiannus</value>
   </data>
   <data name="payment_not_completed" xml:space="preserve">
-    <value>Mae eich taliad heb gael ei gwblhau a does dim arian wedi'i gymryd o'ch cyfrif banc.</value>
+    <value>Chafodd eich taliad mo'i gwblhau a does dim arian wedi'i gymryd o'ch cyfrif.</value>
   </data>
   <data name="try_online_payment_again" xml:space="preserve">
     <value>Rhoi cynnig arall ar eich taliad ar-lein</value>
   </data>
   <data name="reference_number_is" xml:space="preserve">
-    <value>Eich cyfeirnod cais yw</value>
+    <value>Cyfeirnod eich cais yw</value>
   </data>
   <data name="go_to_homepage" xml:space="preserve">
     <value>Go to home page</value>
