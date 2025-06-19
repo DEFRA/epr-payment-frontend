@@ -28,7 +28,7 @@
 }
 
 <main class="govuk-main-wrapper govuk-!-padding-top-8" id="main-content">
-    @if (Model.completePaymentViewModel.RequestorType == PaymentsRequestorTypes.Exporters.GetEnumDescription() || Model.completePaymentViewModel.RequestorType == PaymentsRequestorTypes.Reprocessors.GetEnumDescription())
+    @if (Model.completePaymentViewModel.RequestorType == RequestorType.Exporters.GetEnumDescription() || Model.completePaymentViewModel.RequestorType == PaymentsRequestorTypes.Reprocessors.GetEnumDescription())
     {
         @await Html.PartialAsync("~/Views/Shared/Partials/GovPaySuccess/_SuccessDetailsReprocessorExporterPartial.cshtml", Model);
     }
