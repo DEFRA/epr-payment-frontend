@@ -120,8 +120,11 @@
   <data name="accreditation_fee_paid" xml:space="preserve">
     <value>Rydych chi wedi talu'r tâl am achrediad drwy ddefnyddio GOV.UK Pay.</value>
   </data>
-  <data name="application_reference_number" xml:space="preserve">
+  <data name="application_reference_label" xml:space="preserve">
     <value>Cyfeirnod eich cais yw</value>
+  </data>
+  <data name="application_review_information" xml:space="preserve">
+    <value>Bydd y rheoleiddiwr yn adolygu'r cais ac yn cysylltu â'r person a gyflwynodd y cais.</value>
   </data>
   <data name="email_confirmation_sent" xml:space="preserve">
     <value>Rydyn ni wedi anfon neges ebost gadarnhau at</value>
@@ -135,16 +138,10 @@
   <data name="payment_successful" xml:space="preserve">
     <value>Y taliad yn llwyddiannus</value>
   </data>
-  <data name="the_regulator_will_review" xml:space="preserve">
-    <value>Bydd y rheoleiddiwr yn adolygu'r cais ac yn cysylltu â'r person a gyflwynodd y cais.</value>
+  <data name="registration_fee_paid" xml:space="preserve">
+    <value>Rydych chi wedi talu'r tâl am wneud cais drwy ddefnyddio GOV.UK Pay.</value>
   </data>
   <data name="what_happens_next" xml:space="preserve">
     <value>Beth sy'n digwydd nesaf</value>
-  </data>
-  <data name="you_have_paid_the_accreditation_charge" xml:space="preserve">
-    <value>Rydych chi wedi talu'r tâl am achrediad drwy ddefnyddio GOV.UK Pay.</value>
-  </data>
-  <data name="you_have_paid_the_application_charge" xml:space="preserve">
-    <value>Rydych chi wedi talu'r tâl am wneud cais drwy ddefnyddio GOV.UK Pay.</value>
   </data>
 </root>
