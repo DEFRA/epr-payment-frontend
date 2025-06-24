@@ -133,7 +133,7 @@
     <value>Payment successful</value>
   </data>
   <data name="the_regulator_will_review" xml:space="preserve">
-    <value>The regulator will review the application and contact the person who submitted it.</value>
+    <value>The regulator has up to 12 weeks to review the application. They will contact the person identified in the application if they need more information.</value>
   </data>
   <data name="what_happens_next" xml:space="preserve">
     <value>What happens next</value>
@@ -142,6 +142,6 @@
     <value>You’ve paid the accreditation charge using GOV.UK Pay.</value>
   </data>
   <data name="you_have_paid_the_application_charge" xml:space="preserve">
-    <value>You’ve paid the application charge using GOV.UK Pay.</value>
+    <value>You’ve paid the registration application charge using GOV.UK Pay.</value>
   </data>
 </root>
