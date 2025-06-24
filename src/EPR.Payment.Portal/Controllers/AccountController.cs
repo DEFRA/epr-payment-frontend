@@ -9,23 +9,32 @@ using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Microsoft.Identity.Web;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using System.Text.Unicode;
-using System.Web;
 
 /// <summary>
 /// Controller used in web apps to manage accounts.
 /// </summary>
 [Route("[controller]/[action]")]
-public class AccountController(IOptions<DashboardConfiguration> dashboardConfiguration, IFeatureManager featureManager) : Controller
+public class AccountController : Controller
 {
-    private readonly string _rpdRootUrl = dashboardConfiguration.Value?.RPDRootUrl?.Url 
-        ?? throw new ArgumentException("dashboardConfiguration.Value.RPDRootUrl", nameof(dashboardConfiguration));
+    private readonly string _rpdRootUrl;
+    private readonly string _signOutUrl;
+    private readonly IFeatureManager _featureManager;
 
-    private readonly string _signOutUrl = dashboardConfiguration.Value.SignOutUrl?.Url 
-        ?? throw new ArgumentException("dashboardConfiguration.Value.SignOutUrl", nameof(dashboardConfiguration));
+    public AccountController(IOptions<DashboardConfiguration> dashboardConfiguration, IFeatureManager featureManager)
+    {
+        if (dashboardConfiguration?.Value == null)
+        {
+            throw new ArgumentNullException(nameof(dashboardConfiguration));
+        }
 
-    private readonly IFeatureManager _featureManager = featureManager ?? throw new ArgumentNullException(nameof(featureManager));
+        _rpdRootUrl = dashboardConfiguration.Value.RPDRootUrl?.Url
+            ?? throw new ArgumentException("dashboardConfiguration.Value.RPDRootUrl", nameof(dashboardConfiguration));
+
+        _signOutUrl = dashboardConfiguration.Value.SignOutUrl?.Url
+            ?? throw new ArgumentException("dashboardConfiguration.Value.SignOutUrl", nameof(dashboardConfiguration));
+
+        _featureManager = featureManager ?? throw new ArgumentNullException(nameof(featureManager));
+    }
 
     /// <summary>
     /// Handles the user sign-out.

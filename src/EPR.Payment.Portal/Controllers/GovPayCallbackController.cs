@@ -3,19 +3,28 @@ using EPR.Payment.Portal.Common.Enums;
 using EPR.Payment.Portal.Infrastructure;
 using EPR.Payment.Portal.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace EPR.Payment.Portal.Controllers
 {
     [Route("GovPayCallback", Name = RouteNames.GovPay.GovPayCallback)]
-    public class GovPayCallbackController(IPaymentsService paymentsService, ILogger<GovPayCallbackController> logger) : Controller
+    public class GovPayCallbackController : Controller
     {
-        private readonly IPaymentsService _paymentsService = paymentsService ?? throw new ArgumentNullException(nameof(paymentsService));
-        private readonly ILogger<GovPayCallbackController> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        private readonly IPaymentsService _paymentsService;
+        private readonly ILogger<GovPayCallbackController> _logger;
+
+        public GovPayCallbackController(
+            IPaymentsService paymentsService,
+            ILogger<GovPayCallbackController> logger)
+        {
+            _paymentsService = paymentsService ?? throw new ArgumentNullException(nameof(paymentsService));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
 
         [HttpGet]
         public async Task<IActionResult> Index(Guid id, CancellationToken cancellationToken)
         {
-            
+
 
             if (!ModelState.IsValid || id == Guid.Empty)
             {
@@ -25,7 +34,7 @@ namespace EPR.Payment.Portal.Controllers
 
             try
             {
-                var viewModel = await _paymentsService.CompletePaymentAsync(id, cancellationToken);                
+                var viewModel = await _paymentsService.CompletePaymentAsync(id, cancellationToken);
 
                 var routeName = viewModel.Status switch
                 {

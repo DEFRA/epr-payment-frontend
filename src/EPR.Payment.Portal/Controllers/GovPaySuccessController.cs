@@ -8,10 +8,15 @@ using Microsoft.Extensions.Options;
 namespace EPR.Payment.Portal.Controllers
 {
     [Route("GovPaySuccess", Name = RouteNames.GovPay.PaymentSuccess)]
-    public class GovPaySuccessController(IOptions<DashboardConfiguration> dashboardConfiguration) : Controller
+    public class GovPaySuccessController : Controller
     {
-        private readonly DashboardConfiguration _dashboardConfiguration = dashboardConfiguration?.Value
-            ?? throw new ArgumentNullException(nameof(dashboardConfiguration));
+        private readonly DashboardConfiguration _dashboardConfiguration;
+
+        public GovPaySuccessController(IOptions<DashboardConfiguration> dashboardConfiguration)
+        {
+            _dashboardConfiguration = dashboardConfiguration?.Value
+                ?? throw new ArgumentNullException(nameof(dashboardConfiguration));
+        }
 
         [HttpGet]
         public IActionResult Index(CompletePaymentViewModel? completePaymentResponseViewModel)

@@ -6,10 +6,15 @@ using Microsoft.Extensions.Options;
 namespace EPR.Payment.Portal.Controllers
 {
     [Route("", Name = RouteNames.GovPay.PaymentError)]
-    public class ErrorController(IOptions<DashboardConfiguration> dashboardConfiguration) : Controller
+    public class ErrorController : Controller
     {
-        private readonly DashboardConfiguration _dashboardConfiguration = dashboardConfiguration?.Value
-            ?? throw new ArgumentNullException(nameof(dashboardConfiguration));
+        private readonly DashboardConfiguration _dashboardConfiguration;
+
+        public ErrorController(IOptions<DashboardConfiguration> dashboardConfiguration)
+        {
+            _dashboardConfiguration = dashboardConfiguration?.Value
+                ?? throw new ArgumentNullException(nameof(dashboardConfiguration));
+        }
 
         [HttpGet]
         public IActionResult Index() => View(_dashboardConfiguration);

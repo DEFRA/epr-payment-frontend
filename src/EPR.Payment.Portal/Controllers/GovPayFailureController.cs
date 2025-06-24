@@ -10,21 +10,29 @@ using Microsoft.Extensions.Options;
 namespace EPR.Payment.Portal.Controllers
 {
     [Route("GovPayFailure", Name = RouteNames.GovPay.Paymentfailure)]
-    public class GovPayFailureController(
-    IPaymentsService paymentsService,
-    IOptions<DashboardConfiguration> dashboardConfiguration,
-    ILogger<GovPayFailureController> logger) : Controller
+    public class GovPayFailureController : Controller
     {
-        private readonly IPaymentsService _paymentsService = paymentsService ?? throw new ArgumentNullException(nameof(paymentsService));
-        private readonly DashboardConfiguration _dashboardConfiguration = dashboardConfiguration.Value ?? throw new ArgumentNullException(nameof(dashboardConfiguration));
-        private readonly ILogger _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        private readonly IPaymentsService _paymentsService;
+        private readonly DashboardConfiguration _dashboardConfiguration;
+        private readonly ILogger<GovPayFailureController> _logger;
+
+        public GovPayFailureController(
+            IPaymentsService paymentsService,
+            IOptions<DashboardConfiguration> dashboardConfiguration,
+            ILogger<GovPayFailureController> logger)
+        {
+            _paymentsService = paymentsService ?? throw new ArgumentNullException(nameof(paymentsService));
+            _dashboardConfiguration = dashboardConfiguration?.Value ?? throw new ArgumentNullException(nameof(dashboardConfiguration));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
 
         [HttpGet]
         public IActionResult Index(CompletePaymentViewModel? completePaymentResponseViewModel)
         {
             if (!ModelState.IsValid || completePaymentResponseViewModel is null)
             {
-                return RedirectToRoute(RouteNames.GovPay.PaymentError, new { message = ExceptionMessages.ErrorInvalidViewModel });
+                return RedirectToRoute(RouteNames.GovPay.PaymentError,
+                    new { message = ExceptionMessages.ErrorInvalidViewModel });
             }
 
             ViewData["amount"] = completePaymentResponseViewModel.Amount / 100;
@@ -44,7 +52,8 @@ namespace EPR.Payment.Portal.Controllers
             if (!ModelState.IsValid || request is null)
             {
                 _logger.LogError(ExceptionMessages.ErrorInvalidPaymentRequestDto);
-                return RedirectToRoute(RouteNames.GovPay.PaymentError, new { message = ExceptionMessages.ErrorInvalidPaymentRequestDto });
+                return RedirectToRoute(RouteNames.GovPay.PaymentError,
+                    new { message = ExceptionMessages.ErrorInvalidPaymentRequestDto });
             }
 
             try
@@ -55,7 +64,8 @@ namespace EPR.Payment.Portal.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, ExceptionMessages.ErrorInitiatePayment);
-                return RedirectToRoute(RouteNames.GovPay.PaymentError, new { message = ex.Message });
+                return RedirectToRoute(RouteNames.GovPay.PaymentError,
+                    new { message = ex.Message });
             }
         }
     }
