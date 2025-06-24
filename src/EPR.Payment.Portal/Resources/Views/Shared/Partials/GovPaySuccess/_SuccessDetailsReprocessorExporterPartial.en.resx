@@ -117,14 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="accreditation_fee_paid" xml:space="preserve">
-    <value>You’ve paid the accreditation charge using GOV.UK Pay.</value>
-  </data>
-  <data name="application_reference_label" xml:space="preserve">
+  <data name="application_reference_number" xml:space="preserve">
     <value>Your application reference is</value>
-  </data>
-  <data name="application_review_information" xml:space="preserve">
-    <value>The regulator will review the application and contact the person who submitted it.</value>
   </data>
   <data name="email_confirmation_sent" xml:space="preserve">
     <value>We’ve sent a confirmation email to</value>
@@ -138,10 +132,16 @@
   <data name="payment_successful" xml:space="preserve">
     <value>Payment successful</value>
   </data>
-  <data name="registration_fee_paid" xml:space="preserve">
-    <value>You’ve paid the application charge using GOV.UK Pay.</value>
+  <data name="the_regulator_will_review" xml:space="preserve">
+    <value>The regulator will review the application and contact the person who submitted it.</value>
   </data>
   <data name="what_happens_next" xml:space="preserve">
     <value>What happens next</value>
+  </data>
+  <data name="you_have_paid_the_accreditation_charge" xml:space="preserve">
+    <value>You’ve paid the accreditation charge using GOV.UK Pay.</value>
+  </data>
+  <data name="you_have_paid_the_application_charge" xml:space="preserve">
+    <value>You’ve paid the application charge using GOV.UK Pay.</value>
   </data>
 </root>
