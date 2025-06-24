@@ -11,22 +11,26 @@
 <main class="govuk-main-wrapper govuk-!-padding-top-8" id="main-content">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-
-            <h1 class="govuk-heading-xl">@Localizer["payment_successful"]</h1>
-
+            <div class="govuk-panel govuk-panel--confirmation">
+                <h1 class="govuk-panel__title">
+                    @Localizer["payment_successful"]
+                </h1>
+                <div class="govuk-panel__body">
+                    @if (Model.completePaymentViewModel.RequestorType == "Reprocessors")
+                    {
+                        @Localizer["you_have_paid_the_accreditation_charge"]
+                    }
+                    else
+                    {
+                        @Localizer["you_have_paid_the_application_charge"]
+                    }
+                </div>
+            </div>
             <p class="govuk-body">
-                @if (Model.completePaymentViewModel.RequestorType == "Reprocessors")
-                {
-                    @Localizer["you_have_paid_the_accreditation_charge"]
-                }
-                else
-                {
-                    @Localizer["you_have_paid_the_application_charge"]
-                }
-            </p>
-
-            <p class="govuk-body">
-                @Localizer["email_confirmation_sent"] <strong>@Model.completePaymentViewModel.Email</strong><br />
+                @Localizer["email_confirmation_sent"]
+                <a href="mailto:@Model.completePaymentViewModel.Email">
+                    @Model.completePaymentViewModel.Email
+                </a><br/>
                 @Localizer["application_reference_number"] <strong>@Model.completePaymentViewModel.Reference</strong>
             </p>
 
