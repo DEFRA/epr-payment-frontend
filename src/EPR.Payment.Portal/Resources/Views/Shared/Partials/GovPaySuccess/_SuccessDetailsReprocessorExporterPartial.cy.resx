@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="accreditation_fee_paid" xml:space="preserve">
-    <value>Rydych chi wedi talu'r tâl am achrediad drwy ddefnyddio GOV.UK Pay.</value>
-  </data>
   <data name="application_reference_number" xml:space="preserve">
     <value>Cyfeirnod eich cais yw</value>
   </data>
@@ -136,7 +133,7 @@
     <value>Y taliad yn llwyddiannus</value>
   </data>
   <data name="the_regulator_will_review" xml:space="preserve">
-    <value>Bydd y rheoleiddiwr yn adolygu'r cais ac yn cysylltu â'r person a gyflwynodd y cais.</value>
+    <value>Mae gan y rheoleiddiwr hyd at 12 wythnos i adolygu'r cais. Byddan nhw'n cysylltu â'r person sydd wedi'i nodi yn y cais os bydd arnyn nhw angen rhagor o wybodaeth.</value>
   </data>
   <data name="what_happens_next" xml:space="preserve">
     <value>Beth sy'n digwydd nesaf</value>
