@@ -30,7 +30,10 @@
                 @Localizer["email_confirmation_sent"]
                 <a href="mailto:@Model.completePaymentViewModel.Email">
                     @Model.completePaymentViewModel.Email
-                </a><br/>
+                </a>
+            </p>
+            
+            <p class="govuk-body">
                 @Localizer["application_reference_number"] <strong>@Model.completePaymentViewModel.Reference</strong>
             </p>
 
