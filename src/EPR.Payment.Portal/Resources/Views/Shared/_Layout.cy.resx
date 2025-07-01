@@ -205,7 +205,7 @@
     <value>Cliciwch ar y ddolen yma os hoffech chi fynd i'r tudalen Preifatrwydd</value>
   </data>
   <data name="email_descriptive_text" xml:space="preserve">
-    <value>Cliciwch ar y ddolen yma os hoffech chi anfon neges ebost at eprcustomerservice@defra.gov.uk</value>
+    <value>Cliciwch ar y ddolen yma os hoffech chi anfon neges ebost at</value>
   </data>
   <data name="privacy_url" xml:space="preserve">
     <value>https://www.gov.uk/guidance/extended-producer-responsibility-for-packaging-privacy-policy.cy</value>

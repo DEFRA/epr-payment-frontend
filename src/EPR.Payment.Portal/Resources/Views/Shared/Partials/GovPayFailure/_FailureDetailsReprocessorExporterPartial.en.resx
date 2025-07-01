@@ -147,4 +147,7 @@
   <data name="regulator_review_only_after_payment" xml:space="preserve">
     <value>The regulator will only review the application once payment has been made.</value>
   </data>
+  <data name="email_descriptive_text" xml:space="preserve">
+    <value>Click on this link if you wish to send an email to</value>
+  </data>
 </root>
