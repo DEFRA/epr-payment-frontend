@@ -1,0 +1,53 @@
+﻿@using EPR.Payment.Portal.Common.Configuration
+@using EPR.Payment.Portal.Common.Constants
+@using EPR.Payment.Portal.Common.Models
+@using Microsoft.AspNetCore.Mvc.Routing;
+@model CompositeViewModel;
+
+@{
+    var rpdRootUrl = @Model.dashboardConfiguration.RPDRootUrl.Url;
+    var backUrl = rpdRootUrl + @Model.dashboardConfiguration.BackUrl.Url;
+    var registrationTaskList = rpdRootUrl + @Model.dashboardConfiguration.RegistrationTaskList.Url;
+}
+
+<main class="govuk-main-wrapper govuk-!-padding-top-8" id="main-content">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <div class="govuk-panel govuk-panel--confirmation">
+                <h1 class="govuk-panel__title">
+                    @Localizer["payment_successful"]
+                </h1>
+                <div class="govuk-panel__body">
+                    @Localizer[@Model.completePaymentViewModel.Description == PaymentDescription.RegistrationFee ? "registration_fee_paid" : "packaging_fee_paid"]
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <p class="govuk-body">
+                @Localizer["email_confirmation_sent"] <a href="mailto:@Model.completePaymentViewModel.Email" aria-label="@Model.completePaymentViewModel.Email">@Model.completePaymentViewModel.Email</a>
+            </p>
+            <p class="govuk-body">
+                @Localizer[@Model.completePaymentViewModel.Description == PaymentDescription.RegistrationFee ? "application_reference_number" : "packaging_reference_number"]
+                @Model.completePaymentViewModel.Reference
+            </p>
+            <p></p>
+            <h2 class="govuk-heading-s">@Localizer["what_happens_next"]</h2>
+            <p></p>
+            <p class="govuk-body">
+                @Localizer[@Model.completePaymentViewModel.Description == PaymentDescription.RegistrationFee ? "last_step_before_review" : "packaging_last_step"]
+            </p>
+            <div class="govuk-button-group">
+                @if (Model.completePaymentViewModel.Description == PaymentDescription.RegistrationFee)
+                {
+                    <a href=@registrationTaskList class="govuk-button" type="submit" aria-label="@Localizer["submit_registration_application_descriptive_text"]">@Localizer["submit_registration_application"]</a>
+                }
+            </div>
+            <p class="govuk-body">
+                <a href=@backUrl aria-label="@Localizer["return_to_dashboard_descriptive_text"]">@Localizer["return_dashboard"]</a>
+            </p>
+            <p></p>
+        </div>
+    </div>
+</main>

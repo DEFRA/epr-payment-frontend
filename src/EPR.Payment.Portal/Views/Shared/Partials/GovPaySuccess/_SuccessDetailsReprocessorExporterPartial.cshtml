@@ -1,0 +1,51 @@
+﻿@using EPR.Payment.Portal.Common.Configuration
+@using EPR.Payment.Portal.Common.Models
+@using Microsoft.AspNetCore.Mvc.Routing;
+@model CompositeViewModel
+
+@{
+    var repExpRootUrl = @Model.dashboardConfiguration.RepExpRootUrl.Url;
+    var backUrl = repExpRootUrl + @Model.dashboardConfiguration.RepExpBackUrl.Url;
+}
+
+<main class="govuk-main-wrapper govuk-!-padding-top-8" id="main-content">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-panel govuk-panel--confirmation">
+                <h1 class="govuk-panel__title">
+                    @Localizer["payment_successful"]
+                </h1>
+                <div class="govuk-panel__body">
+                    @if (Model.completePaymentViewModel.RequestorType == "Reprocessors")
+                    {
+                        @Localizer["you_have_paid_the_accreditation_charge"]
+                    }
+                    else
+                    {
+                        @Localizer["you_have_paid_the_application_charge"]
+                    }
+                </div>
+            </div>
+            <p class="govuk-body">
+                @Localizer["email_confirmation_sent"]
+                <a href="mailto:@Model.completePaymentViewModel.Email">
+                    @Model.completePaymentViewModel.Email
+                </a><br/>
+                @Localizer["application_reference_number"] <strong>@Model.completePaymentViewModel.Reference</strong>
+            </p>
+
+            <h2 class="govuk-heading-l">@Localizer["what_happens_next"]</h2>
+            <p class="govuk-body">
+                @Localizer["the_regulator_will_review"]
+            </p>
+            <p class="govuk-body">
+                @Localizer["go_to_homepage_descriptive_text"]
+            </p>
+
+            <a href="@backUrl" class="govuk-button govuk-button--secondary" aria-label="@Localizer["go_to_homepage_descriptive_text"]">
+                @Localizer["go_to_homepage"]
+            </a>
+
+        </div>
+    </div>
+</main>
