@@ -31,7 +31,7 @@
                 @(Localizer["reference_number_is"]) <strong>@Model.completePaymentViewModel.Reference</strong>.
             </p>
             <p class="govuk-body">
-                @(Localizer["problems_with_payment"]) <a class="govuk-link govuk-link--no-visited-state" href="@($"mailto:{EprGlobalConstants.CustomerServiceEmail}")" aria-label="@($"{Localizer["email_descriptive_text"]} {EprGlobalConstants.CustomerServiceEmail}")">@EprGlobalConstants.CustomerServiceEmail</a>
+                @(Localizer["problems_with_payment"]) <a class="govuk-link govuk-link--no-visited-state" href="@($"mailto:{EprGlobalConstants.CustomerServiceEmail}")" aria-label="@($"{Localizer["email_descriptive_text"].Value} {EprGlobalConstants.CustomerServiceEmail}")">@EprGlobalConstants.CustomerServiceEmail</a>
                 @(Localizer["or_call"]) @EprGlobalConstants.CustomerServiceTelephone.
             </p>
             <div class="govuk-button-group">
