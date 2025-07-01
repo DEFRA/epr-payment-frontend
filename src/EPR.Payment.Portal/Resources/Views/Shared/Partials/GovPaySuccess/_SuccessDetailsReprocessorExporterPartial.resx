@@ -124,9 +124,6 @@
   <data name="reference_number_is" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
-  <data name="accreditation_fee_paid" xml:space="preserve">
-    <value />
-  </data>
   <data name="application_reference_number" xml:space="preserve">
     <value />
   </data>
@@ -143,9 +140,6 @@
     <value />
   </data>
   <data name="payment_successful" xml:space="preserve">
-    <value />
-  </data>
-  <data name="registration_fee_paid" xml:space="preserve">
     <value />
   </data>
   <data name="what_happens_next" xml:space="preserve">
