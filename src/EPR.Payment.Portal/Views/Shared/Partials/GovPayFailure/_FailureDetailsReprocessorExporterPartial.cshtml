@@ -1,5 +1,6 @@
 ﻿@using EPR.Payment.Portal.Common.Configuration
 @using EPR.Payment.Portal.Common.Models
+@using EPR.Payment.Portal.Constants
 @using Microsoft.AspNetCore.Mvc.Routing;
 
 @model CompositeViewModel;
@@ -12,7 +13,12 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
         <h1 class="govuk-heading-l">@Localizer["payment_unsuccessful"]</h1>
-        <p class="govuk-body">@Localizer["payment_not_completed"]</p>
+        <p class="govuk-body">
+            @Localizer["payment_not_completed"]
+        </p>
+        <p class="govuk-body">
+            @Localizer["regulator_review_only_after_payment"]
+        </p>
         <form method="post">
             <input type="hidden" value="@Model.completePaymentViewModel.UserId" />
             <input type="hidden" value="@Model.completePaymentViewModel.OrganisationId" />
@@ -22,7 +28,11 @@
             <input type="hidden" value="@Model.completePaymentViewModel.Description" />
             <input type="hidden" value="@Model.completePaymentViewModel.RequestorType" />
             <p class="govuk-body">
-                @Localizer["reference_number_is"] <strong>@Model.completePaymentViewModel.Reference</strong>.                
+                @(Localizer["reference_number_is"]) <strong>@Model.completePaymentViewModel.Reference</strong>.
+            </p>
+            <p class="govuk-body">
+                @(Localizer["problems_with_payment"]) <a class="govuk-link govuk-link--no-visited-state" href="@($"mailto:{EprGlobalConstants.CustomerServiceEmail}")" aria-label="@($"{Localizer["email_descriptive_text"].Value} {EprGlobalConstants.CustomerServiceEmail}")">@EprGlobalConstants.CustomerServiceEmail</a>
+                @(Localizer["or_call"]) @EprGlobalConstants.CustomerServiceTelephone.
             </p>
             <div class="govuk-button-group">
                 <button class="govuk-button" data-module="govuk-button" aria-label="@Localizer["try_online_payment_again_descriptive_text"]">

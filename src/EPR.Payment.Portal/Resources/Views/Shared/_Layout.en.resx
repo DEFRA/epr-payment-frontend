@@ -205,7 +205,7 @@
     <value>Click on this link if you wish to go to the Privacy page</value>
   </data>
   <data name="email_descriptive_text" xml:space="preserve">
-    <value>Click on this link if you wish to send an email to eprcustomerservice@defra.gov.uk</value>
+    <value>Click on this link if you wish to send an email to</value>
   </data>
   <data name="privacy_url" xml:space="preserve">
     <value>https://www.gov.uk/guidance/extended-producer-responsibility-for-packaging-privacy-policy</value>

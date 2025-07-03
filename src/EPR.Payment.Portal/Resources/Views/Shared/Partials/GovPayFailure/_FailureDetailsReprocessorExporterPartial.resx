@@ -139,4 +139,16 @@
   <data name="go_to_homepage_descriptive_text" xml:space="preserve">
     <value />
   </data>
+  <data name="problems_with_payment" xml:space="preserve">
+    <value />
+  </data>
+  <data name="or_call" xml:space="preserve">
+    <value />
+  </data>
+  <data name="regulator_review_only_after_payment" xml:space="preserve">
+    <value />
+  </data>
+  <data name="email_descriptive_text" xml:space="preserve">
+    <value />
+  </data>
 </root>

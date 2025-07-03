@@ -153,9 +153,9 @@
 
                     <h2 class="govuk-heading-m">@Localizer["get_help"]</h2>
 
-                    <p class="govuk-body">@Localizer["email"]: <a class="govuk-link govuk-link--no-visited-state" href="mailto:eprcustomerservice@defra.gov.uk" aria-label="@Localizer["email_descriptive_text"]">eprcustomerservice@defra.gov.uk</a></p>
+                    <p class="govuk-body">@Localizer["email"]: <a class="govuk-link govuk-link--no-visited-state" href="@($"mailto:{EprGlobalConstants.CustomerServiceEmail}")" aria-label="@($"{Localizer["email_descriptive_text"].Value} {EprGlobalConstants.CustomerServiceEmail}")">@EprGlobalConstants.CustomerServiceEmail</a></p>
 
-                    <p class="govuk-body govuk-!-margin-bottom-2">@Localizer["telephone"]: 0300 060 0002</p>
+                    <p class="govuk-body govuk-!-margin-bottom-2">@Localizer["telephone"]: @EprGlobalConstants.CustomerServiceTelephone</p>
 
                     <p class="govuk-body">@Localizer["monday_friday"]</p>
 
