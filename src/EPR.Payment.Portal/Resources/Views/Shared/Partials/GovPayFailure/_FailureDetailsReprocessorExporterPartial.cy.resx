@@ -130,12 +130,24 @@
     <value>Cyfeirnod eich cais yw</value>
   </data>
   <data name="go_to_homepage" xml:space="preserve">
-    <value>Go to home page</value>
+    <value>Mynd i'r tudalen hafan</value>
   </data>
   <data name="try_online_payment_again_descriptive_text" xml:space="preserve">
     <value>Cliciwch ar y ddolen yma os hoffech chi wneud taliad ar-lein eto</value>
   </data>
   <data name="go_to_homepage_descriptive_text" xml:space="preserve">
     <value>Click on this link if you wish to return to the home page</value>
+  </data>
+  <data name="problems_with_payment" xml:space="preserve">
+    <value>Os byddwch yn dal i gael problemau wrth dalu, cysylltwch â desg gymorth EPR</value>
+  </data>
+  <data name="or_call" xml:space="preserve">
+    <value>neu ffoniwch</value>
+  </data>
+  <data name="regulator_review_only_after_payment" xml:space="preserve">
+    <value>Dim ond ar ôl i daliad gael ei wneud y bydd y rheoleiddiwr yn adolygu'r cais.</value>
+  </data>
+  <data name="email_descriptive_text" xml:space="preserve">
+    <value>Cliciwch ar y ddolen yma os hoffech chi anfon neges ebost at</value>
   </data>
 </root>
