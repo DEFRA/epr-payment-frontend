@@ -26,13 +26,6 @@ const sassOptions = {
     silenceDeprecations: deprecationSuppressions
 };
 
-//// Task to compile GOV.UK Frontend SCSS
-//gulp.task('copy-govuk-styles', function () {
-//    return gulp.src(path.join(paths.govuk, '*.css'))
-//        .pipe(concat('govuk-frontend.min.css'))
-//        .pipe(gulp.dest('wwwroot/css', { overwrite: true }));
-//});
-
 // Task to copy GOV.UK Frontend JavaScript
 gulp.task('copy-govuk-scripts', function () {
     return gulp.src(path.join(paths.govuk, 'govuk-frontend.min.js'))
