@@ -24,3 +24,5 @@ appsettings.Test.json
 /bin/Debug
 /obj
 /src/EPR.Payment.Portal/appsettings.development.json
+wwwroot/*
+!wwwroot/.gitkeep
