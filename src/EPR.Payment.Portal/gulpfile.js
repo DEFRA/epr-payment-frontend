@@ -78,6 +78,7 @@ gulp.task('copy-rebrand', () => {
         .pipe(gulp.dest('wwwroot/rebrand'));
 });
 
-// Default task
+// Default task, copy-rebrand must come before copy-govuk-crown-images as the latter copies over an image from the former, so the rebrand folder
+// needs to exist beforehand
 gulp.task('build-frontend', gulp.series('copy-govuk-scripts', 'copy-govuk-images', 'copy-rebrand', 'copy-govuk-crown-images',
     'copy-govuk-fonts', 'copy-govuk-manifest', 'compile-scss')); 
