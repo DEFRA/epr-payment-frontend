@@ -246,7 +246,7 @@ namespace EPR.Payment.Portal.Common.RESTServices
             }
         }
 
-        private T ReturnValue<T>(string value)
+        private static T ReturnValue<T>(string value)
         {
             if (IsValidJson(value))
                 return JsonConvert.DeserializeObject<T>(value)!;

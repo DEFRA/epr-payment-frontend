@@ -14,11 +14,11 @@
 
     @if (Model.completePaymentViewModel.RequestorType == RequestorType.Exporters.ToString() || Model.completePaymentViewModel.RequestorType == RequestorType.Reprocessors.ToString())
     {
-        @await Html.PartialAsync("~/Views/Shared/Partials/GovPayFailure/_FailureDetailsReprocessorExporterPartial.cshtml", Model);
+        @await Html.PartialAsync("~/Views/Shared/Partials/GovPayFailure/_FailureDetailsReprocessorExporterPartial.cshtml", Model)
     }
     else
     {
-        @await Html.PartialAsync("~/Views/Shared/Partials/GovPayFailure/_FailureDetailsPartial.cshtml", Model);
+        @await Html.PartialAsync("~/Views/Shared/Partials/GovPayFailure/_FailureDetailsPartial.cshtml", Model)
     }
 
 </main>

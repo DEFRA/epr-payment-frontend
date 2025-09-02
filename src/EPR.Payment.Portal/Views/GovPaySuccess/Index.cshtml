@@ -13,10 +13,10 @@
 <main class="govuk-main-wrapper govuk-!-padding-top-8" id="main-content">
     @if (Model.completePaymentViewModel.RequestorType == RequestorType.Exporters.ToString() || Model.completePaymentViewModel.RequestorType == RequestorType.Reprocessors.ToString())
     {
-        @await Html.PartialAsync("~/Views/Shared/Partials/GovPaySuccess/_SuccessDetailsReprocessorExporterPartial.cshtml", Model);
+        @await Html.PartialAsync("~/Views/Shared/Partials/GovPaySuccess/_SuccessDetailsReprocessorExporterPartial.cshtml", Model)
     }
     else
     {
-        @await Html.PartialAsync("~/Views/Shared/Partials/GovPaySuccess/_SuccessDetailsPartial.cshtml", Model);
+        @await Html.PartialAsync("~/Views/Shared/Partials/GovPaySuccess/_SuccessDetailsPartial.cshtml", Model)
     }
 </main>
