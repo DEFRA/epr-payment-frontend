@@ -31,8 +31,11 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             _dashboardConfigurationMock.Setup(x => x.Value).Returns(_dashboardConfig);
 
             // Act
-            Action act = () => new GovPayFailureController(_paymentsServiceMock.Object, _dashboardConfigurationMock.Object,
-                _loggerMock.Object);
+            Action act = () =>
+            {
+                _ = new GovPayFailureController(_paymentsServiceMock.Object, _dashboardConfigurationMock.Object,
+                    _loggerMock.Object);
+            };
 
             // Assert
             act.Should().NotThrow();
@@ -48,7 +51,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             _dashboardConfigurationMock.Setup(x => x.Value).Returns(_dashboardConfig);
 
             // Act
-            Action act = () => new GovPayFailureController(null!, _dashboardConfigurationMock.Object, _loggerMock.Object);
+            Action act = () => _ = new GovPayFailureController(null!, _dashboardConfigurationMock.Object, _loggerMock.Object);
 
 
             // Assert
@@ -66,7 +69,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
 
 
             // Act
-            Action act = () => new GovPayFailureController(_paymentsServiceMock.Object, _dashboardConfigurationMock.Object,
+            Action act = () => _ = new GovPayFailureController(_paymentsServiceMock.Object, _dashboardConfigurationMock.Object,
                 _loggerMock.Object);
 
             // Assert
@@ -83,7 +86,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             _dashboardConfigurationMock.Setup(x => x.Value).Returns(_dashboardConfig);
 
             // Act
-            Action act = () => new GovPayFailureController(_paymentsServiceMock.Object, _dashboardConfigurationMock.Object, null!);
+            Action act = () => _ = new GovPayFailureController(_paymentsServiceMock.Object, _dashboardConfigurationMock.Object, null!);
 
             // Assert
             act.Should().Throw<ArgumentNullException>().WithMessage("*logger*");

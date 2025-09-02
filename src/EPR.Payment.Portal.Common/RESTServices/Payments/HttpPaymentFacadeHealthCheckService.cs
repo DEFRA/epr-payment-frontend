@@ -13,14 +13,13 @@ namespace EPR.Payment.Portal.Common.RESTServices.Payments
             IHttpClientFactory httpClientFactory,
             IOptions<FacadeService> config)
         {
-            if (httpClientFactory == null)
-                throw new ArgumentNullException(nameof(httpClientFactory));
+            ArgumentNullException.ThrowIfNull(httpClientFactory);
 
             if (config == null)
                 throw new ArgumentNullException(nameof(config), "Config cannot be null.");
 
             if (string.IsNullOrWhiteSpace(config.Value.Url))
-                throw new ArgumentNullException(nameof(config.Value.Url), "PaymentFacadeHealthCheck BaseUrl configuration is missing");
+                throw new ArgumentNullException(nameof(config), "PaymentFacadeHealthCheck BaseUrl configuration is missing");
 
             _httpClient = httpClientFactory.CreateClient();
             _healthCheckUrl = $"{config.Value.Url.TrimEnd('/')}/admin/health";
@@ -34,7 +33,9 @@ namespace EPR.Payment.Portal.Common.RESTServices.Payments
             }
             catch (Exception ex)
             {
+#pragma warning disable S112
                 throw new Exception($"Health check request to {_healthCheckUrl} failed.", ex);
+#pragma warning restore S112
             }
         }
     }

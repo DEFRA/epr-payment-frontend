@@ -26,7 +26,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             _dashboardConfigurationMock.Setup(x => x.Value).Returns((DashboardConfiguration)null!);
 
             // Act
-            Action act = () => new GovPaySuccessController(_dashboardConfigurationMock.Object);
+            Action act = () => _ = new GovPaySuccessController(_dashboardConfigurationMock.Object);
 
             // Assert
             act.Should().Throw<ArgumentNullException>()
