@@ -96,7 +96,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             // Act
             var result = await _testableHttpService.PublicGet<object>(url, cancellationToken);
             // Parse the result to JToken and assert the expected JSON token
-            var jsonResult = JToken.Parse(result!.ToString()!);
+            var jsonResult = JToken.Parse(result.ToString()!);
 
             // Assert
             using (new AssertionScope())
@@ -141,7 +141,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             // Act
             var result = await _testableHttpService.PublicPost<object>(url, payload, cancellationToken);
             // Parse the result to JToken and assert the expected JSON token
-            var jsonResult = JToken.Parse(result!.ToString()!);
+            var jsonResult = JToken.Parse(result.ToString()!);
 
             // Assert
             using (new AssertionScope())
@@ -227,7 +227,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             // Act
             var result = await _testableHttpService.PublicPut<object>(url, payload, cancellationToken);
             // Parse the result to JToken and assert the expected JSON token
-            var jsonResult = JToken.Parse(result!.ToString()!);
+            var jsonResult = JToken.Parse(result.ToString()!);
 
             // Assert
             using (new AssertionScope())
@@ -313,7 +313,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             // Act
             var result = await _testableHttpService.PublicDelete<object>(url, payload, cancellationToken);
             // Parse the result to JToken and assert the expected JSON token
-            var jsonResult = JToken.Parse(result!.ToString()!);
+            var jsonResult = JToken.Parse(result.ToString()!);
 
             // Assert
             using (new AssertionScope())
@@ -839,14 +839,17 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
         public void Constructor_WhenHttpContextAccessorIsNull_ShouldThrowArgumentNullException()
         {
             // Act
-            Action act = () => new TestableBaseHttpService(
-                null!,
-                _httpClientFactoryMock.Object,
-                baseUrl,
-                endPointName,
-                _tokenAcquisitionMock.Object,
-                "scope",
-                _featureManagerMock.Object);
+            var act = () =>
+            {
+                _ = new TestableBaseHttpService(
+                    null!,
+                    _httpClientFactoryMock.Object,
+                    baseUrl,
+                    endPointName,
+                    _tokenAcquisitionMock.Object,
+                    "scope",
+                    _featureManagerMock.Object);
+            };
 
             // Assert
             act.Should().Throw<ArgumentNullException>().WithMessage("*httpContextAccessor*");
@@ -856,14 +859,17 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
         public void Constructor_WhenHttpClientFactoryIsNull_ShouldThrowArgumentNullException()
         {
             // Act
-            Action act = () => new TestableBaseHttpService(
-                _httpContextAccessorMock.Object,
-                null!, // HttpClientFactory is null
-                baseUrl,
-                endPointName,
-                _tokenAcquisitionMock.Object,
-                "scope",
-                _featureManagerMock.Object);
+            Action act = () =>
+            {
+                _ = new TestableBaseHttpService(
+                    _httpContextAccessorMock.Object,
+                    null!, // HttpClientFactory is null
+                    baseUrl,
+                    endPointName,
+                    _tokenAcquisitionMock.Object,
+                    "scope",
+                    _featureManagerMock.Object);
+            };
 
             // Assert
             act.Should().Throw<ArgumentNullException>()
@@ -874,14 +880,17 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
         public void Constructor_WhenBaseUrlIsNull_ShouldThrowArgumentNullException()
         {
             // Act
-            Action act = () => new TestableBaseHttpService(
-                _httpContextAccessorMock.Object,
-                _httpClientFactoryMock.Object,
-                null!,
-                endPointName,
-                _tokenAcquisitionMock.Object,
-                "scope",
-                _featureManagerMock.Object);
+            Action act = () =>
+            {
+                _ = new TestableBaseHttpService(
+                    _httpContextAccessorMock.Object,
+                    _httpClientFactoryMock.Object,
+                    null!,
+                    endPointName,
+                    _tokenAcquisitionMock.Object,
+                    "scope",
+                    _featureManagerMock.Object);
+            };
 
             // Assert
             act.Should().Throw<ArgumentNullException>().WithMessage("*baseUrl*");
@@ -891,14 +900,17 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
         public void Constructor_WhenEndPointNameIsNull_ShouldThrowArgumentNullException()
         {
             // Act
-            Action act = () => new TestableBaseHttpService(
-                _httpContextAccessorMock.Object,
-                _httpClientFactoryMock.Object,
-                baseUrl,
-                null!,
-                _tokenAcquisitionMock.Object,
-                "scope",
-                _featureManagerMock.Object);
+            Action act = () =>
+            {
+                _ = new TestableBaseHttpService(
+                    _httpContextAccessorMock.Object,
+                    _httpClientFactoryMock.Object,
+                    baseUrl,
+                    null!,
+                    _tokenAcquisitionMock.Object,
+                    "scope",
+                    _featureManagerMock.Object);
+            };
 
             // Assert
             act.Should().Throw<ArgumentNullException>().WithMessage("*endPointName*");

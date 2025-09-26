@@ -36,7 +36,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
         public void Constructor_ShouldInitialize_Instance(
             [Frozen] Mock<IHttpContextAccessor> httpContextAccessorMock,
             [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
-            [Frozen] Mock<Microsoft.FeatureManagement.IFeatureManager> featureManagerMock)
+            [Frozen] Mock<IFeatureManager> featureManagerMock)
         {
             // Arrange
             var service = new HttpPaymentFacadeHealthCheckService(
@@ -51,12 +51,8 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
         [TestMethod]
         public void Constructor_WhenHttpClientFactoryIsNull_ShouldThrowArgumentNullException()
         {
-            // Arrange
-            var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-            var featureManagerMock = new Mock<IFeatureManager>();
-
             // Act
-            Action act = () => new HttpPaymentFacadeHealthCheckService(
+            Action act = () => _ = new HttpPaymentFacadeHealthCheckService(
                 null!,
                 _config);
 
@@ -69,9 +65,9 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock)
         {
             // Arrange
-            IOptions<FacadeService>? nullConfig = null;
+            IOptions<FacadeService>? nullConfig = null!;
 
-            Action act = () => new HttpPaymentFacadeHealthCheckService(
+            Action act = () => _ = new HttpPaymentFacadeHealthCheckService(
                 httpClientFactoryMock.Object,
                 nullConfig);
 
@@ -91,7 +87,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             });
 
             // Act & Assert
-            Action act = () => new HttpPaymentFacadeHealthCheckService(
+            Action act = () => _ = new HttpPaymentFacadeHealthCheckService(
                 httpClientFactoryMock.Object,
                 invalidConfig);
 
@@ -136,13 +132,13 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
                 configMock.Object);
 
             // Act
-            HttpResponseMessage? result = await service.GetHealthAsync(CancellationToken.None);
+            var result = await service.GetHealthAsync(CancellationToken.None);
 
             // Assert
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                result!.StatusCode.Should().Be(HttpStatusCode.OK);
+                result.StatusCode.Should().Be(HttpStatusCode.OK);
 
                 handlerMock.Protected().Verify(
                     "SendAsync",

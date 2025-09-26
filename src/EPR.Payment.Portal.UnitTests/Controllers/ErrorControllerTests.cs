@@ -40,7 +40,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
         {
             // Act
             mockOptions.Setup(o => o.Value).Returns((DashboardConfiguration)null!);
-            Action act = () => new ErrorController(mockOptions.Object);
+            Action act = () => _ = new ErrorController(mockOptions.Object);
 
             // Assert
             act.Should().Throw<ArgumentNullException>().WithMessage("*dashboardConfiguration*");

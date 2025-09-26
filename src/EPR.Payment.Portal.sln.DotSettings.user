@@ -1,0 +1,7 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=0dbdddf5_002D307d_002D48e3_002D985e_002D1fe5261d8df6/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Session" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Or&gt;&#xD;
+    &lt;Project Location="C:\Repos\epr-payment-frontend\src\EPR.Payment.Portal.Common.UnitTests" Presentation="&amp;lt;Tests&amp;gt;\&amp;lt;EPR.Payment.Portal.Common.UnitTests&amp;gt;" /&gt;&#xD;
+    &lt;Project Location="C:\Repos\epr-payment-frontend\src\EPR.Payment.Portal.UnitTests" Presentation="&amp;lt;Tests&amp;gt;\&amp;lt;EPR.Payment.Portal.UnitTests&amp;gt;" /&gt;&#xD;
+  &lt;/Or&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

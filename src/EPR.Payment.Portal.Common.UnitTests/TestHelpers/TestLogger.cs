@@ -6,9 +6,9 @@ namespace EPR.Payment.Portal.Common.UnitTests.TestHelpers
     [ExcludeFromCodeCoverage]
     public class TestLogger<T> : ILogger<T>
     {
-        public List<(LogLevel, string, Exception?)> LogEntries { get; } = new List<(LogLevel, string, Exception?)>();
+        public List<(LogLevel, string, Exception?)> LogEntries { get; } = [];
 
-        public IDisposable BeginScope<TState>(TState state) => null;
+        public IDisposable BeginScope<TState>(TState state) where TState : notnull => null!;
 
         public bool IsEnabled(LogLevel logLevel) => true;
 

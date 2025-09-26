@@ -195,7 +195,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
         public void Constructor_WhenHttpContextAccessorIsNull_ShouldThrowArgumentNullException()
         {
             // Act
-            Action act = () => new HttpPaymentFacadeV2(
+            Action act = () => _ = new HttpPaymentFacadeV2(
                 null!,
                 Mock.Of<IHttpClientFactory>(),
                 Mock.Of<ITokenAcquisition>(),
@@ -218,7 +218,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             });
 
             // Act
-            Action act = () => new HttpPaymentFacadeV2(
+            Action act = () => _ = new HttpPaymentFacadeV2(
                 _httpContextAccessorMock.Object,
                 Mock.Of<IHttpClientFactory>(),
                 Mock.Of<ITokenAcquisition>(),
@@ -241,7 +241,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             });
 
             // Act
-            Action act = () => new HttpPaymentFacadeV2(
+            Action act = () => _ = new HttpPaymentFacadeV2(
                 _httpContextAccessorMock.Object,
                 Mock.Of<IHttpClientFactory>(),
                 Mock.Of<ITokenAcquisition>(),
@@ -264,7 +264,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             });
 
             // Act
-            Action act = () => new HttpPaymentFacadeV2(
+            Action act = () => _ = new HttpPaymentFacadeV2(
                 _httpContextAccessorMock.Object,
                 Mock.Of<IHttpClientFactory>(),
                 Mock.Of<ITokenAcquisition>(),
@@ -279,7 +279,7 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
         public void Constructor_WhenTokenAcquisitionIsNull_ShouldThrowArgumentNullException()
         {
             // Act
-            Action act = () => new HttpPaymentFacadeV2(
+            Action act = () => _ = new HttpPaymentFacadeV2(
                 _httpContextAccessorMock.Object,
                 Mock.Of<IHttpClientFactory>(),
                 null!, // Token acquisition is null
@@ -294,12 +294,12 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
         public void Constructor_WhenFeatureManagerIsNull_ShouldThrowArgumentNullException()
         {
             // Act
-            Action act = () => new HttpPaymentFacadeV2(
-                _httpContextAccessorMock.Object,
-                Mock.Of<IHttpClientFactory>(),
-                Mock.Of<ITokenAcquisition>(),
-                _configMock.Object,
-                null!); // Feature manager is null
+            Action act = () => _ = new HttpPaymentFacadeV2(
+                    _httpContextAccessorMock.Object,
+                    Mock.Of<IHttpClientFactory>(),
+                    Mock.Of<ITokenAcquisition>(),
+                    _configMock.Object,
+                    null!); // Feature manager is null
 
             // Assert
             act.Should().Throw<ArgumentNullException>().WithMessage("*featureManager*");

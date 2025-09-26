@@ -20,7 +20,9 @@ namespace EPR.Payment.Portal.Common.Configuration
         public string? DownstreamScope { get; set; }
     }
 
+#pragma warning disable S2094
     public class FacadeServiceV2: FacadeService
+#pragma warning restore S2094
     {
     }
 }

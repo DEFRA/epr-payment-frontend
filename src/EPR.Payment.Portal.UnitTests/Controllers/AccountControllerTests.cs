@@ -24,7 +24,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             featureManager.Setup(x => x.IsEnabledAsync("EnableAuthenticationFeature")).Returns(Task.FromResult(true));
 
             // Act
-            Action act = () => new AccountController(_dashboardConfigurationMock.Object, featureManager.Object);
+            Action act = () => _ = new AccountController(_dashboardConfigurationMock.Object, featureManager.Object);
 
             // Assert
             act.Should().Throw<ArgumentException>()
@@ -41,7 +41,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             featureManager.Setup(x => x.IsEnabledAsync("EnableAuthenticationFeature")).Returns(Task.FromResult(true));
 
             // Act
-            Action act = () => new AccountController(_dashboardConfigurationMock.Object, featureManager.Object);
+            Action act = () => _ = new AccountController(_dashboardConfigurationMock.Object, featureManager.Object);
 
             // Assert
             act.Should().Throw<ArgumentException>()
@@ -58,7 +58,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             featureManager.Setup(x => x.IsEnabledAsync("EnableAuthenticationFeature")).Returns(Task.FromResult(true));
 
             // Act
-            Action act = () => new AccountController(_dashboardConfigurationMock.Object, featureManager.Object);
+            Action act = () => _ = new AccountController(_dashboardConfigurationMock.Object, featureManager.Object);
 
             // Assert
             act.Should().Throw<ArgumentException>()
@@ -75,7 +75,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             featureManager.Setup(x => x.IsEnabledAsync("EnableAuthenticationFeature")).Returns(Task.FromResult(true));
 
             // Act
-            Action act = () => new AccountController(_dashboardConfigurationMock.Object, featureManager.Object);
+            Action act = () => _ = new AccountController(_dashboardConfigurationMock.Object, featureManager.Object);
 
             // Assert
             act.Should().Throw<ArgumentException>()
@@ -92,7 +92,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             featureManager.Setup(x => x.IsEnabledAsync("EnableAuthenticationFeature")).Returns(Task.FromResult(true));
 
             // Act
-            Action act = () => new AccountController(_dashboardConfigurationMock.Object, featureManager.Object);
+            Action act = () => _ = new AccountController(_dashboardConfigurationMock.Object, featureManager.Object);
 
             // Assert
             act.Should().Throw<ArgumentException>()
@@ -107,7 +107,7 @@ namespace EPR.Payment.Portal.UnitTests.Controllers
             _dashboardConfigurationMock.Setup(x => x.Value).Returns(new DashboardConfiguration { RPDRootUrl = new Service { Url = "http://www.google.com" }, SignOutUrl = new Service { Url = "" } });
 
             // Act
-            Action act = () => new AccountController(_dashboardConfigurationMock.Object, null!);
+            Action act = () => _ = new AccountController(_dashboardConfigurationMock.Object, null!);
 
             // Assert
             act.Should().Throw<ArgumentNullException>()

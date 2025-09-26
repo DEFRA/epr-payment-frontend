@@ -25,7 +25,7 @@ namespace EPR.Payment.Portal.UnitTests.Services
             ILogger<PaymentsService> logger)
         {
             // Arrange & Act
-            var act = () => new PaymentsService(null, httpPaymentFacade, httpPaymentFacadeV2, logger);
+            var act = () => new PaymentsService(null!, httpPaymentFacade, httpPaymentFacadeV2, logger);
 
             // Assert
             act.Should().Throw<ArgumentNullException>()
@@ -39,7 +39,7 @@ namespace EPR.Payment.Portal.UnitTests.Services
             ILogger<PaymentsService> logger)
         {
             // Arrange & Act
-            var act = () => new PaymentsService(mapper, null, httpPaymentFacadeV2, logger);
+            var act = () => new PaymentsService(mapper, null!, httpPaymentFacadeV2, logger);
 
             // Assert
             act.Should().Throw<ArgumentNullException>()
@@ -53,7 +53,7 @@ namespace EPR.Payment.Portal.UnitTests.Services
             ILogger<PaymentsService> logger)
         {
             // Arrange & Act
-            var act = () => new PaymentsService(mapper, httpPaymentFacade, null, logger);
+            var act = () => new PaymentsService(mapper, httpPaymentFacade, null!, logger);
 
             // Assert
             act.Should().Throw<ArgumentNullException>()
@@ -67,7 +67,7 @@ namespace EPR.Payment.Portal.UnitTests.Services
             IHttpPaymentFacadeV2 httpPaymentFacadeV2)
         {
             // Arrange & Act
-            var act = () => new PaymentsService(mapper, httpPaymentFacade, httpPaymentFacadeV2, null);
+            var act = () => new PaymentsService(mapper, httpPaymentFacade, httpPaymentFacadeV2, null!);
 
             // Assert
             act.Should().Throw<ArgumentNullException>()
@@ -169,7 +169,7 @@ namespace EPR.Payment.Portal.UnitTests.Services
             string responseContent)
         {
             // Arrange
-            paymentRequestDto.RequestorType = null; 
+            paymentRequestDto.RequestorType = null!; 
 
             httpPaymentFacadeMock
                 .Setup(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()))
@@ -279,7 +279,7 @@ namespace EPR.Payment.Portal.UnitTests.Services
             string responseContent)
         {
             // Arrange
-            paymentRequestDto.RequestorType = null;
+            paymentRequestDto.RequestorType = null!;
 
             httpPaymentFacadeMock
                 .Setup(facade => facade.InitiatePaymentAsync(It.IsAny<PaymentRequestDto>(), It.IsAny<CancellationToken>()))

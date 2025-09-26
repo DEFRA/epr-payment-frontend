@@ -52,10 +52,10 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
         private HttpPaymentFacade CreateHttpPaymentsService(HttpClient httpClient)
         {
             return new HttpPaymentFacade(
-                _httpContextAccessorMock!.Object,
+                _httpContextAccessorMock.Object,
                 new HttpClientFactoryMock(httpClient),
-                _tokenAcquisitionMock!.Object,
-                _configMock!.Object,
+                _tokenAcquisitionMock.Object,
+                _configMock.Object,
                 _featureManagerMock.Object);
         }
 
@@ -195,12 +195,15 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
         public void Constructor_WhenHttpContextAccessorIsNull_ShouldThrowArgumentNullException()
         {
             // Act
-            Action act = () => new HttpPaymentFacade(
-                null!,
-                Mock.Of<IHttpClientFactory>(),
-                Mock.Of<ITokenAcquisition>(),
-                _configMock.Object,
-                Mock.Of<IFeatureManager>());
+            Action act = () =>
+            {
+                _ = new HttpPaymentFacade(
+                    null!,
+                    Mock.Of<IHttpClientFactory>(),
+                    Mock.Of<ITokenAcquisition>(),
+                    _configMock.Object,
+                    Mock.Of<IFeatureManager>());
+            };
 
             // Assert
             act.Should().Throw<ArgumentNullException>().WithMessage("*httpContextAccessor*");
@@ -218,12 +221,15 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             });
 
             // Act
-            Action act = () => new HttpPaymentFacade(
-                _httpContextAccessorMock.Object,
-                Mock.Of<IHttpClientFactory>(),
-                Mock.Of<ITokenAcquisition>(),
-                _configMock.Object,
-                Mock.Of<IFeatureManager>());
+            Action act = () =>
+            {
+                _ = new HttpPaymentFacade(
+                    _httpContextAccessorMock.Object,
+                    Mock.Of<IHttpClientFactory>(),
+                    Mock.Of<ITokenAcquisition>(),
+                    _configMock.Object,
+                    Mock.Of<IFeatureManager>());
+            };
 
             // Assert
             act.Should().Throw<ArgumentNullException>().WithMessage("*Base URL is missing.*");
@@ -241,12 +247,15 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             });
 
             // Act
-            Action act = () => new HttpPaymentFacade(
-                _httpContextAccessorMock.Object,
-                Mock.Of<IHttpClientFactory>(),
-                Mock.Of<ITokenAcquisition>(),
-                _configMock.Object,
-                Mock.Of<IFeatureManager>());
+            Action act = () =>
+            {
+                _ = new HttpPaymentFacade(
+                    _httpContextAccessorMock.Object,
+                    Mock.Of<IHttpClientFactory>(),
+                    Mock.Of<ITokenAcquisition>(),
+                    _configMock.Object,
+                    Mock.Of<IFeatureManager>());
+            };
 
             // Assert
             act.Should().Throw<ArgumentNullException>().WithMessage("*Endpoint Name is missing.*");
@@ -264,12 +273,15 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
             });
 
             // Act
-            Action act = () => new HttpPaymentFacade(
-                _httpContextAccessorMock.Object,
-                Mock.Of<IHttpClientFactory>(),
-                Mock.Of<ITokenAcquisition>(),
-                _configMock.Object,
-                Mock.Of<IFeatureManager>());
+            Action act = () =>
+            {
+                _ = new HttpPaymentFacade(
+                    _httpContextAccessorMock.Object,
+                    Mock.Of<IHttpClientFactory>(),
+                    Mock.Of<ITokenAcquisition>(),
+                    _configMock.Object,
+                    Mock.Of<IFeatureManager>());
+            };
 
             // Assert
             act.Should().Throw<ArgumentNullException>().WithMessage("*Downstream Scope is missing.*");
@@ -279,12 +291,15 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
         public void Constructor_WhenTokenAcquisitionIsNull_ShouldThrowArgumentNullException()
         {
             // Act
-            Action act = () => new HttpPaymentFacade(
-                _httpContextAccessorMock.Object,
-                Mock.Of<IHttpClientFactory>(),
-                null!, // Token acquisition is null
-                _configMock.Object,
-                Mock.Of<IFeatureManager>());
+            Action act = () =>
+            {
+                _ = new HttpPaymentFacade(
+                    _httpContextAccessorMock.Object,
+                    Mock.Of<IHttpClientFactory>(),
+                    null!, // Token acquisition is null
+                    _configMock.Object,
+                    Mock.Of<IFeatureManager>());
+            };
 
             // Assert
             act.Should().Throw<ArgumentNullException>().WithMessage("*tokenAcquisition*");
@@ -294,12 +309,15 @@ namespace EPR.Payment.Portal.Common.UnitTests.RESTServices
         public void Constructor_WhenFeatureManagerIsNull_ShouldThrowArgumentNullException()
         {
             // Act
-            Action act = () => new HttpPaymentFacade(
-                _httpContextAccessorMock.Object,
-                Mock.Of<IHttpClientFactory>(),
-                Mock.Of<ITokenAcquisition>(),
-                _configMock.Object,
-                null!); // Feature manager is null
+            Action act = () =>
+            {
+                _ = new HttpPaymentFacade(
+                    _httpContextAccessorMock.Object,
+                    Mock.Of<IHttpClientFactory>(),
+                    Mock.Of<ITokenAcquisition>(),
+                    _configMock.Object,
+                    null!);
+            }; // Feature manager is null
 
             // Assert
             act.Should().Throw<ArgumentNullException>().WithMessage("*featureManager*");

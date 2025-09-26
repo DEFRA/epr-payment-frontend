@@ -20,7 +20,7 @@ namespace EPR.Payment.Portal.Common.RESTServices
         private readonly string[] _scopes;
         private readonly IFeatureManager _featureManager;
 
-        public BaseHttpService(
+        protected BaseHttpService(
             IHttpContextAccessor httpContextAccessor,
             IHttpClientFactory httpClientFactory,
             string baseUrl,
@@ -167,7 +167,7 @@ namespace EPR.Payment.Portal.Common.RESTServices
             await Send(CreateMessage(finalUrl, payload, HttpMethod.Delete), cancellationToken);
         }
 
-        private HttpRequestMessage CreateMessage(
+        private static HttpRequestMessage CreateMessage(
             string url,
             object? payload,
             HttpMethod httpMethod)
@@ -186,15 +186,28 @@ namespace EPR.Payment.Portal.Common.RESTServices
             return msg;
         }
 
+        private static bool IsValidJson(string stringValue)
+        {
+            try
+            {
+                JToken.Parse(stringValue);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         private async Task<T> Send<T>(HttpRequestMessage requestMessage, CancellationToken cancellationToken)
         {
             var response = await _httpClient.SendAsync(requestMessage, cancellationToken);
 
             if (response.IsSuccessStatusCode)
             {
-                var responseStream = await response.Content.ReadAsStreamAsync();
+                var responseStream = await response.Content.ReadAsStreamAsync(cancellationToken);
                 using var streamReader = new StreamReader(responseStream);
-                var content = await streamReader.ReadToEndAsync();
+                var content = await streamReader.ReadToEndAsync(cancellationToken);
 
                 if (string.IsNullOrWhiteSpace(content))
                     return default!;
@@ -204,13 +217,13 @@ namespace EPR.Payment.Portal.Common.RESTServices
             else
             {
                 // get any message from the response
-                var responseStream = await response.Content.ReadAsStreamAsync();
+                var responseStream = await response.Content.ReadAsStreamAsync(cancellationToken);
                 var content = default(string);
 
                 if (responseStream.Length > 0)
                 {
                     using var streamReader = new StreamReader(responseStream);
-                    content = await streamReader.ReadToEndAsync();
+                    content = await streamReader.ReadToEndAsync(cancellationToken);
                 }
 
                 // set the response status code and throw the exception for the middleware to handle
@@ -224,32 +237,21 @@ namespace EPR.Payment.Portal.Common.RESTServices
 
             if (!response.IsSuccessStatusCode)
             {
-                _httpContextAccessor.HttpContext.Response.StatusCode = (int)response.StatusCode;
+                _httpContextAccessor.HttpContext!.Response.StatusCode = (int)response.StatusCode;
                 // for now we don't know how we're going to handle errors specifically,
                 // so we'll just throw an error with the error code
+#pragma warning disable S112
                 throw new Exception($"Error occurred calling API with error code: {response.StatusCode}. Message: {response.ReasonPhrase}");
+#pragma warning restore S112
             }
         }
 
-        private T ReturnValue<T>(string value)
+        private static T ReturnValue<T>(string value)
         {
             if (IsValidJson(value))
                 return JsonConvert.DeserializeObject<T>(value)!;
             else
                 return (T)Convert.ChangeType(value, typeof(T));
-        }
-
-        private bool IsValidJson(string stringValue)
-        {
-            try
-            {
-                var val = JToken.Parse(stringValue);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
         }
     }
 }
