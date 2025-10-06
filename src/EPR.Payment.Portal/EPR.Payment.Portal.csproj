@@ -89,7 +89,7 @@
 
 	<ItemGroup>
 		<SonarQubeSetting Include="sonar.exclusions">
-			<Value>gulpfile.js</Value>
+			<Value>gulpfile.js, Asset/site.css, wwwroot/css/site.css</Value>
 		</SonarQubeSetting>
 	</ItemGroup>
 
