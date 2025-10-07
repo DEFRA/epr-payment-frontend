@@ -41,13 +41,13 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     var forwardedHeadersOptions = builderConfig.GetSection("ForwardedHeaders").Get<ForwardedHeadersOptions>()
                                   ?? throw new InvalidOperationException("ForwardedHeaders configuration is missing.");
 
-options.ForwardedHeaders = ForwardedHeaders.XForwardedHost | ForwardedHeaders.XForwardedProto;
-options.ForwardedHostHeaderName = forwardedHeadersOptions.ForwardedHostHeaderName
-                                  ?? throw new InvalidOperationException("ForwardedHostHeaderName is not configured in ForwardedHeaders.");
-options.OriginalHostHeaderName = forwardedHeadersOptions.OriginalHostHeaderName
-                                 ?? throw new InvalidOperationException("OriginalHostHeaderName is not configured in ForwardedHeaders.");
-options.AllowedHosts = forwardedHeadersOptions.AllowedHosts
-                       ?? throw new InvalidOperationException("AllowedHosts is not configured in ForwardedHeaders.");
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedHost | ForwardedHeaders.XForwardedProto;
+    options.ForwardedHostHeaderName = forwardedHeadersOptions.ForwardedHostHeaderName
+                                      ?? throw new InvalidOperationException("ForwardedHostHeaderName is not configured in ForwardedHeaders.");
+    options.OriginalHostHeaderName = forwardedHeadersOptions.OriginalHostHeaderName
+                                     ?? throw new InvalidOperationException("OriginalHostHeaderName is not configured in ForwardedHeaders.");
+    options.AllowedHosts = forwardedHeadersOptions.AllowedHosts
+                           ?? throw new InvalidOperationException("AllowedHosts is not configured in ForwardedHeaders.");
 });
 
 builder.Services.AddSession(options =>
