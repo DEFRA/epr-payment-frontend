@@ -6,8 +6,8 @@
 @model CompositeViewModel;
 
 @{    
-    var repExpRootUrl = @Model.dashboardConfiguration.RepExpRootUrl.Url;
-    var backUrl = repExpRootUrl + @Model.dashboardConfiguration.RepExpBackUrl.Url;
+    var repExpRootUrl = @Model.DashboardConfiguration.RepExpRootUrl.Url;
+    var backUrl = repExpRootUrl + @Model.DashboardConfiguration.RepExpBackUrl.Url;
 }
 
 <div class="govuk-grid-row">
@@ -20,15 +20,15 @@
             @Localizer["regulator_review_only_after_payment"]
         </p>
         <form method="post">
-            <input type="hidden" value="@Model.completePaymentViewModel.UserId" />
-            <input type="hidden" value="@Model.completePaymentViewModel.OrganisationId" />
-            <input type="hidden" value="@Model.completePaymentViewModel.Reference" />
-            <input type="hidden" value="@Model.completePaymentViewModel.Regulator" />
-            <input type="hidden" value="@Model.completePaymentViewModel.Amount" />
-            <input type="hidden" value="@Model.completePaymentViewModel.Description" />
-            <input type="hidden" value="@Model.completePaymentViewModel.RequestorType" />
+            <input type="hidden" value="@Model.CompletePaymentViewModel.UserId" />
+            <input type="hidden" value="@Model.CompletePaymentViewModel.OrganisationId" />
+            <input type="hidden" value="@Model.CompletePaymentViewModel.Reference" />
+            <input type="hidden" value="@Model.CompletePaymentViewModel.Regulator" />
+            <input type="hidden" value="@Model.CompletePaymentViewModel.Amount" />
+            <input type="hidden" value="@Model.CompletePaymentViewModel.Description" />
+            <input type="hidden" value="@Model.CompletePaymentViewModel.RequestorType" />
             <p class="govuk-body">
-                @(Localizer["reference_number_is"]) <strong>@Model.completePaymentViewModel.Reference</strong>.
+                @(Localizer["reference_number_is"]) <strong>@Model.CompletePaymentViewModel.Reference</strong>.
             </p>
             <p class="govuk-body">
                 @(Localizer["problems_with_payment"]) <a class="govuk-link govuk-link--no-visited-state" href="@($"mailto:{EprGlobalConstants.CustomerServiceEmail}")" aria-label="@($"{Localizer["email_descriptive_text"].Value} {EprGlobalConstants.CustomerServiceEmail}")">@EprGlobalConstants.CustomerServiceEmail</a>

@@ -5,8 +5,8 @@
 @model CompositeViewModel;
 
 @{
-    var rpdRootUrl = @Model.dashboardConfiguration.RPDRootUrl.Url;
-    var backUrl = rpdRootUrl + @Model.dashboardConfiguration.BackUrl.Url;
+    var rpdRootUrl = @Model.DashboardConfiguration.RPDRootUrl.Url;
+    var backUrl = rpdRootUrl + @Model.DashboardConfiguration.BackUrl.Url;
 }
 
 <div class="govuk-grid-row">
@@ -14,13 +14,13 @@
         <h1 class="govuk-heading-l">@Localizer["payment_unsuccessful"]</h1>
         <p class="govuk-body">@Localizer["payment_not_completed"]</p>
         <form method="post">
-            <input type="hidden" value="@Model.completePaymentViewModel.UserId" />
-            <input type="hidden" value="@Model.completePaymentViewModel.OrganisationId" />
-            <input type="hidden" value="@Model.completePaymentViewModel.Reference" />
-            <input type="hidden" value="@Model.completePaymentViewModel.Regulator" />
-            <input type="hidden" value="@Model.completePaymentViewModel.Amount" />
-            <input type="hidden" value="@Model.completePaymentViewModel.Description" />
-            <input type="hidden" value="@Model.completePaymentViewModel.RequestorType" />
+            <input type="hidden" value="@Model.CompletePaymentViewModel.UserId" />
+            <input type="hidden" value="@Model.CompletePaymentViewModel.OrganisationId" />
+            <input type="hidden" value="@Model.CompletePaymentViewModel.Reference" />
+            <input type="hidden" value="@Model.CompletePaymentViewModel.Regulator" />
+            <input type="hidden" value="@Model.CompletePaymentViewModel.Amount" />
+            <input type="hidden" value="@Model.CompletePaymentViewModel.Description" />
+            <input type="hidden" value="@Model.CompletePaymentViewModel.RequestorType" />
             <div class="govuk-button-group">
                 <button class="govuk-button" data-module="govuk-button" aria-label="@Localizer["try_online_payment_again_descriptive_text"]">
                     @Localizer["try_online_payment_again"]
@@ -29,10 +29,10 @@
         </form>
         <br />
         <p class="govuk-body">
-            @Localizer["reference_number_is"] <strong>@Model.completePaymentViewModel.Reference</strong>.
+            @Localizer["reference_number_is"] <strong>@Model.CompletePaymentViewModel.Reference</strong>.
             <br>@Localizer["note_reference"]
         </p>
-        <p class="govuk-body">@Localizer["use_these_details"] : £@(((decimal?)Model.completePaymentViewModel.Amount ?? 0) / 100)</p>
+        <p class="govuk-body">@Localizer["use_these_details"] : £@(((decimal?)Model.CompletePaymentViewModel.Amount ?? 0) / 100)</p>
         <h2 class="govuk-heading-m">@Localizer["pay_by_bank_transfer"]</h2>
         <p></p>
         <div class="govuk-inset-text">
