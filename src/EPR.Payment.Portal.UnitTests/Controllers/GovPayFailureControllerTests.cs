@@ -150,6 +150,49 @@ public class GovPayFailureControllerTests
         }
     }
 
+    
+    [TestMethod, AutoMoqData]
+    public void Index_Get_WithValidModelStateAndNoOrganisation_ShouldReturnView(
+        string organisationName,
+        [Frozen] Mock<IPaymentsService> paymentsServiceMock,
+        [Frozen] DashboardConfiguration dashboardConfig,
+        [Frozen] CompletePaymentViewModel completePaymentViewModel,
+        [Frozen] Mock<IOptions<DashboardConfiguration>> dashboardConfigurationMock,
+        [Frozen] Mock<ILogger<GovPayFailureController>> loggerMock,
+        [Greedy] GovPayFailureController controller)
+    {
+        dashboardConfigurationMock.Setup(x => x.Value).Returns(dashboardConfig);
+        controller = new GovPayFailureController(paymentsServiceMock.Object, dashboardConfigurationMock.Object,
+            loggerMock.Object);
+        completePaymentViewModel.Amount = 10000;
+        var userDataJson = JsonSerializer.Serialize(new { Organisations = new List<Organisation>() });
+        var claimsIdentity = new ClaimsIdentity(
+        [
+            new Claim(ClaimTypes.UserData, userDataJson)
+        ], "TestAuth");
+        var httpContext = new DefaultHttpContext
+        {
+            User = new ClaimsPrincipal(claimsIdentity)
+        };
+        controller.ControllerContext = new ControllerContext
+        {
+            HttpContext = httpContext
+        };
+
+        var result = controller.Index(completePaymentViewModel);
+
+        using (new AssertionScope())
+        {
+            result.Should().BeOfType<ViewResult>();
+            var viewResult = result as ViewResult;
+            viewResult!.ViewData["amount"].Should().Be(completePaymentViewModel.Amount / 100);
+            var model = viewResult.Model as CompositeViewModel;
+            model!.CompletePaymentViewModel.Should().BeEquivalentTo(completePaymentViewModel);
+            model.DashboardConfiguration.Should().BeEquivalentTo(dashboardConfigurationMock.Object.Value);
+            model.OrganisationName.Should().BeNull();
+        }
+    }
+    
     [TestMethod, AutoMoqData]
     public void Index_Get_WithValidModelState_NoUserDataClaim_ShouldSetOrganisationNameNull(
         [Frozen] Mock<IPaymentsService> paymentsServiceMock,

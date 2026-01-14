@@ -28,8 +28,8 @@ public class GovPayFailureController(
             return RedirectToRoute(RouteNames.GovPay.PaymentError, new { message = ExceptionMessages.ErrorInvalidViewModel });
         }
 
-        var userData = User?.GetUserData();
-        var organisationName = userData?.Organisations?.FirstOrDefault()?.Name;
+        var userData = User.GetUserData();
+        var organisationName = userData.Organisations.FirstOrDefault()?.Name;
 
         ViewData["amount"] = completePaymentResponseViewModel.Amount / 100;
 

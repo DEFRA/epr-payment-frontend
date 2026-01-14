@@ -22,8 +22,8 @@ public class GovPaySuccessController(IOptions<DashboardConfiguration> dashboardC
             return RedirectToRoute(RouteNames.GovPay.PaymentError, new { message = ExceptionMessages.ErrorInvalidViewModel });
         }
 
-        var userData = User?.GetUserData();
-        var organisationName = userData?.Organisations?.FirstOrDefault()?.Name;
+        var userData = User.GetUserData();
+        var organisationName = userData.Organisations.FirstOrDefault()?.Name;
 
         var compositeViewModel = new CompositeViewModel
         {

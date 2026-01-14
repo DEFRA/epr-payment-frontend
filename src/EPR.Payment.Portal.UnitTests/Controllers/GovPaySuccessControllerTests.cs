@@ -112,14 +112,15 @@ public class GovPaySuccessControllerTests
     }
 
     [TestMethod, AutoMoqData]
-    public void Index_WithValidModelState_NoUserDataClaim_ShouldSetOrganisationNameNull(
+    public void Index_WithValidModelState_NoOrganisationDataClaim_ShouldSetOrganisationNameNull(
         [Frozen] Mock<IOptions<DashboardConfiguration>> dashboardConfigurationMock,
         [Frozen] DashboardConfiguration dashboardConfiguration,
         [Frozen] CompletePaymentViewModel completePaymentViewModel)
     {
         dashboardConfigurationMock.Setup(x => x.Value).Returns(dashboardConfiguration);
         var controller = new GovPaySuccessController(dashboardConfigurationMock.Object);
-        var claimsIdentity = new ClaimsIdentity([], "TestAuth");
+        var userDataJson = JsonSerializer.Serialize(new { Organisations = new List<Organisation>() });
+        var claimsIdentity = new ClaimsIdentity([new Claim(ClaimTypes.UserData, userDataJson)], "TestAuth");
         var httpContext = new DefaultHttpContext { User = new ClaimsPrincipal(claimsIdentity) };
         controller.ControllerContext = new ControllerContext { HttpContext = httpContext };
 
