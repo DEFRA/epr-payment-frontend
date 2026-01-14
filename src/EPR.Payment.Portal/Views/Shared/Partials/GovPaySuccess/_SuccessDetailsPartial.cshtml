@@ -10,14 +10,16 @@
 
 <main class="govuk-main-wrapper govuk-!-padding-top-8" id="main-content">
     <div class="govuk-grid-row">
-        <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
-            <div class="govuk-notification-banner__header">
-                <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-                    @Localizer["payment_successful"]
-                </h2>
-            </div>
-            <div class="govuk-notification-banner__content">
-                <p class="govuk-body">@Localizer[@Model.CompletePaymentViewModel.Description == PaymentDescription.RegistrationFee ? "registration_fee_paid" : "packaging_fee_paid"]</p>
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+            <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+                <div class="govuk-notification-banner__header">
+                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                        @Localizer["payment_successful"]
+                    </h2>
+                </div>
+                <div class="govuk-notification-banner__content">
+                    <p class="govuk-body">@Localizer[@Model.CompletePaymentViewModel.Description == PaymentDescription.RegistrationFee ? "registration_fee_paid" : "packaging_fee_paid"]</p>
+                </div>
             </div>
         </div>
     </div>
