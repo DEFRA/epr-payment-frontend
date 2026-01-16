@@ -11,7 +11,7 @@
 }
 
 <main class="govuk-main-wrapper govuk-!-padding-top-8" id="main-content">
-    @if (Model.completePaymentViewModel.RequestorType == RequestorType.Exporters.ToString() || Model.completePaymentViewModel.RequestorType == RequestorType.Reprocessors.ToString())
+    @if (Model.CompletePaymentViewModel.RequestorType == RequestorType.Exporters.ToString() || Model.CompletePaymentViewModel.RequestorType == RequestorType.Reprocessors.ToString())
     {
         @await Html.PartialAsync("~/Views/Shared/Partials/GovPaySuccess/_SuccessDetailsReprocessorExporterPartial.cshtml", Model)
     }

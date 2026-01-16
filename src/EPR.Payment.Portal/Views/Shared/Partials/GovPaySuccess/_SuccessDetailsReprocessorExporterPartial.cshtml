@@ -4,8 +4,8 @@
 @model CompositeViewModel
 
 @{
-    var repExpRootUrl = @Model.dashboardConfiguration.RepExpRootUrl.Url;
-    var backUrl = repExpRootUrl + @Model.dashboardConfiguration.RepExpBackUrl.Url;
+    var repExpRootUrl = @Model.DashboardConfiguration.RepExpRootUrl.Url;
+    var backUrl = repExpRootUrl + @Model.DashboardConfiguration.RepExpBackUrl.Url;
 }
 
 <main class="govuk-main-wrapper govuk-!-padding-top-8" id="main-content">
@@ -16,7 +16,7 @@
                     @Localizer["payment_successful"]
                 </h1>
                 <div class="govuk-panel__body">
-                    @if (Model.completePaymentViewModel.RequestorType == "Reprocessors")
+                    @if (Model.CompletePaymentViewModel.RequestorType == "Reprocessors")
                     {
                         @Localizer["you_have_paid_the_accreditation_charge"]
                     }
@@ -28,13 +28,13 @@
             </div>
             <p class="govuk-body">
                 @Localizer["email_confirmation_sent"]
-                <a href="mailto:@Model.completePaymentViewModel.Email">
-                    @Model.completePaymentViewModel.Email
+                <a href="mailto:@Model.CompletePaymentViewModel.Email">
+                    @Model.CompletePaymentViewModel.Email
                 </a>
             </p>
             
             <p class="govuk-body">
-                @Localizer["application_reference_number"] <strong>@Model.completePaymentViewModel.Reference</strong>
+                @Localizer["application_reference_number"] <strong>@Model.CompletePaymentViewModel.Reference</strong>
             </p>
 
             <h2 class="govuk-heading-l">@Localizer["what_happens_next"]</h2>

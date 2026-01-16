@@ -4,7 +4,8 @@ namespace EPR.Payment.Portal.Common.Models
 {
     public class CompositeViewModel
     {
-        public CompletePaymentViewModel completePaymentViewModel { get; set; } = null!;
-        public DashboardConfiguration dashboardConfiguration { get; set; } = null!;
+        public CompletePaymentViewModel CompletePaymentViewModel { get; set; } = null!;
+        public DashboardConfiguration DashboardConfiguration { get; set; } = null!;
+        public string? OrganisationName { get; set; }
     }
 }
