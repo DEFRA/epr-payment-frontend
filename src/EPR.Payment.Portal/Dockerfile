@@ -1,12 +1,12 @@
 # Base stage with .NET dependencies
-FROM defradigital/dotnetcore-development:dotnet10.0 AS base
+FROM defradigital/dotnetcore:dotnet10.0 AS base
  
 USER root
 ARG PORT=8080
 ENV ASPNETCORE_URLS=http://*:${PORT}
 EXPOSE ${PORT}
  
-RUN apk update && apk --no-cache add icu-libs
+RUN apk add --no-cache icu-libs
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=0
  
 # Build stage with .NET and Node.js/Gulp installation
@@ -22,7 +22,6 @@ ARG PAT=localhost
 RUN sed -i "s|</configuration>|<packageSourceCredentials><epr-packaging-common><add key=\"Username\" value=\"PAT\" /><add key=\"ClearTextPassword\" value=\"${PAT}\" /></epr-packaging-common></packageSourceCredentials></configuration>|" NuGet.Config
  
 # Restore as distinct layers
-USER root
 COPY Directory.Build.props ./
 RUN dotnet restore "EPR.Payment.Portal/EPR.Payment.Portal.csproj" --configfile "./NuGet.Config"
  
@@ -34,13 +33,19 @@ RUN dotnet tool install dotnet-ef --version 6.* --tool-path "/root/.dotnet/tools
  
 # Add the tools folder to PATH
 ENV PATH="${PATH}:/root/.dotnet/tools"
+
+# Install frontend dependencies as a cacheable layer
+COPY ["EPR.Payment.Portal/package.json", "EPR.Payment.Portal/package-lock.json", "EPR.Payment.Portal/"]
+WORKDIR "/src/EPR.Payment.Portal"
+RUN npm ci --ignore-scripts
  
+WORKDIR /src
 COPY EPR.Payment.Portal/. ./EPR.Payment.Portal/.
 COPY EPR.Payment.Portal.Common/. ./EPR.Payment.Portal.Common/.
  
 # Install Gulp CLI globally and project dependencies
 WORKDIR "/src/EPR.Payment.Portal"
-RUN npm install --ignore-scripts -g gulp-cli && npm install --ignore-scripts
+RUN npm install --ignore-scripts -g gulp-cli
  
 # Run Gulp build task
 RUN gulp build-frontend
@@ -58,5 +63,4 @@ USER dotnet
  
 WORKDIR /app
 COPY --from=publish /app/publish .
-USER dotnet
 ENTRYPOINT ["dotnet", "EPR.Payment.Portal.dll"]
