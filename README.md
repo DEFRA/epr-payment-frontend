@@ -11,6 +11,16 @@ UI to calculate fees and manage payment records for EPR
 - EPR Payment Facade - https://github.com/DEFRA/epr-payment-facade
 - .NET 8 SDK
 - Visual Studio or Visual Studio Code
+- Azure ADB2C(Optional for Development - AppSettings: FeatureManagement__EnableAuthenticationFeature:false to disable)
+- Redis(Optional for Development - AppSettings: UseLocalSession:true to disable)
+
+- #### Redis
+
+The Portal Optionally requires Redis, the recommended way of runnig Redis locally is to run it via Docker.
+
+```sh
+$ docker run -d --name my-redis -p 6379:6379 -p 8001:8001 redis/redis-stack:latest
+```
 
 ### Installation
 1. Clone the repository:
