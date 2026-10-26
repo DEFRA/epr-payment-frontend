@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using AutoFixture.MSTest;
+using AutoFixture.Xunit2;
 using EPR.Payment.Portal.Common.UnitTests.TestHelpers;
 using EPR.Payment.Portal.HealthCheck;
 using EPR.Payment.Portal.Services.Interfaces;

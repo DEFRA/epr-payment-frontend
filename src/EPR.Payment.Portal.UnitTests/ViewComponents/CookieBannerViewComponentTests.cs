@@ -1,4 +1,4 @@
-﻿using AutoFixture.MSTest;
+﻿using AutoFixture.Xunit2;
 using EPR.Payment.Portal.Common.UnitTests.TestHelpers;
 using EPR.Payment.Portal.Constants;
 using EPR.Payment.Portal.ViewComponents;
